@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.BioFragment">
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/rey_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:max="100"
+            android:layout_centerInParent="true"
+            app:pv_autostart="false"
+            app:pv_circular="true"
+            android:tooltipText="@string/save"
+            android:visibility="gone"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStyleSnap" />
+        <ImageView
+            android:id="@+id/imgBriefCV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/value10"
+            android:minHeight="150dp"
+
+            />
+
+        <RelativeLayout
+            android:id="@+id/layPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/text_color_new">
+            <ImageView
+                android:id="@+id/imgPlaceholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/picture"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:layout_margin="@dimen/value10"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/imgSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/setting"
+        android:layout_gravity="right"
+        android:padding="@dimen/value10"/>
+    <LinearLayout
+        android:id="@+id/layProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtUploading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+
+            android:text="@string/uploading"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+
+            app:edittextfont="Roboto-Bold.ttf" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/value10"
+            android:layout_marginLeft="@dimen/value10"
+            android:indeterminate="false"
+            android:max="100"
+
+            android:minHeight="50dp"
+            android:minWidth="200dp"
+            android:progress="1" />
+    </LinearLayout>
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtTitleBriefCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+
+        android:textColor="@color/text_color_new"
+        android:textSize="20sp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        app:edittextfont="Roboto-Bold.ttf"  />
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/txtBriefCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        app:trimMode="trimModeLength"
+        app:colorClickableText="#0097CC"
+        app:trimLines="5"
+        android:textColor="@color/text_color_new"
+        android:textSize="15sp"
+        app:edittextfont="Roboto-Regular.ttf" />
+
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>
+</FrameLayout>

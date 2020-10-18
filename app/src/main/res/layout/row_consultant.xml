@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardUseCompatPadding="false">
+
+
+    <LinearLayout
+        android:id="@+id/lay_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2.5">
+
+            <com.app.session.customview.CircleImageView
+                android:id="@+id/img_profilepic"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/profile_large"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="7.5"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:orientation="horizontal">
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/contact_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+
+                    android:layout_weight="4"
+                    android:singleLine="true"
+
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Bold.ttf" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0">
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+
+
+                    android:numStars="5"
+                    android:rating="4"
+                    android:stepSize="0.5"
+                    android:theme="@style/RatingBarBlue" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.app.session.customview.CustomTextView
+android:id="@+id/txtCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:singleLine="true"
+
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Regular.ttf"
+                  />
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txt_sub_catg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:singleLine="true"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/grey"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Regular.ttf"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone">
+
+                <com.app.session.customview.CustomTextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:singleLine="true"
+                    android:text="@string/prof_contact"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Regular.ttf"
+                    />
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/user_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:singleLine="true"
+                    android:text="1234568541"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/grey"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Regular.ttf"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--</androidx.cardview.widget.CardView>-->
+</androidx.cardview.widget.CardView>

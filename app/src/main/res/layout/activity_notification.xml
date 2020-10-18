@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.session.activity.NotificationActivity">
+
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_default"></include>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_centerInParent="true"
+        app:cardCornerRadius="5dp"
+        app:cardUseCompatPadding="false">
+    <LinearLayout
+        android:id="@+id/lay_invitation"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txt_invitetion"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="50dp"
+            app:edittextfont="OpenSans-Regular.ttf" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginBottom="10dp">
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/btn_accept"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/orange_btn_bg"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/btn_accept"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/btn_reject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/orange_btn_bg"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/btn_reject"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+        </LinearLayout>
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>

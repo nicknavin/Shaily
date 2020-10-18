@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/laySubscription"
+
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_alignParentTop="true"
+
+            android:layout_width="match_parent"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_height="match_parent"
+
+            />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/white"
+        app:rippleColor="@color/btn_color"
+        app:srcCompat="@mipmap/plus" />
+
+    <LinearLayout
+        android:id="@+id/layAddSubcription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        >
+
+
+
+        <com.app.session.customview.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/value10"
+            android:layout_marginRight="10dp"
+            android:maxLines="2"
+            android:text="@string/add_group"
+            android:textColor="@color/text_color_new"
+            android:textSize="14sp"
+            app:edittextfont="Roboto-Bold.ttf" />
+    </LinearLayout>
+</RelativeLayout>
+</LinearLayout>

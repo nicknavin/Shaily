@@ -1,0 +1,179 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">#3573E0</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="actionMenuTextColor">@color/black</item>
+
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="FlatWaveColorButtonRippleStyle1" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">#0c000000</item>
+        <item name="rd_cornerRadius">4dp</item>
+
+    </style>
+
+    <style name="loadingstyle1" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">400</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/story_colore1</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/story_colore1</item>
+        <item name="cpd_maxSweepAngle">180</item>
+    </style>
+    <style name="loadingstyle" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">400</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/progress_download1</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/progress_download1</item>
+        <item name="cpd_maxSweepAngle">180</item>
+    </style>
+    <style name="InOutColorsCircularProgressDrawableStylenew" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">800</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/progress_colors_new</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/progress_colors_new</item>
+        <item name="cpd_maxSweepAngle">180</item>
+    </style>
+
+    <style name="InOutColorsCircularProgressDrawableStylenew1" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">800</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/progress_download1</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/progress_download1</item>
+        <item name="cpd_maxSweepAngle">180</item>
+    </style>
+
+    <style name="InOutColorsCircularProgressDrawableStyleSnap" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">800</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/progress_snap</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/progress_snap</item>
+        <item name="cpd_maxSweepAngle">180</item>
+    </style>
+
+    <style name="InOutColorsCircularProgressDrawableStyle" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">800</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/progress_colors_new</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/progress_colors_new</item>
+    </style>
+
+    <style name="ButtonRippleStyle" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">@color/ripplewhite</item>
+    </style>
+
+    <style name="ButtonRippleStyle1" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">@color/ripplewhite</item>
+
+
+    </style>
+
+    <style name="ButtonRippleStyle2" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">@color/ripplewhite</item>
+
+
+    </style>
+
+    <style name="MaterialDialogSheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>
+    </style>
+
+    <style name="MaterialDialogSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/up_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/down_from_position</item>
+    </style>
+
+    <style name="SpinnerTheme_new" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/bg_spinner</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="SpinnerTheme_custome" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/custome_bg_spinner</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:popupBackground">@drawable/dialog_bg</item>
+    </style>
+
+    <style name="RatingBarBlue" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/DarkGrey</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/spinner_background</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">#4276d9</item>
+        <item name="colorAccent">#4276d9</item>
+
+    </style>
+
+
+    <style name="TextAppearance.AppTheme.TextInputLayout.HintTextAlt" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">#4276d9</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorControlNormal">@color/black</item>
+        <item name="buttonBarPositiveButtonStyle">@color/black</item>
+        <item name="buttonBarNegativeButtonStyle">@color/black</item>
+        <item name="buttonBarStyle">@color/black</item>
+
+    </style>
+
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+        <item name="colorAccent">@color/white</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+    <style name="TextAttachmentOptions">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+</resources>

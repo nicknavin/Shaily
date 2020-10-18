@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FCFCFC"
+    tools:context=".activity.UpdateSubscriptionGroupDiscription">
+
+    <include layout="@layout/toolbar_group_brief"/>
+
+
+    <com.app.session.customview.CustomTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#B7B7B7"
+        android:textSize="16sp"
+android:layout_marginTop="30dp"
+        android:text="@string/description"
+        app:edittextfont="Roboto-Bold.ttf"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
+
+    <com.app.session.customview.CustomEditText
+        android:id="@+id/edt_cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:layout_gravity="center"
+        android:background="@drawable/box_square_border"
+        android:text="@string/lorem"
+android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:minLines="15"
+        android:maxLines="15"
+        android:paddingTop="@dimen/value10"
+
+        android:paddingRight="@dimen/value5"
+        android:maxLength="1000"
+
+        android:textColor="#000000  "
+        android:textSize="14sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+
+
+
+</LinearLayout>

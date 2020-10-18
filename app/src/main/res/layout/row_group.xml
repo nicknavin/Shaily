@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/layGroup"
+    android:layout_marginTop="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.app.session.customview.CircleImageView
+        android:id="@+id/imgGroup"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/profile_image"
+        app:border_color="#DBDBDB"
+        app:border_overlay="true"
+        app:border_width="1dp" />
+    <RelativeLayout
+        android:id="@+id/layAddSubcription"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+android:layout_gravity="center"
+        android:orientation="vertical"
+        >
+<com.app.session.customview.CustomTextView
+            android:id="@+id/txtGroupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value10"
+            android:layout_marginRight="10dp"
+    android:layout_marginTop="10dp"
+android:gravity="left"
+
+            android:text="@string/new_group"
+            android:textColor="@color/text_color_new"
+            android:textSize="14sp"
+            app:edittextfont="Roboto-Bold.ttf" />
+        <com.app.session.customview.CustomTextView
+            android:layout_below="@+id/txtGroupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value10"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+
+
+            android:text="@string/new_group"
+            android:textColor="@color/text_color_new"
+            android:textSize="14sp"
+            app:edittextfont="Roboto-Bold.ttf" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#F0F1F3"
+            android:layout_marginLeft="@dimen/value10"
+
+            ></View>
+    </RelativeLayout>
+</LinearLayout>

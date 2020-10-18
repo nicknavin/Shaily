@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:src="@mipmap/otp_icon" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="@string/otp_msg3"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf"
+                app:edittextfontHint="OpenSans-Regular.ttf" />
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/text_patientContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:text="@string/confirmation_text"
+                android:textColor="@color/Grey"
+                android:textSize="16sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+            <com.app.session.customview.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="@string/msg_otp"
+                android:textColor="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf"
+                app:edittextfontHint="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="@dimen/value10"
+                android:background="@drawable/line_gray"
+                android:inputType="textPassword"
+                android:paddingBottom="@dimen/value5"
+                android:paddingTop="@dimen/value5"
+
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf"
+                app:edittextfontHint="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="@string/msg_otp1"
+                android:textColor="#727272"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf"
+                app:edittextfontHint="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_Resend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="@dimen/value10"
+                android:text="@string/resend_code_btn"
+                android:textColor="#666666"
+                android:textSize="18sp"
+                app:edittextfont="OpenSans-Regular.ttf"
+                app:edittextfontHint="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtDone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/box_gray"
+                style="@style/ButtonRippleStyle1"
+                android:gravity="center"
+                android:paddingBottom="@dimen/value10"
+                android:paddingTop="@dimen/value10"
+                android:text="@string/verify"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:edittextfont="OpenSans-Regular.ttf"
+                app:edittextfontHint="OpenSans-Regular.ttf" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

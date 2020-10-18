@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.session.activity.RegistrationThirdActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_default"></include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:id="@+id/relative_layout_profile_pic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <com.app.session.customview.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/profile_large"
+                    app:border_color="@color/black"
+
+                    app:border_width="1dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/imgProfile"
+                    android:src="@mipmap/camera" />
+
+            </RelativeLayout>
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/reg_upload_img"
+                android:textColor="@color/Grey"
+                android:layout_marginTop="2dp"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:edittextfont="OpenSans-Bold.ttf"
+                app:edittextfontHint="OpenSans-Bold.ttf" />
+
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_selectLang"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+android:visibility="gone"
+                android:background="@drawable/edit_round"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:drawableLeft="@mipmap/grid"
+                android:drawablePadding="10dp"
+                android:editable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
+                android:paddingLeft="20dp"
+                android:text="@string/select_lang"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/header_selection"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:edittextfont="OpenSans-Regular.ttf"
+                />
+
+            <RadioGroup
+                android:id="@+id/rg_counsult_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <RadioButton
+                    android:id="@+id/rb_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/black"
+                    android:checked="true"
+                    android:text="@string/client"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_counsultant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/black"
+                    android:checked="false"
+                    android:text="@string/consultant"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_organizationaa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:buttonTint="@color/black"
+                    android:checked="false"
+                    android:text="@string/organization"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/lay_org_freelance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+android:visibility="gone"
+                >
+
+
+                <RadioGroup
+
+                    android:id="@+id/rg_org_freelncer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+
+                </RadioGroup>
+
+                <com.app.session.customview.CustomEditText
+                    android:id="@+id/edt_selectCat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/edit_round"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableLeft="@mipmap/grid"
+                    android:drawablePadding="10dp"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:imeOptions="actionNext"
+                    android:paddingLeft="20dp"
+                    android:text="@string/select_category"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="14sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <com.app.session.customview.CustomEditText
+                    android:id="@+id/edt_selectSubCat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+
+                    android:background="@drawable/edit_round"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableLeft="@mipmap/grid"
+                    android:drawablePadding="10dp"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:imeOptions="actionNext"
+                    android:paddingLeft="20dp"
+                    android:text="@string/select_sub_category"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="14sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="40dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtBack"
+                        style="@style/ButtonRippleStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/orange_btn_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/back"
+                        android:textColor="@color/orange_theme"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtNext"
+                        style="@style/ButtonRippleStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/orange_btn_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/next"
+                        android:textColor="@color/orange_theme"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

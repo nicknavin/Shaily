@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:id="@+id/layTops">
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value10"
+        android:layout_marginLeft="10dp">
+
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/profile_large"
+            app:border_color="#DDDDDD"
+            app:border_width="1dp" />
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txt_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+
+            android:layout_marginLeft="@dimen/value10"
+            android:layout_toRightOf="@+id/imgProfile"
+            android:text="navin nimade"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:edittextfont="Roboto-Regular.ttf" />
+
+        <ImageView
+            android:id="@+id/imgRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/value10"
+            android:tint="#607D8A"
+            android:src="@mipmap/setting" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/value5"
+        android:minHeight="200dp"
+        android:background="@drawable/black_ripple_btn_bg_squre">
+
+
+
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/rey_loading"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:max="50"
+            android:layout_centerInParent="true"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/loadingstyle" />
+        <ImageView
+            android:id="@+id/imgStory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:minHeight="200dp"
+            android:background="@drawable/black_ripple_btn_bg_squre"
+            />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layDocument"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+
+        android:background="@drawable/sqaure_box"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/imgDoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:src="@mipmap/pdf_story"/>
+        <com.app.session.customview.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/txtDocName"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            app:edittextfont="Roboto-Bold.ttf"
+
+            android:text="@string/youtube" />
+        <CheckedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></CheckedTextView>
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/lay_audio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="3dp"
+        android:elevation="3dp"
+        android:visibility="gone"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+        android:layout_marginTop="20dp">
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+      android:padding="@dimen/value10"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/img_audio_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/audio_selector"
+            android:src="@mipmap/play_icon" />
+
+        <SeekBar
+            android:id="@+id/audio_seekBar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:max="10"
+            android:progressDrawable="@drawable/seekbar_line"
+
+            android:thumbTint="@color/btn_color" />
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txt_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/color_audio"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/layVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:minHeight="200dp"
+        android:background="@drawable/black_ripple_btn_bg_squre"
+        >
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/rey_loading_video"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:max="50"
+            android:layout_centerInParent="true"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/loadingstyle" />
+
+        <ImageView
+        android:id="@+id/imgVideoThumb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        />
+    <ImageView
+            android:id="@+id/imgPlay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:src="@mipmap/youtubeplay"
+            android:layout_centerInParent="true"
+            />
+
+
+
+    </RelativeLayout>
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtStoryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:text="sfsdfdsfsdfsdfsdfsfsdf"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        app:edittextfont="Roboto-Bold.ttf" />
+
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/txtStoryDiscription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+android:clickable="true"
+        app:colorClickableText="#0097CC"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:trimLines="5"
+        android:text="dsfsdafsdfsadfsdaf"
+        android:layout_marginTop="5dp"
+        app:edittextfont="Roboto-Regular.ttf" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:layout_marginBottom="5dp">
+        <ImageView
+            android:id="@+id/imgShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/share_post"
+            android:layout_toLeftOf="@+id/txtViewCount"
+            android:layout_gravity="right"
+            android:layout_marginRight="15dp"
+            android:tint="@color/grey"
+            android:visibility="gone"
+            android:padding="10dp"></ImageView>
+
+        <com.app.session.customview.CustomTextView
+
+            android:id="@+id/txtViewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:layout_toLeftOf="@+id/txtweek"
+            android:drawableLeft="@mipmap/ic_eyes_open"
+            android:text="5K"
+            android:drawablePadding="5dp"
+            android:textColor="@color/placeholder"
+            android:textSize="14sp"
+            app:edittextfont="Roboto_Regular.ttf"/>
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtweek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:text="2weeks ago"
+            android:textColor="@color/placeholder"
+            android:textSize="14sp"
+            app:edittextfont="Roboto_Regular.ttf"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:background="#DBDBDB"></View>
+
+
+
+</LinearLayout>

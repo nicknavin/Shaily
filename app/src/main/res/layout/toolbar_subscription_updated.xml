@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    android:elevation="2dp"
+    app:layout_scrollFlags="scroll|enterAlways"
+    app:titleTextColor="@android:color/white">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/imgGroupCoverheader"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            app:border_color="@color/grayline"
+            app:border_width="0.5dp"
+            android:layout_alignParentLeft="true"
+            android:src="@mipmap/profile_image"/>
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtGroupName5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/txtSave"
+            android:layout_toRightOf="@+id/imgGroupCoverheader"
+            android:padding="@dimen/value10"
+            android:text="dsfsf"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+
+            app:edittextfont="OpenSans-Regular.ttf" />
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtSave"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imgCross"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_marginRight="20dp"
+            android:padding="@dimen/value10"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            android:background="@drawable/box_gray_border"
+            app:edittextfont="OpenSans-Regular.ttf" />
+
+        <ImageView
+            android:id="@+id/imgCross"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/value10"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/cross"
+            />
+
+
+    </RelativeLayout>
+
+</androidx.appcompat.widget.Toolbar>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+android:id="@+id/layChatUser"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+    android:id="@+id/layTop"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:weightSum="10">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/demo"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center">
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:textColor="@color/black_txt"
+                android:textSize="15sp"
+                android:text="Rahul sharma"
+                app:edittextfont="Roboto-Bold.ttf" />
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtChatMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#757575"
+                android:textSize="15sp"
+                android:minLines="1"
+                android:ellipsize="end"
+                android:text="hi how are you.lcome"
+                app:edittextfont="OpenSans-Regular.ttf" />
+        </LinearLayout>
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="2"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtTimeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#757575"
+        android:text="18:32"
+
+        android:textSize="14sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+    <RelativeLayout
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@drawable/circle">
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtMsgCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="1"
+            android:layout_centerInParent="true"
+            android:textSize="12sp"
+            app:edittextfont="OpenSans-Regular.ttf" />
+    </RelativeLayout>
+</LinearLayout>
+</LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#E1E1E1"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/layTop"/>
+
+
+
+</RelativeLayout>

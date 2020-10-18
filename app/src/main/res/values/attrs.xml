@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomEditText">
+        <attr name="edittextfont" format="string" />
+        <attr name="edittextfontHint" format="string" />
+        <attr name="edittextpwd" format="string" />
+        <attr name="editcharpwd" format="string" />
+    </declare-styleable>
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="ParallaxView">
+        <attr name="speed" format="dimension" />
+        <attr name="src" format="reference" />
+        <attr name="sceneLength" format="integer" />
+        <attr name="randomness" format="reference" />
+        <attr name="initialState" format="enum">
+            <enum name="started" value="0" />
+            <enum name="stopped" value="1" />
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="CustomImageView">
+        <attr name="image_type" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="square" value="1" />
+            <enum name="half" value="2" />
+            <enum name="halfplus" value="3" />
+            <enum name="threebytwo" value="4" />
+            <enum name="oneplus" value="5" />
+            <enum name="halfhalf" value="7" />
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="SettingsToggle">
+        <attr name="text" format="string" />
+        <attr name="textColor" format="string" />
+        <attr name="prefName" format="string" />
+        <attr name="oval_background_off" format="string" />
+        <attr name="oval_background_on" format="string" />
+    </declare-styleable>
+    <declare-styleable name="ContactEditText">
+        <attr name="cet_spanHeight" format="reference|dimension"/>
+        <attr name="cet_spanMaxWidth" format="reference|dimension"/>
+        <attr name="cet_spanPaddingLeft" format="reference|dimension"/>
+        <attr name="cet_spanPaddingRight" format="reference|dimension"/>
+        <attr name="cet_spanFontFamily" format="reference|string"/>
+        <attr name="cet_spanTextStyle" format="integer">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+            <enum name="bold_italic" value="3" />
+        </attr>
+        <attr name="cet_spanTextSize" format="reference|dimension"/>
+        <attr name="cet_spanTextColor" format="reference|color"/>
+        <attr name="cet_spanBackgroundColor" format="reference|color"/>
+        <attr name="cet_spanSpacing" format="reference|dimension"/>
+    </declare-styleable>
+    <declare-styleable name="ExpandablePanel">
+        <attr name="handle" format="reference" />
+        <attr name="content" format="reference" />
+        <attr name="collapsedHeight" format="dimension"/>
+        <attr name="animationDuration" format="integer"/>
+    </declare-styleable>
+    <declare-styleable name="CalendarView">
+        <attr name="dateFormat" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="WheelView">
+        <attr name="wheelViewLineColor" format="color"/>
+        <attr name="wheelViewOverflowTextColor" format="color"/>
+        <attr name="wheelViewContentTextColor" format="color"/>
+        <attr name="wheelViewTextSize" format="dimension"/>
+        <attr name="wheelViewIsLoopEnabled" format="boolean"/>
+        <attr name="wheelViewInitialPosition" format="integer"/>
+        <attr name="wheelViewDrawItemCount" format="integer"/>
+    </declare-styleable>
+    <declare-styleable name="StaggeredGridView">
+        <attr name="column_count" format="integer" />
+        <attr name="column_count_portrait" format="integer" />
+        <attr name="column_count_landscape" format="integer" />
+        <attr name="item_margin" format="dimension" />
+        <attr name="grid_paddingLeft" format="dimension" />
+        <attr name="grid_paddingRight" format="dimension" />
+        <attr name="grid_paddingTop" format="dimension" />
+        <attr name="grid_paddingBottom" format="dimension" />
+    </declare-styleable>
+
+
+    <attr name="popupTextAlignment" format="enum">
+        <enum name="start" value="0" />
+        <enum name="end" value="1" />
+        <enum name="center" value="2" />
+    </attr>
+
+    <declare-styleable name="NiceSpinner">
+        <attr name="arrowTint" format="color" />
+        <attr name="hideArrow" format="boolean" />
+        <attr name="arrowDrawable" format="reference|color" />
+        <attr name="dropDownListPaddingBottom" format="dimension" />
+        <attr name="backgroundSelector" format="integer" />
+        <attr name="textTint" format="color" />
+        <attr name="popupTextAlignment" />
+        <attr name="entries" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="AspectRatioImageView">
+        <attr name="aspectRatio" format="float" />
+        <attr name="aspectRatioEnabled" format="boolean" />
+        <attr name="dominantMeasurement">
+            <enum name="width" value="0"/>
+            <enum name="height" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ExpandableLinearLayout">
+        <attr name="expandDuration" format="integer"/>
+    </declare-styleable>
+</resources>

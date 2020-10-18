@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp">
+
+
+    <LinearLayout
+        android:id="@+id/lay_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/img_profilepic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/value10"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/profile_large"
+            app:border_color="@color/bg_btn"
+            app:border_width="1dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/value10"
+
+            android:layout_marginRight="@dimen/value10"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/consultant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:singleLine="true"
+                    android:text="sdfsdafsadf"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/bg_btn"
+                    android:textSize="15sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+                <ImageView
+                    android:id="@+id/img_country_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/country_icon"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/consultant_cv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+    <!--</androidx.cardview.widget.CardView>-->
+</RelativeLayout><!--<View
+                android:layout_width="match_parent"
+                android:layout_height="0.6dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/bg_btn"></View>-->

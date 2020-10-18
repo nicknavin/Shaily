@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".activity.ExpertProfilePageActivity">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include layout="@layout/toolbar_expert"></include>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal"
+                    >
+                    <com.app.session.customview.CircleImageView
+                        android:id="@+id/imgGroupCover"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+                        android:layout_alignParentLeft="true"
+
+                        android:layout_gravity="center"
+                        android:src="@mipmap/profile_image"
+                        app:border_color="#F1F0EF"
+                        app:border_width="0.5dp" />
+                    <LinearLayout
+                        android:id="@+id/layGroupmid"
+                        android:layout_gravity="center"
+                        android:layout_toLeftOf="@+id/imgDrop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center|left"
+
+
+                        android:orientation="vertical">
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtGroupName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fadel Bohamad"
+                            android:textColor="#626365"
+                            android:textSize="16sp"
+
+                            app:edittextfont="Segoe_UI_Bold.ttf" />
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtCategoryName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/txtGroupName"
+                            android:layout_toRightOf="@+id/imgGroupCoverCover"
+                            android:gravity="left"
+                            android:text="Photographer"
+                            android:textColor="#A5A7A6"
+                            android:textSize="14sp"
+                            app:edittextfont="Roboto-Regular.ttf" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/laySubscriber"
+                    android:layout_alignParentRight="true"
+
+                    android:layout_marginTop="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtSubscriber1"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+
+                        android:text="1,767"
+                        android:textColor="#626365"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:edittextfont="Roboto-Bold.ttf" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:text="@string/subscriber"
+                        android:textColor="#626365"
+                        android:textSize="14sp"
+                        app:edittextfont="Roboto-Regular.ttf" />
+
+                    <CheckBox
+                        android:id="@+id/imgDrop"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center|right"
+                        android:buttonTint="#626365"
+                        android:button="@mipmap/ic_dropdown_arrow"
+                        android:checked="true"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/recyclerViewtop" />
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp" >
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.8dp"
+                        android:background="#D8D8D8" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        >
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtBio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="Price"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="#5E605F"
+                            android:textSize="16sp"
+                            app:edittextfont="Segoe_UI_Bold.ttf" />
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtSubscriber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:text="@string/subscribes"
+                            android:layout_alignParentRight="true"
+                            android:textColor="@color/txt_subscriber"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="16sp"
+                            app:edittextfont="Segoe_UI_Bold.ttf" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.8dp"
+                        android:layout_marginTop="10dp"
+                        android:background="#D8D8D8" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+                        >
+
+                        <com.rey.material.widget.ProgressView
+                            android:id="@+id/rey_loading"
+                            android:layout_width="48dp"
+                            android:layout_height="58dp"
+                            android:visibility="gone"
+                            android:max="50"
+                            android:layout_centerInParent="true"
+                            app:pv_autostart="false"
+                            app:pv_circular="true"
+                            app:pv_progressMode="indeterminate"
+                            app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStylenew" />
+
+                        <ImageView
+                            android:id="@+id/imgStory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            />
+
+                        <com.google.android.exoplayer2.ui.PlayerView
+                            android:id="@+id/player"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:default_artwork="@mipmap/demo"
+                            app:use_artwork="true"
+                            app:resize_mode="fill"
+                            android:layout_alignBottom="@+id/imgStory"
+                            app:keep_content_on_player_reset="true"
+                            />
+
+                    </RelativeLayout>
+
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtTitleName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:textColor="#6d6a6a"
+                        android:textSize="16sp"
+                        app:edittextfont="Segoe_UI_Bold.ttf" />
+
+                    <com.borjabravo.readmoretextview.ReadMoreTextView
+                        android:id="@+id/txtTitleBriefCV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        app:trimMode="trimModeLength"
+                        app:trimLines="5"
+                        android:textColor="#6d6a6a"
+                        android:textSize="14sp"
+                        app:colorClickableText="@color/read" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:visibility="gone"  >
+
+
+                        <com.app.session.customview.CustomTextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_toLeftOf="@+id/txtweek"
+                            android:drawableLeft="@mipmap/ic_eyes_open"
+                            android:text="5K"
+                            android:drawablePadding="5dp"
+                            android:textColor="@color/placeholder"
+                            android:textSize="14sp"
+                            app:edittextfont="Roboto_Regular.ttf"/>
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtweek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_alignParentRight="true"
+                            android:text="2weeks ago"
+                            android:textColor="@color/placeholder"
+                            android:textSize="14sp"
+                            app:edittextfont="Roboto_Regular.ttf"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recyclerViewBrief"
+                    android:visibility="gone" />
+
+
+
+
+
+
+
+                <!--
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="10dp"
+                                >
+
+                                <com.app.consultlot.customview.CustomTextView
+                                    android:id="@+id/txtBriefCV"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:layout_centerVertical="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:text="@string/bio_english"
+                                    android:layout_alignParentLeft="true"
+                                    android:textColor="#5E605F"
+                                    android:textSize="16sp"
+
+                                    app:edittextfont="Segoe_UI_Bold.ttf" />
+
+                                <com.app.consultlot.customview.CustomTextView
+                                    android:id="@+id/txtSubscriber"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:text="@string/subscribes"
+                                    android:layout_alignParentRight="true"
+                                    android:textColor="#9C0612"
+                                    android:layout_centerVertical="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:textSize="16sp"
+
+                                    app:edittextfont="Segoe_UI_Bold.ttf" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_marginTop="10dp"
+                                android:background="#D8D8D8" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp">
+
+                                <com.rey.material.widget.ProgressView
+                                    android:id="@+id/rey_loading"
+                                    android:layout_width="48dp"
+                                    android:layout_height="58dp"
+                                    android:max="50"
+                                    android:layout_centerInParent="true"
+                                    app:pv_autostart="false"
+                                    app:pv_circular="true"
+                                    app:pv_progressMode="indeterminate"
+                                    app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStylenew" />
+
+                                <ImageView
+                                    android:id="@+id/imgStory"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:adjustViewBounds="true"
+
+                                    android:src="@mipmap/demo7"
+                                    android:background="@color/gray"
+                                    android:minHeight="150dp" />
+
+                            </RelativeLayout>
+
+
+                            <com.app.consultlot.customview.CustomTextView
+                                android:id="@+id/txtTitleName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+
+                                android:text="Uniform Code of Military Justice"
+                                android:layout_toRightOf="@+id/imgProfile"
+                                android:textColor="#6d6a6a"
+                                android:textSize="16sp"
+                                app:edittextfont="Segoe_UI_Bold.ttf" />
+
+                            <com.borjabravo.readmoretextview.ReadMoreTextView
+                                android:id="@+id/txtTitleBriefCV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:text="The Uniform Code of Military Justice is the foundation of military law in the United States. It was established by the United States Congress in accordance with the authority given by the United States"
+                                android:textColor="#6d6a6a"
+                                android:textSize="14sp"
+                                app:colorClickableText="@color/placeholder" />-->
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,82 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ebabu.jingadala.ProductDetailActivity">
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="1"
+        android:title="search"
+        android:icon="@mipmap/search"
+        app:showAsAction="always"
+       />
+
+
+    <item
+        android:id="@+id/action_notification"
+        android:icon="@mipmap/notification_icon"
+        android:orderInCategory="1"
+        android:title="notification"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/action_setting"
+                android:icon="@mipmap/setting"
+        android:orderInCategory="1"
+        android:title="Cart"
+        app:showAsAction="always"
+        />
+
+    <!-- <item
+         android:id="@+id/action_more"
+         android:actionLayout="@layout/layout_menu_counter"
+         android:orderInCategory="1"
+         android:title=""
+         app:showAsAction="always" >
+         <menu>
+             <group_selected>
+                 <item
+                     android:id="@+id/action_account"
+                     android:title="My Account"/>
+                 <item
+                     android:id="@+id/action_wish"
+                     android:title="Wishlist"/>
+                 <item
+                     android:id="@+id/action_recent"
+                     android:title="Recently Viewed"/>
+             </group_selected>
+         </menu>
+     </item>-->
+
+
+    <!--<item
+        android:orderInCategory="1"
+        android:icon="@mipmap/more_g"
+        android:title="Search Option"
+        android:id="@+id/menu_search_option"
+        app:showAsAction="always">
+        <menu>
+            <group_selected>
+                <item
+                    android:id="@+id/menuSearchFilmEpisode"
+                    android:title="Episode"/>
+                <item
+                    android:id="@+id/menuSearchActor"
+                    android:title="Actor"/>
+                <item
+                    android:id="@+id/menuSearchDirector"
+                    android:title="Director"/>
+            </group_selected>
+        </menu>
+    </item>-->
+
+    <!--<group_selected android:id="@+id/group_delete"
+        android:actionLayout="@layout/layout_menu_counter">
+        <item android:id="@+id/menu_archive"
+            android:title="hi" />
+        <item android:id="@+id/menu_delete"
+            android:title="bye" />
+    </group_selected>-->
+
+
+</menu>

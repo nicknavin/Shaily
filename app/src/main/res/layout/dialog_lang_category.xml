@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="@dimen/value10"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="@dimen/value10"
+    android:background="@drawable/dialog_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtLanguageName"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/edt_box_square_border"
+        android:gravity="center|left"
+        android:paddingLeft="10dp"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/languages"
+        app:edittextfont="Roboto-Regular.ttf"
+        app:edittextfontHint="Roboto-Regular.ttf"
+        android:drawableTint="@color/txt_app"
+        android:drawablePadding="@dimen/value10"
+        android:paddingRight="20dp"
+        android:drawableRight="@mipmap/dropdownarrow"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+
+        style="@style/LoginTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:boxBackgroundColor="@color/white"
+        android:focusable="true"
+        android:screenReaderFocusable="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/txt_app"
+        android:hint="@string/categorys">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtSelectCategory"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:textCursorDrawable="@color/black"
+            android:textSize="15sp"
+            android:textColor="@color/txt_app"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName|textCapSentences|textCapCharacters"
+            android:maxLines="1"
+
+            app:edittextfont="Roboto-Regular.ttf"
+            app:edittextfontHint="Roboto-Regular.ttf"  />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtAddCategory"
+
+        android:layout_gravity="right"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="20dp"
+
+
+        android:background="@drawable/btn_blue_bg"
+        android:paddingTop="@dimen/value10"
+        android:paddingBottom="@dimen/value10"
+        android:text="@string/add_categorys"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+
+        android:layout_marginRight="30dp"
+        app:edittextfont="Roboto-Bold.ttf" />
+
+</LinearLayout>

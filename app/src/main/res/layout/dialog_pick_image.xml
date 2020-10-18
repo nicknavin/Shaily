@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dial_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtAddphoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_btn"
+        android:gravity="center"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="Add Photo"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="25sp"
+        app:edittextfont="OpenSans-Bold.ttf"
+        app:edittextfontHint="OpenSans-Bold.ttf"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"   >
+
+        <ImageView
+            android:id="@+id/imgTake_photo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/camera_black"
+            android:padding="10dp"/>
+        <ImageView
+            android:id="@+id/imgTake_gallery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/gallery_black"
+            android:padding="10dp"/>
+
+
+    </LinearLayout>
+<!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:weightSum="2"-->
+    <!--android:layout_marginTop="10dp">-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/imgCancel"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:src="@mipmap/arrowicon"-->
+        <!--android:padding="10dp"/>-->
+    <!--<ImageView-->
+        <!--android:id="@+id/imgRemove"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:src="@mipmap/arrowicon"-->
+        <!--android:padding="10dp"/>-->
+<!--</LinearLayout>-->
+</LinearLayout>

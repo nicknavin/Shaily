@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="@dimen/value10"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/cross"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/value10"
+        android:visibility="gone"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <com.app.session.customview.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/value10"
+        android:layout_marginRight="@dimen/value10"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minLines="1"
+        android:padding="@dimen/value10"
+        android:text="@string/msg_story"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:edittextfont="OpenSans-Bold.ttf" />
+
+    <com.app.session.customview.CustomEditText
+        android:id="@+id/edt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/value10"
+        android:layout_marginRight="@dimen/value10"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittxt_bg"
+        android:hint="@string/hint_write_about"
+        android:maxLines="2"
+        android:minLines="1"
+        android:padding="@dimen/value10"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+
+    <ImageView
+        android:id="@+id/img_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/upload_photo" />
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/btn_Send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginBottom="@dimen/value10"
+        android:layout_marginRight="@dimen/value10"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/btn_gray"
+        android:inputType="textMultiLine"
+        android:padding="@dimen/value10"
+        android:scrollbars="vertical"
+        android:text="@string/send_story"
+        android:textColor="@color/black"
+
+        android:textSize="15sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+</LinearLayout>
+</RelativeLayout>

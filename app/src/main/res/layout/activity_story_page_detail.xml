@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.StoryPageDetailActivity">
+    <include layout="@layout/toolbar_story_default"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_actionbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+         <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    >
+    <ImageView
+        android:id="@+id/imgStory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="5dp"
+        />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/lay_audio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="3dp"
+        android:elevation="3dp"
+        android:visibility="gone"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+        android:layout_marginTop="20dp">
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/value10"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/img_audio_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/audio_selector"
+                android:src="@mipmap/play_icon" />
+
+            <SeekBar
+                android:id="@+id/audio_seekBar"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:max="10"
+                android:progressDrawable="@drawable/seekbar_line"
+
+                android:thumbTint="@color/btn_color" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/color_audio"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+             <RelativeLayout
+                 android:id="@+id/layVideo"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:visibility="gone"
+                 android:layout_marginTop="5dp">
+                 <ImageView
+                     android:id="@+id/imgVideoThumb"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:adjustViewBounds="true"
+                     />
+                 <ImageView
+                     android:id="@+id/imgPlay"
+                     android:layout_width="50dp"
+                     android:layout_height="50dp"
+                     android:visibility="gone"
+                     android:src="@mipmap/youtubeplay"
+                     android:layout_centerInParent="true"
+                     />
+             </RelativeLayout>
+             <LinearLayout
+                 android:id="@+id/layDocument"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center"
+                 android:visibility="gone"
+                 android:layout_marginLeft="20dp"
+                 android:layout_marginRight="20dp"
+                 android:layout_marginTop="10dp"
+                 android:padding="10dp"
+
+                 android:background="@drawable/sqaure_box"
+                 android:orientation="horizontal">
+                 <ImageView
+                     android:id="@+id/imgDoc"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center"
+
+                     android:src="@mipmap/pdf_story"/>
+                 <com.app.session.customview.CustomTextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center"
+                     android:id="@+id/txtDocName"
+                     android:gravity="center"
+                     android:layout_marginLeft="10dp"
+                     app:edittextfont="Roboto-Bold.ttf"
+
+                     android:text="@string/youtube" />
+                 <CheckedTextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"></CheckedTextView>
+             </LinearLayout>
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtStoryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="sfsdfdsfsdfsdfsdfsfsdf"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        app:edittextfont="Roboto-Bold.ttf" />
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtStoryDiscription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:colorClickableText="#0097CC"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:trimLines="5"
+        android:text="dsfsdafsdfsadfsdaf"
+        android:layout_marginTop="5dp"
+        app:edittextfont="Roboto-Regular.ttf" />
+
+   <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+                 android:layout_marginTop="20dp"
+                 android:layout_marginBottom="5dp">
+
+
+                 <com.app.session.customview.CustomTextView
+android:id="@+id/txtViewCount"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+
+
+                     android:layout_gravity="right"
+                     android:layout_toLeftOf="@+id/txtweek"
+                     android:drawableLeft="@mipmap/ic_eyes_open"
+                     android:text="5K"
+                     android:drawablePadding="5dp"
+                     android:textColor="@color/placeholder"
+                     android:textSize="14sp"
+                     app:edittextfont="Roboto_Regular.ttf"/>
+
+                 <com.app.session.customview.CustomTextView
+                     android:id="@+id/txtweek"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+
+                     android:layout_marginLeft="20dp"
+                     android:layout_marginRight="20dp"
+                     android:layout_alignParentRight="true"
+                     android:text="2weeks ago"
+                     android:textColor="@color/placeholder"
+                     android:textSize="14sp"
+                     app:edittextfont="Roboto_Regular.ttf"/>
+             </RelativeLayout>
+
+</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="3dp"
+        android:focusable="true"
+        app:cardUseCompatPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/lay_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical">
+
+                <RelativeLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/value10">
+
+                    <com.app.session.customview.CircleImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/profile_large"
+                        app:border_color="@color/black"
+                        app:border_width="1dp" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txt_userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:layout_toRightOf="@+id/imgProfile"
+                        android:text="navin nimade"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+
+                    <ImageView
+                        android:id="@+id/imgRemove"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/value10"
+                        android:src="@mipmap/setting" />
+
+                </RelativeLayout>
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/story_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/value10"
+
+                    android:text="story title"
+                    android:textSize="14sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txt_story_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/value10"
+
+                    android:text=""
+                    android:textSize="14sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+            </LinearLayout>
+
+
+
+                <RelativeLayout
+                    android:id="@+id/lay_center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/img_story"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:visibility="gone" />
+
+                    <WebView
+                        android:id="@+id/webview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="WebViewLayout"
+                        android:visibility="gone"></WebView>
+
+                    <LinearLayout
+                        android:id="@+id/lay_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+
+<!--                        <cn.jzvd.JzvdStd-->
+<!--                            android:id="@+id/videoplayer"-->
+<!--                            android:layout_width="match_parent"-->
+
+<!--                            android:layout_height="match_parent" />-->
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/lay_bottem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="@dimen/value10"
+                    android:layout_marginRight="@dimen/value10"
+
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/eye_on" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txt_view_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:text="100 view"
+                        android:textSize="14sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txt_view_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|right"
+                        android:layout_marginLeft="50dp"
+
+                        android:gravity="right"
+                        android:text="2 hour"
+                        android:textSize="14sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+                </LinearLayout>
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txt_story_contain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/value10"
+
+                    android:text=""
+                    android:textSize="14sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <com.app.session.customview.CustomEditText
+                    android:id="@+id/txt_story_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/value10"
+                    android:background="@drawable/white_btn_bg"
+                    android:gravity="left|top"
+                    android:hint="@string/write_comment"
+                    android:maxLines="2"
+                    android:minLines="1"
+                    android:padding="10dp"
+                    android:textColor="@color/orange_theme"
+                    android:textColorHint="@color/orange_ripple"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

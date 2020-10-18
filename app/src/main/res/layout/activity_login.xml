@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true"
+    android:orientation="vertical"
+
+    tools:context="com.app.session.activity.LoginActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true">
+        <LinearLayout
+            android:id="@+id/layTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentTop="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+
+            >
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/app_new_icon" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="left"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/txt_app"
+                android:textSize="25sp"
+
+                app:edittextfont="Roboto-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="@string/sign_in"
+                android:layout_marginLeft="5dp"
+                android:textColor="#202124"
+                android:textSize="18sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/LoginTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:boxBackgroundColor="@color/white"
+
+
+
+                android:textColor="@color/txt_app"
+                android:layout_marginTop="20dp"
+                android:textColorHint="@color/txt_app"
+                android:hint="@string/hint_email_phone">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:textCursorDrawable="@color/black"
+                    android:textSize="15sp"
+                    android:imeOptions="actionNext"
+                    app:edittextfont="Roboto-Regular.ttf"
+                    app:edittextfontHint="Roboto-Regular.ttf"  />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/eye_toggle"
+
+                style="@style/LoginTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:boxBackgroundColor="@color/white"
+                android:hint="@string/hint_password"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+
+                android:textColorHint="@color/txt_app"  >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:textCursorDrawable="@color/black"
+                    android:inputType="textPassword"
+                    android:textSize="15sp"
+                    android:imeOptions="actionDone"
+                    android:textColor="@color/txt_app"
+                    app:edittextfont="Roboto-Regular.ttf"
+                    app:edittextfontHint="Roboto-Regular.ttf"  />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/btn_skip"
+                android:layout_gravity="right"
+                android:layout_alignParentLeft="true"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+
+                android:background="@drawable/btn_blue_bg"
+                android:paddingTop="@dimen/value10"
+                android:paddingBottom="@dimen/value10"
+                android:text="@string/btn_skip"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/btn_login"
+android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+
+                android:background="@drawable/btn_blue_bg"
+                android:paddingTop="@dimen/value10"
+                android:paddingBottom="@dimen/value10"
+                android:text="@string/sign_in"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+
+                android:layout_marginRight="10dp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/lay_bottem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+android:layout_marginTop="10dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layTop"
+
+
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+
+            >
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_singup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:text="@string/create_account"
+                android:textColor="#4276d9"
+                android:textSize="16sp"
+                app:edittextfont="Roboto-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_forgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textColor="#4276d9"
+                android:text="@string/login_forgot_password"
+                android:textSize="16sp"
+                app:edittextfont="Roboto-Regular.ttf" />
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+</androidx.core.widget.NestedScrollView>

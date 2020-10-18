@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+
+        app:cardCornerRadius="3dp"
+        app:cardUseCompatPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.app.session.customview.CustomTextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="@string/txt_mobile_old"
+                    android:textColor="@color/bg_btn"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:src="@mipmap/plus" />
+
+                    <com.app.session.customview.CustomEditText
+                        android:id="@+id/edt_cntryCode_old"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/edit_round"
+
+                        android:clickable="false"
+                        android:cursorVisible="false"
+
+                        android:drawablePadding="10dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/hint_code"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:paddingBottom="5dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="14sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+
+                    <com.app.session.customview.CustomEditText
+                        android:id="@+id/edt_MobileNo_old"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="6"
+                        android:background="@drawable/edit_round"
+
+                        android:clickable="false"
+                        android:cursorVisible="false"
+
+                        android:drawablePadding="10dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/old_mobile"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:paddingBottom="5dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="14sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+                </LinearLayout>
+
+                <com.app.session.customview.CustomTextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="@string/txt_mobile_new"
+                    android:textColor="@color/bg_btn"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+
+                    <com.app.session.customview.CustomEditText
+                        android:id="@+id/edt_cntryCode_new"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/edit_round"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:drawablePadding="10dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/hint_code"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+
+                    <com.app.session.customview.CustomEditText
+                        android:id="@+id/edt_MobileNo_new"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="7"
+                        android:background="@drawable/edit_round"
+
+                        android:drawablePadding="10dp"
+                        android:hint="@string/new_mobile"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginTop="35dp"
+                    android:orientation="horizontal"
+
+                    android:weightSum="2">
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/btn_update"
+                        style="@style/ButtonRippleStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/orange_btn_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/update"
+                        android:textColor="@color/orange_theme"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/btn_cancel"
+                        style="@style/ButtonRippleStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/orange_btn_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/cancel"
+                        android:textColor="@color/orange_theme"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.app.session.customview.CustomTextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="@string/txt_otp_msg_mobile"
+                    android:textColor="@color/bg_btn"
+                    android:textSize="15sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/bg_btn" />
+
+                <com.app.session.customview.CustomEditText
+                    android:id="@+id/edt_otp"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="20dp"
+
+                    android:background="@drawable/edit_round"
+
+
+                    android:drawablePadding="10dp"
+
+
+                    android:gravity="center"
+                    android:hint="@string/otp_code"
+                    android:maxLines="1"
+                    android:minLines="1"
+                    android:paddingBottom="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="18sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginTop="35dp"
+                    android:orientation="horizontal"
+
+                    android:weightSum="2">
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/btn_Send"
+                        style="@style/ButtonRippleStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/orange_btn_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/update"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/btn_cancelotp"
+                        style="@style/ButtonRippleStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/orange_btn_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/cancel"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

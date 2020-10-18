@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SelectLanguageCategoryActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_default"
+        android:visibility="gone"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lay_bottem"
+        android:layout_below="@+id/toolbar"
+        android:scrollbars="none"
+        android:layout_marginBottom="@dimen/value10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+
+                android:text="Select categories of your expertise"
+                android:textColor="#6F6D6E"
+                android:textSize="18sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+
+
+
+            <LinearLayout
+    android:id="@+id/layLangimagAdd"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/imgAddItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/add"
+                android:tint="@color/img_bg"
+                />
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtLang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:edittextfont="OpenSans-Bold.ttf"
+        android:textSize="16sp"
+        android:layout_marginTop="@dimen/value5"
+        android:textColor="@color/black"
+        android:text="@string/languages"/>
+
+</LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_viewSelectedLang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/value10"
+                android:elevation="10dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewSelectedLang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp" />
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_viewlang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/value10"
+
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/value10"
+                app:cardElevation="@dimen/value5">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewlang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp" />
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+            android:id="@+id/layCatgimagAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/imgAddCategroy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/value10"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="@dimen/value10"
+                android:src="@drawable/add"
+                android:tint="@color/img_bg"
+                />
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtCatg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:edittextfont="OpenSans-Bold.ttf"
+                android:textSize="16sp"
+                android:layout_marginTop="@dimen/value5"
+                android:textColor="@color/black"
+                android:text="@string/categorys"/>
+        </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_viewCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+android:visibility="gone"
+                app:cardCornerRadius="@dimen/value10"
+                app:cardElevation="@dimen/value5">
+
+
+              <LinearLayout
+    android:id="@+id/layCatg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentTop="true"
+
+                    />
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtCancel"
+        style="@style/ButtonRippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+android:visibility="gone"
+        android:background="@drawable/orange_btn_bg"
+        android:gravity="center"
+
+        android:padding="10dp"
+        android:text="@string/cancel"
+        android:textColor="@color/orange_theme"
+        android:textSize="16sp"
+        app:edittextfont="OpenSans-Bold.ttf" />
+
+</LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/value10"
+                app:cardElevation="@dimen/value5">
+
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imgAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/value10"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/add"
+
+                android:tint="@color/btn_color" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <RelativeLayout
+        android:id="@+id/lay_bottem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtBack"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_line_bg"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/back"
+            android:textColor="@color/btn_color"
+            android:textSize="16sp"
+            app:edittextfont="Roboto-Bold.ttf" />
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtNext"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_line_bg"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/next"
+            android:textColor="@color/btn_color"
+            android:textSize="16sp"
+            app:edittextfont="Roboto-Bold.ttf" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

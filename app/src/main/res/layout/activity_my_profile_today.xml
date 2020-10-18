@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBFCFE"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/value10">
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="horizontal">
+                    <com.app.session.customview.CircleImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/profile_large"
+                        app:border_color="#F1F0EF"
+                        app:border_width="0.5dp"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/value10">
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+
+                            android:background="@drawable/box_transparent"
+                            android:textCursorDrawable="@drawable/color_cursor"
+                            android:hint="Navin"
+                            android:maxLength="40"
+                            android:maxLines="1"
+                            android:minLines="1"
+                            android:textColor="#616464"
+                            android:textColorHint="#616464"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:edittextfont="Segoe_UI_Bold.ttf" />
+                        <com.app.session.customview.CustomTextView
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Photogropher"
+                            android:textColor="#616464"
+                            android:textSize="14sp"
+                            app:edittextfont="Segoe_UI.ttf"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/value10">
+                    <com.app.session.customview.CustomTextView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+
+                        android:background="@drawable/box_transparent"
+                        android:textCursorDrawable="@drawable/color_cursor"
+                        android:hint="0"
+                        android:maxLength="10"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:textColor="#616464"
+                        android:textColorHint="#616464"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        app:edittextfont="Segoe_UI_Bold.ttf" />
+                    <com.app.session.customview.CustomTextView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Subscriber"
+                        android:textColor="#616464"
+                        android:textSize="14sp"
+                        app:edittextfont="Segoe_UI.ttf"
+                        />
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:scrollbarFadeDuration="800"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:scrollbars="none"
+                app:reverseLayout="true"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                <!-- Adding 7 rows of placeholders -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical">
+                    <include layout="@layout/data_placeholder_layout" />
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewtop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@color/white"
+                android:layout_marginLeft="20dp"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:scrollbars="none"
+                android:orientation="horizontal"
+                app:reverseLayout="true"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+android:visibility="gone"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="2.5"
+                    android:gravity="center">
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="7.5"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp"
+                        android:weightSum="4">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <com.app.session.customview.CustomTextView
+                                android:id="@+id/txt_follwr_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:singleLine="true"
+                                android:text="0"
+                                android:textColor="#8C8C8C"
+                                android:textSize="16sp"
+                                app:edittextfont="OpenSans-Regular.ttf" />
+
+                            <com.app.session.customview.CustomTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/txt_follwr_count"
+                                android:singleLine="true"
+                                android:text="@string/followers"
+                                android:textColor="#8C8C8C"
+                                android:textSize="16sp"
+                                app:edittextfont="Roboto-Regular.ttf"  />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="2"
+                            android:gravity="center"
+
+                            android:orientation="vertical">
+
+                            <com.app.session.customview.CustomTextView
+                                android:id="@+id/txt_follwng_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="#8C8C8C"
+                                android:textSize="16sp"
+                                app:edittextfont="OpenSans-Regular.ttf" />
+
+                            <com.app.session.customview.CustomTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/txt_follwng_count"
+
+                                android:gravity="center"
+                                android:text="@string/following"
+                                android:textColor="#8C8C8C"
+                                android:textSize="16sp"
+                                app:edittextfont="Roboto-Regular.ttf" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/btn_editprof"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/value10"
+                        android:layout_marginTop="@dimen/value5"
+                        android:background="@drawable/sqaure_box"
+                        android:padding="@dimen/value5"
+                        android:text="@string/edit_profile"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <com.app.session.customview.CustomTextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+
+android:visibility="gone"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+
+                app:edittextfont="Roboto-Bold.ttf" />
+
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                android:weightSum="2">
+
+
+
+                <LinearLayout
+                    android:id="@+id/laySubTab"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="15sp"
+                    android:layout_marginRight="@dimen/value5"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtSubscription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/subcriptiongrout"
+                        android:paddingBottom="@dimen/value5"
+                        android:paddingTop="@dimen/value5"
+                        android:textColor="@color/text_color_new"
+                        android:textSize="15sp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        app:edittextfont="Roboto-Bold.ttf" />
+
+                    <View
+                        android:id="@+id/viewSubscription"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="@dimen/value5"
+                        android:background="@color/line_selected"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layBriefTab"
+                    android:layout_marginLeft="@dimen/value5"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtBriefTab"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/value5"
+                        android:paddingBottom="@dimen/value5"
+                        android:text="Bio. english"
+                        android:textColor="@color/text_color_new"
+                        android:textSize="15sp"
+
+                        app:edittextfont="Roboto-Bold.ttf" />
+
+                    <View
+                        android:id="@+id/viewbrieftab"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:visibility="gone"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="@dimen/value5"
+                        android:background="@color/line_selected"/>
+                </LinearLayout>
+
+
+
+
+
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:background="@color/grayline"/>
+
+
+
+
+
+        </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layspinr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+       android:visibility="gone" >
+
+        <com.app.session.customspinner.NiceSpinner
+            android:id="@+id/spinnerBrieftab"
+            android:layout_width="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_height="43dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="@dimen/value10"
+            android:layout_alignParentStart="true"
+            android:background="@color/transparent"
+            android:gravity="left"
+
+            app:edittextfont="Roboto-Regular.ttf"
+            />
+
+        <View
+            android:layout_width="90dp"
+            android:layout_height="1.5dp"
+            android:layout_marginLeft="25dp"
+            android:layout_alignBottom="@+id/spinnerBrieftab"
+            android:layout_marginBottom="@dimen/value5"
+            android:background="#CBCCCE"/>
+
+
+
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <include layout="@layout/toolbar_default"></include>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <com.app.session.customview.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="@string/edit_bankdetail"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:edittextfont="OpenSans-Bold.ttf" />
+
+        <LinearLayout
+            android:id="@+id/layBankdetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:orientation="vertical">
+
+
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_Bankname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_round"
+               android:inputType="textCapSentences"
+                android:layout_marginTop="20dp"
+               
+                android:hint="@string/bank_name"
+                android:maxLines="1"
+                android:minLines="1"
+
+                android:padding="10dp"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                 android:textColorHint="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_BranchName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_round"
+                android:inputType="textCapSentences"
+                android:hint="@string/bank_branch"
+                android:maxLines="1"
+                android:minLines="1"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                 android:textColorHint="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_AccountNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_round"
+                android:inputType="textCapSentences"
+                android:hint="@string/bank_account"
+                android:maxLines="1"
+                android:minLines="1"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                 android:textColorHint="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_BankIbn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_round"
+              
+                android:hint="@string/bank_iban"
+                android:maxLines="1"
+                android:minLines="1"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                 android:textColorHint="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_swifcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/edit_round"
+
+                android:layout_marginTop="20dp"
+
+
+
+                android:hint="@string/swif_code"
+                android:maxLines="1"
+                android:minLines="1"
+                  
+                android:padding="10dp"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                 android:textColorHint="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_branch_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_round"
+                android:clickable="false"
+                android:layout_marginTop="20dp"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/branch_address"
+                android:maxLines="1"
+                android:minLines="1"
+                android:padding="10dp"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                 android:textColorHint="@color/bg_btn"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_bank_Update"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/orange_btn_bg"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/update"
+                android:textColor="@color/orange_theme"
+                android:textSize="14sp"
+              
+
+                app:edittextfont="OpenSans-Bold.ttf" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

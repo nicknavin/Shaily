@@ -1,0 +1,6 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/transparent"></solid>
+    <gradient android:type="radial" android:gradientRadius="250dp"
+        android:startColor="@color/btn_color" android:centerColor="@color/green" android:endColor="@color/txt_subscriber" />
+</shape>

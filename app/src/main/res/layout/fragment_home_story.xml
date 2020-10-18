@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.HomeStoryFragment">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+
+      android:background="#F7F7F7"
+      >
+
+    <ImageView
+        android:id="@+id/imgBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/close" />
+
+    <com.app.session.customview.CustomEditText
+        android:id="@+id/edt_search"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/imgBack"
+        android:layout_toLeftOf="@+id/imgMenu"
+        android:background="@drawable/search_edittxt_bg"
+        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/search"
+        android:imeOptions="actionSearch"
+        android:inputType="textCapSentences|textAutoCorrect"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:minLines="1"
+        android:singleLine="true"
+        app:edittextfont="Roboto-Regular.ttf"
+        app:edittextfontHint="Roboto-Regular.ttf"
+        android:textColor="#8d9191"
+        android:textColorHint="#8d9191" />
+
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/imgMenu"
+    android:layout_marginRight="10dp"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    android:src="@mipmap/setting"></ImageView>
+
+  </RelativeLayout>
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_marginBottom="10dp"
+      android:layout_height="match_parent"/>
+
+</LinearLayout>
+
+</FrameLayout>

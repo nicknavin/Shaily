@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        android:visibility="gone"
+        layout="@layout/toolbar_default"></include>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <com.app.session.customview.CustomTextView
+
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/msg_your_personal_info"
+                android:textColor="#6F6D6E"
+                android:textSize="18sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/LoginTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:boxBackgroundColor="@color/white"
+                android:focusable="true"
+                android:screenReaderFocusable="true"
+                android:layout_marginTop="100dp"
+                android:textColorHint="@color/txt_app"
+                android:hint="@string/hint_fullnames">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_fullname"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:textCursorDrawable="@color/black"
+                    android:textSize="15sp"
+                    android:textColor="@color/txt_app"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    app:edittextfont="Roboto-Regular.ttf"
+                    app:edittextfontHint="Roboto-Regular.ttf"  />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtSelectGender"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/edt_box_square_border"
+                android:gravity="center|left"
+                android:paddingLeft="10dp"
+                android:textSize="15sp"
+                android:text="@string/select_gender"
+                app:edittextfont="Roboto-Regular.ttf"
+                app:edittextfontHint="Roboto-Regular.ttf"
+
+
+                android:drawablePadding="@dimen/value10"
+                android:paddingRight="20dp"
+                android:drawableRight="@mipmap/dropdownarrow"/>
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="horizontal"
+android:visibility="gone"
+    android:background="@drawable/edt_box_square_border"
+    >
+
+    <Spinner
+        android:id="@+id/spinnerGender"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:paddingLeft="@dimen/value10"
+        android:paddingRight="@dimen/value10"
+        android:spinnerMode="dropdown" />
+</RelativeLayout>
+
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp">
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Material.Drawable.CheckBox"
+        ></CheckBox>
+    <com.app.session.customview.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register_msg"
+        android:textColor="@color/txt_app"
+        android:textSize="14sp"
+
+        app:edittextfont="Roboto-Regular.ttf" />
+
+</LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/lay_bottem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="100dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtBack"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/btn_line_bg"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:paddingBottom="5dp"
+                    android:text="@string/back"
+                    android:textColor="@color/btn_color"
+                    android:textSize="16sp"
+                    app:edittextfont="Roboto-Bold.ttf" />
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtNext"
+                    
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/btn_line_bg"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/value5"
+                    android:paddingTop="@dimen/value5"
+                    android:text="@string/next"
+                    android:textColor="@color/btn_color"
+                    android:textSize="16sp"
+                    app:edittextfont="Roboto-Bold.ttf" />
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+
+</LinearLayout>

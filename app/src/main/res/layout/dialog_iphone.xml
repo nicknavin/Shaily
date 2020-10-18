@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/dialog_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="sdfsdafsadfsadfsadf"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        app:edittextfont="regular.ttf" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_marginTop="5dp"
+        android:background="#aaaaaa"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/yes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/FlatWaveColorButtonRippleStyle1"
+            android:gravity="center"
+            android:text="OK"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:edittextfont="regular.ttf" />
+    </RelativeLayout>
+
+</LinearLayout>

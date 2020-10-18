@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+<LinearLayout
+    android:id="@+id/layExpert"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="15dp"
+
+
+        >
+
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/demo"
+            app:border_color="#DDDDDD"
+            app:border_width="1dp" />
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txt_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+android:layout_marginLeft="10dp"
+
+            android:layout_toRightOf="@+id/imgProfile"
+            android:text="Navin Nimade"
+            android:textColor="#626365"
+            android:textSize="16sp"
+            app:edittextfont="Roboto-Bold.ttf" />
+
+        <ImageView
+            android:id="@+id/imgRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+
+            android:tint="#626365"
+            android:src="@mipmap/ic_view_more" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/rey_loading"
+            android:layout_width="48dp"
+            android:layout_height="58dp"
+            android:max="50"
+            android:layout_centerInParent="true"
+            app:pv_autostart="false"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStylenew" />
+        <ImageView
+            android:id="@+id/imgStory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@mipmap/demo7"
+            android:background="@color/gray"
+            android:minHeight="150dp"  />
+
+    </RelativeLayout>
+</LinearLayout>
+
+
+
+    <com.app.session.customview.CustomTextView
+    android:id="@+id/txtTitleName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+android:text="Uniform Code of Military Justice"
+    android:layout_toRightOf="@+id/imgProfile"
+    android:textColor="#6d6a6a"
+    android:textSize="16sp"
+        app:edittextfont="Segoe_UI_Bold.ttf"/>
+
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/txtTitleBriefCV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="The Uniform Code of Military Justice is the foundation of military law in the United States. It was established by the United States Congress in accordance with the authority given by the United States"
+        android:textColor="#6d6a6a"
+        android:textSize="14sp"
+        app:colorClickableText="#0097CC"
+        />
+
+
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+    android:layout_marginBottom="5dp">
+
+
+    <com.app.session.customview.CustomTextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_gravity="right"
+android:layout_toLeftOf="@+id/txtweek"
+android:drawableLeft="@mipmap/ic_eyes_open"
+        android:text="5K"
+        android:drawablePadding="5dp"
+        android:textColor="@color/placeholder"
+        android:textSize="14sp"
+        app:edittextfont="Roboto_Regular.ttf"/>
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtweek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:text="2weeks ago"
+        android:textColor="@color/placeholder"
+        android:textSize="14sp"
+        app:edittextfont="Roboto_Regular.ttf"/>
+</RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="#D8D8D8"></View>
+
+
+
+</LinearLayout>

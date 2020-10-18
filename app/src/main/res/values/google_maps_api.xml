@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=BC:A1:5A:A1:3C:A9:3E:99:3F:38:64:13:8D:EA:22:C7:D0:B7:E1:B6%3Bcom.app.consultlot.activity
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.app.consultlot.activity
+
+    SHA-1 certificate fingerprint:
+    BC:A1:5A:A1:3C:A9:3E:99:3F:38:64:13:8D:EA:22:C7:D0:B7:E1:B6
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAr0rl2eAgDalhF0sbtG1uBVCDD4Wd9Vbg</string>
+</resources>

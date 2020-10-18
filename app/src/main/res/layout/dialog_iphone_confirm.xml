@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:background="@drawable/dialog_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="2">
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/tvConfirmTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Logout?"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:edittextfont="Roboto_regular.ttf" />
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/tvConfirmMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="15dp"
+        android:visibility="gone"
+        app:edittextfont="regular.ttf" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_marginTop="5dp"
+        android:background="#aaaaaa"></View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1">
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/tvConfirmOk"
+            style="@style/FlatWaveColorButtonRippleStyle1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Ok"
+            android:textColor="#FF3E36"
+            android:textSize="20dp"
+            app:edittextfont="regular.ttf" />
+
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="match_parent"
+            android:background="#aaaaaa"></View>
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/tvConfirmCancel"
+            style="@style/FlatWaveColorButtonRippleStyle1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Cancel"
+            android:textColor="#0077F9"
+            android:textSize="20dp"
+            app:edittextfont="regular.ttf" />
+    </LinearLayout>
+</LinearLayout>

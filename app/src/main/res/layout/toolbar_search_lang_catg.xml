@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:elevation="2dp"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    app:titleTextColor="@android:color/white">
+
+
+    <RelativeLayout
+        android:id="@+id/laySearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:padding="10dp"
+android:layout_centerVertical="true"
+            android:src="@mipmap/return_back" />
+
+        <RelativeLayout
+            android:layout_toRightOf="@+id/imgBack"
+            android:layout_toLeftOf="@+id/imgsearch"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/value10"
+            android:layout_marginLeft="@dimen/value10"
+            android:background="@drawable/edittxt_search_bg"
+            android:orientation="horizontal">
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edtSearch"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/edittext_trans_bg"
+                android:layout_toLeftOf="@+id/imgCross"
+                android:hint="@string/search_catg"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:minLines="1"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="#6C6C6C"
+                android:textSize="14sp"
+                />
+            <ImageView
+                android:id="@+id/imgCross"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/value10"
+                android:layout_width="15dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="@dimen/value10"
+android:visibility="gone"
+                android:src="@mipmap/close"/>
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/imgsearch"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:src="@mipmap/return_back" />
+
+    </RelativeLayout>
+
+
+</androidx.appcompat.widget.Toolbar>

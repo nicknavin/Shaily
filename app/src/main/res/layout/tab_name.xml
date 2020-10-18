@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/tab_color_selector">
+
+    <com.app.session.customview.CustomTextView
+
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="sdfsdfdsf"
+        android:padding="@dimen/value10"
+        android:textColor="@drawable/text_color_selector"
+        android:textSize="15sp"
+        app:edittextfont="OpenSans-Bold.ttf"
+        app:edittextfontHint="OpenSans-Bold.ttf" />
+</LinearLayout>

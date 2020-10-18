@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbars"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    app:titleTextColor="@android:color/white">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp">
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/backs"
+                android:padding="10dp"
+                android:layout_gravity="center"/>
+            <com.app.session.customview.CircleImageView
+                android:id="@+id/img_profilepic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/profile_large"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txt_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Tony Stark"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+
+                    android:layout_gravity="center"
+                    app:edittextfont="OpenSans-Bold.ttf" />
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txt_userNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="910251511"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+
+                    android:layout_gravity="center"
+                    app:edittextfont="OpenSans-Bold.ttf" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:id="@+id/imgVideoCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/video_call" />
+            <ImageView
+                android:id="@+id/imgAudioCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+android:layout_marginLeft="10dp"
+                android:src="@mipmap/audio_call" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.appcompat.widget.Toolbar>

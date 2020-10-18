@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="@dimen/value10"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="@dimen/value10"
+    android:background="@drawable/dialog_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/value10"
+        />
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtAddNewTitle"
+        android:drawableLeft="@mipmap/plus_icon"
+        android:drawablePadding="@dimen/value10"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/value10"
+        android:layout_height="wrap_content"
+
+        android:text="@string/add_title"
+        android:textColor="@color/blue"
+        android:padding="@dimen/value10"
+        android:textSize="15sp"
+        android:layout_marginBottom="@dimen/value10"
+        app:edittextfont="OpenSans-Bold.ttf"
+        />
+
+
+
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dots_height">30dp</dimen>
+    <dimen name="keyboard_height">220dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="margin16">16dp</dimen>
+    <dimen name="value5">5dp</dimen>
+    <dimen name="value2">2dp</dimen>
+    <dimen name="value10">10dp</dimen>
+    <dimen name="textsize18">18dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="roboto_calendar_padding">8dp</dimen>
+    <dimen name="roboto_calendar_month_margin_bottom">8dp</dimen>
+    <dimen name="roboto_calendar_week_margin_bottom">5dp</dimen>
+    <dimen name="roboto_calendar_day_of_the_month_background_size">40dp</dimen>
+    <dimen name="roboto_calendar_circle_size">4dp</dimen>
+    <dimen name="roboto_calendar_ring_size">18dp</dimen>
+    <dimen name="roboto_calendar_month_font">16sp</dimen>
+    <dimen name="roboto_calendar_day_of_week_font">16sp</dimen>
+    <dimen name="roboto_calendar_day_of_the_month_font">16sp</dimen>
+    <dimen name="spacing">1dp</dimen>
+    <dimen name="frames_video_height">54dp</dimen>
+    <dimen name="activityPadding">16dp</dimen>
+    <dimen name="placeholderImage">60dp</dimen>
+    <dimen name="placeholderTextHeight">8dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="toolbars">50dp</dimen>
+</resources>

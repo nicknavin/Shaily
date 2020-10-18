@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FAFAFA</color>
+    <color name="colorPrimaryDark">#CCCCCC</color>
+    <color name="whatspp_theme">#075E54</color>
+    <color name="colorAccent">#000000</color>
+    <color name="text_color">#000000</color>
+    <color name="bg_tran">#99FFFFFF</color>
+    <color name="bg_btn">#999999</color>
+    <color name="bg_btnf">#dfb899</color>
+    <!--#28D0D6-->
+    <color name="tab_background_color">#EFEFEF</color>
+    <color name="tab_text_color">#6C6C6C</color>
+    <color name="text_grey">#787878</color>
+    <color name="red">#F05043</color>
+    <color name="green">#47D998</color>
+    <color name="pink">#FC46AA</color>
+    <color name="green_button">#5adc86</color>
+    <color name="green_button_selector">#46ae69</color>
+
+    <color name="blank_blue">#00ABEB</color>
+    <color name="unavailable_time_slots">#9E9E9E</color>
+    <color name="dashboard_icon_bg">#F6F6F6</color>
+
+    <color name="bg_grey">#E8E8E8</color>
+    <color name="hospital_ambulance">#3498DB</color>
+    <color name="private_ambulance">#1ABC9C</color>
+    <color name="individual_ambulance">#9B59B6</color>
+
+
+    <color name="hint">#000000</color>
+
+    <color name="calendar_background">#FAFAFA</color>
+    <color name="text_grey_transparent">#22000000</color>
+
+    <color name="ripple_blue">#5DB9C2</color>
+    <color name="ripple">#9067D8BC</color>
+    <color name="category_bg">#F5F5F5</color>
+    <color name="fb">#3C5894</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#262626</color>
+    <color name="black_txt">#000000</color>
+    <color name="read">#0097CC</color>
+    <color name="hint_color">#6d6a6a</color>
+    <color name="text_color_new">#616464</color>
+    <color name="line_selected">#0B85CE</color>
+    <color name="ripplewhite">#1A000000</color>
+    <color name="bg">#40000000</color>
+    <color name="rippleblue">#FFB5BBDC</color>
+    <color name="grey">#C9C9C9</color>
+    <color name="grayline">#D1D1D1</color>
+    <color name="img_bg">#A3A2A2</color>
+    <!--<color name="button_color">#53C9E4</color>-->
+    <color name="button_color">#379ECE</color>
+    <color name="color_grey">#d3d3d3</color>
+    <color name="inactive_tabs">#DEDEDE</color>
+    <color name="transparent">#00000000</color>
+    <color name="strip">#8004090D</color>
+    <color name="strip_age">#50706C67</color>
+    <color name="Grey">#717171</color>
+    <color name="DarkGrey">#4F4F4F</color>
+    <color name="Green">#0F0</color>
+    <color name="color_map">#509fffa1</color>
+    <color name="whiteripple">#25433C</color>
+
+    <color name="line_row">#EEF4F3</color>
+
+    <color name="TransparentGrey">#7F000000</color>
+
+    <color name="striptrans">#80616161</color>
+    <color name="stripwhite">#80ffffff</color>
+
+    <color name="txt_brand">#1CB1FF</color>
+    <color name="line_light">#80313131</color>
+    <color name="orange_theme">#ff5613</color>
+    <color name="orange_ripple">#FFFA946B</color>
+    <color name="color_audio">#3498DB</color>
+    <color name="blue">#3498DB</color>
+    <color name="color_audio_thumb">#883498DB</color>
+
+    <color name="line_bottem">#E7E1E1</color>
+    <color name="gray">#FFF5F2F2</color>
+
+    <!---->
+    <array name="story_colore1">
+
+        <item>#ffffff</item>
+
+
+
+    </array>
+    <array name="story_colore">
+
+        <item>#1A000000</item>
+        <item>#1A000000</item>
+        <item>#1A000000</item>
+        <item>#1A000000</item>
+
+
+    </array>
+    <array name="progress_colors_new">
+
+        <item>#90F0F0F0</item>
+        <item>#80F0F0F0</item>
+        <item>#70F0F0F0</item>
+        <item>#50F0F0F0</item>
+
+
+    </array>
+    <array name="progress_download">
+
+        <item>#3498DB</item>
+        <item>#993498DB</item>
+        <item>#953498DB</item>
+        <item>#903498DB</item>
+
+
+    </array>
+    <array name="progress_download1">
+
+        <item>#999999</item>
+        <item>#99999999</item>
+        <item>#95999999</item>
+        <item>#90999999</item>
+
+
+    </array>
+    <array name="progress_snap">
+
+
+        <item>#99999999</item>
+
+
+
+    </array>
+    <color name="placeholder">#A3A2A2</color>
+
+
+    <color name="greyish">#eeeeee</color>
+    <color name="textcolor">#68389E</color>
+    <color name="control_background">#cc4285f4</color>
+
+    <color name="today">#4b82ff</color>
+    <color name="greyed_out">#c7c7c7</color>
+
+    <color name="summer">#44eebd82</color>
+    <color name="fall">#44d8d27e</color>
+    <color name="winter">#44a1c1da</color>
+    <color name="spring">#448da64b</color>
+    <color name="roboto_calendar_background">#FFFFFF</color>
+    <color name="roboto_calendar_month_font">#075E54</color>
+    <color name="roboto_calendar_day_of_the_week_font">#161d20</color>
+    <color name="roboto_calendar_selected_day_font">#FFFFFF</color>
+    <color name="roboto_calendar_selected_day_background">#20BEB2</color>
+    <color name="roboto_calendar_current_day_ring">#CCCCCC</color>
+    <color name="roboto_calendar_day_of_the_month_font">#4F4F4F</color>
+    <color name="roboto_calendar_circle_1">#EB5757</color>
+    <color name="roboto_calendar_circle_2">#55c6da</color>
+    <color name="roboto_calendar_month_arrow">#075E54</color>
+    <color name="light_gray">#fff5f5f5</color>
+    <color name="btn_color">#4276d9</color>
+    <color name="txt_app_old">#6d6a6a</color>
+    <color name="txt_app">#6d6a6a</color>
+    <color name="txt_subscriber">#9C0612</color>
+    <color name="txt_subscriber_select">#6d6a6a</color>
+    <dimen name="three_grid_unit">24dp</dimen>
+    <dimen name="one_and_a_half_grid_unit">12dp</dimen>
+    <color name="mtrl_textinput_default_box_stroke_color">#dadce0</color>
+    <color name="background">#dddddd</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_500">#a4a4a4</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_800">#212121</color>
+    <color name="chat_bg_user">#3498DB</color>
+
+
+
+</resources>

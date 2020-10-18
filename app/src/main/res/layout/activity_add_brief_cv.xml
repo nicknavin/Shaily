@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.app.session.activity.AddBriefCVActivity">
+    <include layout="@layout/toolbar_default"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="2dp"
+            app:cardUseCompatPadding="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="5">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    >
+
+                    <com.app.session.customview.CircleImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerInParent="true"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/profile_large"
+                        app:border_color="@color/black"
+                        app:border_width="1dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10dp">
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:text="@string/languages"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:edittextfont="OpenSans-Bold.ttf" />
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtUsercv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:minLines="1"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp">
+
+                    <ImageView
+                        android:id="@+id/img_flag"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="gone"
+                        android:src="@mipmap/country_icon" />
+                </RelativeLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="2dp"
+            app:cardUseCompatPadding="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtCvName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginTop="@dimen/value10"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="@dimen/value10"
+                    app:edittextfont="OpenSans-Bold.ttf" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/grey"
+                    />
+            <LinearLayout
+                android:id="@+id/layUploadVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_margin="@dimen/value10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:src="@mipmap/video_upload"/>
+                <com.app.session.customview.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upload_video"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="@dimen/value10"
+                    android:textSize="16sp"
+                    app:edittextfont="OpenSans-Regular.ttf" />
+            </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layVideothumb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imgVideoCover"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:adjustViewBounds="true"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:src="@mipmap/play_video"
+                    android:layout_gravity="center"    />
+
+
+
+                    <CheckBox
+                        android:id="@+id/checkDropSelection"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:button="@mipmap/downarrow"
+
+                        android:padding="@dimen/value10" />
+                    <LinearLayout
+                        android:id="@+id/layImgVideoSelection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp"
+                        android:visibility="gone"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/box_gray_border">
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtSelectImagCover"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/select_cover"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+
+                            app:edittextfont="OpenSans-Regular.ttf" />
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtSelectVideo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/replace_video"
+                            android:textColor="@color/black"
+android:layout_marginTop="@dimen/value10"
+                            android:textSize="16sp"
+                            app:edittextfont="OpenSans-Regular.ttf" />
+                    </LinearLayout>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/grey"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.app.session.customview.CustomEditText
+                        android:id="@+id/edit_specify_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:drawablePadding="20dp"
+                        android:layout_marginRight="20dp"
+
+                        android:background="@drawable/box_gray_border"
+
+                        android:hint="@string/title"
+
+
+
+                        android:paddingLeft="10dp"
+                        android:paddingRight="@dimen/value10"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="15sp"
+
+
+                        app:edittextfont="OpenSans-Regular.ttf"
+                        />
+
+                    <com.app.session.customview.CustomEditText
+                        android:id="@+id/edt_cv"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/box_white"
+                        android:gravity="top"
+                        android:layout_gravity="center"
+                        android:minLines="5"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:maxLength="1000"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:edittextfont="OpenSans-Regular.ttf" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+
+                        android:weightSum="2">
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/btn_update"
+                            style="@style/ButtonRippleStyle"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|right"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/box_gray_border"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="@string/update"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            app:edittextfont="OpenSans-Bold.ttf" />
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/btn_cancel"
+                            style="@style/ButtonRippleStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:visibility="gone"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/orange_btn_bg"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="@string/cancel"
+                            android:textColor="@color/orange_theme"
+                            android:textSize="16sp"
+                            app:edittextfont="OpenSans-Bold.ttf" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:id="@+id/imgVideoThumb"
+                    android:layout_width="150dp"
+                    android:layout_gravity="center"
+                    android:layout_height="100dp"
+                    android:visibility="gone"/>
+
+
+                <LinearLayout
+                    android:id="@+id/layProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtUploading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/uploading"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+
+                        app:edittextfont="Roboto-Bold.ttf" />
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/value10"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:indeterminate="false"
+                        android:max="100"
+
+                        android:minHeight="50dp"
+                        android:minWidth="200dp"
+                        android:progress="1" />
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/layPlayVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:orientation="vertical">
+                    <FrameLayout
+                        android:id="@+id/root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:keepScreenOn="true"
+                        android:background="#000000">
+
+                        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                            android:id="@+id/player_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:foregroundGravity="center"
+                            />
+
+                    </FrameLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="2dp"
+            app:cardUseCompatPadding="false">
+
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

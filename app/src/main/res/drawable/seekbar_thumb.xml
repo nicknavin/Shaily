@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval" >
+
+    <size android:height="30dp" android:width="30dp" />
+    <!--<stroke android:width="0dp" android:color="@color/color_audio_thumb"/>-->
+    <solid android:color="@color/color_audio" />
+    <corners android:radius="0.5dp"  />
+
+</shape>

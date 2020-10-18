@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.app.session.activity.ProfileDetailEditActivity">
+
+
+    <include layout="@layout/toolbar_default"></include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <LinearLayout
+            android:id="@+id/layProfileUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:orientation="vertical">
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:padding="10dp"
+                android:text="@string/profile_detail_edit"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edit_round"
+                android:drawableLeft="@mipmap/user"
+                android:drawablePadding="10dp"
+                android:hint="@string/email_name"
+                android:maxLines="1"
+                android:minLines="1"
+                android:paddingBottom="5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/bg_btn"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/edt_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edit_round"
+                android:drawableLeft="@mipmap/mobile_icon"
+                android:drawablePadding="10dp"
+                android:maxLines="1"
+                android:minLines="1"
+                android:paddingBottom="5dp"
+                android:singleLine="true"
+                android:hint="@string/mobile_number"
+                android:textColor="@color/black"
+                android:textColorHint="@color/bg_btn"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/edt_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edit_round"
+                android:drawableLeft="@mipmap/email_icon"
+                android:drawablePadding="10dp"
+                android:maxLines="1"
+                android:minLines="1"
+                android:hint="@string/hint_email"
+                android:paddingBottom="5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/bg_btn"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/edt_selectCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edit_round"
+                android:drawableLeft="@mipmap/country_icon"
+                android:drawablePadding="10dp"
+                android:hint="@string/prof_country"
+                android:maxLines="1"
+                android:minLines="1"
+                android:paddingBottom="5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/bg_btn"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+            <RadioGroup
+                android:id="@+id/rg_group_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <RadioButton
+                    android:id="@+id/rb_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/black"
+                    android:checked="true"
+                    android:text="@string/male"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/black"
+                    android:checked="false"
+                    android:text="@string/female"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </RadioGroup>
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtUpdate_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                style="@style/ButtonRippleStyle"
+                android:background="@drawable/orange_btn_bg"
+                android:padding="10dp"
+                android:text="@string/update"
+                android:textColor="@color/orange_theme"
+                android:textSize="14sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<item android:id="@+id/menu_edit"-->
+    <!--android:title="Edit"-->
+    <!--android:icon="@android:drawable/ic_menu_edit"/>-->
+    <!--<item android:id="@+id/menu_delete"-->
+    <!--android:title="Delete"-->
+    <!--android:icon="@android:drawable/ic_menu_delete"/>
+    -->
+
+    <item
+        android:id="@+id/menu_edit_profile"
+        android:orderInCategory="100"
+        android:title="@string/edit_profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_create_channel"
+        android:orderInCategory="100"
+        android:title="@string/create_channel"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_edit_mystory"
+        android:orderInCategory="100"
+        android:title="@string/create_group"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_edit_financial"
+        android:orderInCategory="100"
+        android:title="@string/finacial"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_edit_coureses"
+        android:orderInCategory="100"
+        android:title="@string/coureses"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_edit_report"
+        android:orderInCategory="100"
+        android:title="@string/report"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_pwd"
+        android:orderInCategory="100"
+        android:title="@string/change_pwd"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_status"
+        android:orderInCategory="100"
+        android:title="@string/change_status"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_invite"
+        android:orderInCategory="100"
+        android:title="@string/change_invite"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_logout"
+        android:orderInCategory="100"
+        android:title="@string/logout"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_delete"
+        android:orderInCategory="100"
+        android:title="@string/delete_account"
+        app:showAsAction="never" />
+</menu>

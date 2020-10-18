@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/layProfile"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <com.app.session.customspinner.NiceSpinner
+            android:id="@+id/spinnerBrief"
+            android:layout_width="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_height="43dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="@dimen/value10"
+
+            android:layout_alignParentStart="true"
+             android:background="@color/transparent"
+            android:gravity="left"
+
+            app:edittextfont="Roboto-Regular.ttf"
+            />
+
+        <View
+            android:layout_width="90dp"
+            android:layout_height="1.5dp"
+            android:layout_marginLeft="25dp"
+            android:layout_alignBottom="@+id/spinnerBrief"
+            android:layout_marginBottom="@dimen/value5"
+            android:background="#CBCCCE"/>
+
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/rey_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:max="100"
+            android:layout_centerInParent="true"
+            app:pv_autostart="false"
+            app:pv_circular="true"
+            android:tooltipText="@string/save"
+            android:visibility="gone"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStyleSnap" />
+        <ImageView
+            android:id="@+id/imgBriefCV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/value10"
+            android:minHeight="150dp"
+
+          />
+
+<RelativeLayout
+    android:id="@+id/layPlaceholder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/text_color_new">
+        <ImageView
+            android:id="@+id/imgPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/picture"
+            android:layout_centerInParent="true"
+android:visibility="gone"
+            android:layout_margin="@dimen/value10"
+          />
+</RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtTitleBriefCV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+android:text="dsfasdfawsf"
+android:layout_alignParentLeft="true"
+            android:textColor="@color/text_color_new"
+            android:textSize="16sp"
+
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            app:edittextfont="Roboto-Bold.ttf"
+            android:layout_toLeftOf="@+id/imgSetting"/>
+        <ImageView
+            android:id="@+id/imgSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/setting"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtUploading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+
+            android:text="@string/uploading"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+
+            app:edittextfont="Roboto-Bold.ttf" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/value10"
+            android:layout_marginLeft="@dimen/value10"
+            android:indeterminate="false"
+            android:max="100"
+
+            android:minHeight="50dp"
+            android:minWidth="200dp"
+            android:progress="1" />
+    </LinearLayout>
+
+
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/txtBriefCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+
+        android:layout_marginBottom="20dp"
+        app:trimMode="trimModeLength"
+        app:colorClickableText="#0097CC"
+        app:trimLines="5"
+        android:textColor="@color/text_color_new"
+        android:textSize="15sp"
+        app:edittextfont="Roboto-Regular.ttf" />
+</LinearLayout>

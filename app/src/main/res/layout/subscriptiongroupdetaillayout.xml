@@ -1,0 +1,35 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+
+    <ImageView
+        android:id="@+id/imgVideoCover"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/demos"
+        >
+
+    </ImageView>
+
+
+
+    <com.app.session.customview.CircleImageView
+        android:id="@+id/floatbtn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@mipmap/demo_icon"
+        app:border_width="2dp"
+        app:border_color="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/imgVideoCover"
+        app:layout_constraintTop_toBottomOf="@+id/imgVideoCover"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

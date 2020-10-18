@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Shayan Rais (http://shanraisshan.com) -->
+<resources>
+
+    <item type="id" name="toolbar"></item>
+    <item type="id" name="menu_attachments"></item>
+    <item type="id" name="cardView"></item>
+
+    <item type="id" name="menu_attachment_document"></item>
+    <item type="id" name="menu_attachment_youtube"></item>
+    <item type="id" name="menu_attachment_camera"></item>
+    <item type="id" name="menu_attachment_gallery"></item>
+    <item type="id" name="menu_attachment_video"></item>
+    <item type="id" name="menu_attachment_audio"></item>
+    <item type="id" name="menu_attachment_location"></item>
+    <item type="id" name="menu_attachment_contact"></item>
+
+</resources>

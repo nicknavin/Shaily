@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/layStory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/value10"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/profile_large"
+            app:border_color="@color/black"
+            app:border_width="1dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+
+            android:layout_toRightOf="@+id/imgProfile"
+            android:orientation="vertical">
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/value10"
+                android:text="navin nimade"
+                android:textColor="@color/bg_btn"
+                android:textSize="15sp"
+                app:edittextfont="OpenSans-Regular.ttf" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.6dp"
+                android:layout_marginLeft="@dimen/value10"
+                android:layout_marginRight="@dimen/value10"
+                android:layout_marginTop="20dp"
+                android:background="@color/bg_btn"></View>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="5dp"
+
+        app:cardUseCompatPadding="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           android:orientation="vertical" >
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtlang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+     <View
+         android:layout_width="match_parent"
+         android:layout_height="1dp"
+         android:layout_marginLeft="@dimen/value5"
+         android:layout_marginRight="@dimen/value5"
+         android:background="@color/grayline"
+         />
+
+    <com.app.session.customview.CustomEditText
+        android:id="@+id/edt_cv"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:background="@drawable/box_white"
+        android:gravity="top"
+        android:maxLength="1000"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:padding="@dimen/value10"
+
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

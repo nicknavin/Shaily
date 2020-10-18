@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbars"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    android:layout_margin="2dp"
+    android:elevation="10dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:layout_alignParentTop="true"
+    android:background="#FAFAFA"
+    app:layout_scrollFlags="scroll|enterAlways"
+    app:titleTextColor="@android:color/white">
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.app.session.customview.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            app:border_color="@color/grayline"
+            app:border_width="1dp"
+            android:src="@mipmap/profile_large"/>
+        <View
+            android:id="@+id/viewImgProfil"
+            android:layout_width="50dp"
+            android:layout_height="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:background="#0B85CE"/>
+
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtExplore"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imgProfile"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/explore"
+            android:paddingBottom="@dimen/value5"
+            android:paddingTop="@dimen/value5"
+            android:textColor="@color/text_color_new"
+            android:textSize="18sp"
+
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:edittextfont="Roboto-Bold.ttf" />
+
+        <View
+            android:id="@+id/viewExplore"
+            android:layout_width="80dp"
+            android:layout_height="3dp"
+            android:layout_toRightOf="@+id/imgProfile"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/value5"
+            android:background="#0B85CE"/>
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtChat"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/txtExplore"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/chat"
+            android:paddingBottom="@dimen/value5"
+            android:paddingTop="@dimen/value5"
+            android:textColor="@color/text_color_new"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            app:edittextfont="Roboto-Bold.ttf"  />
+
+        <View
+            android:id="@+id/viewChat"
+            android:layout_width="70dp"
+            android:layout_height="3dp"
+            android:layout_toRightOf="@+id/txtExplore"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="@dimen/value5"
+            android:visibility="gone"
+
+            android:background="#0B85CE"/>
+
+        <ImageView
+            android:id="@+id/imgSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/value10"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/setting"/>
+
+
+
+    </RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#FAFAFA"
+        app:cardMaxElevation="@dimen/value5"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="2dp"
+        android:visibility="gone"
+        app:cardElevation="5dp">
+
+
+    </androidx.cardview.widget.CardView>
+</androidx.appcompat.widget.Toolbar>

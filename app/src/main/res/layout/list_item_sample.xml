@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/panel_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        style="@style/ButtonRippleStyle1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="1dp"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/grey"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/rey_loading"
+                android:layout_width="48dp"
+                android:layout_height="58dp"
+                android:max="50"
+                android:layout_centerInParent="true"
+                app:pv_autostart="true"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                app:pv_progressStyle="@style/InOutColorsCircularProgressDrawableStylenew" />
+            <com.app.session.utility.DynamicHeightImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/demo"
+              android:layout_centerInParent="true" />
+
+
+
+            <com.app.session.utility.DynamicHeightTextView
+                android:id="@+id/txt_line1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="James Rock"
+                 android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/img"
+                android:layout_alignLeft="@+id/img"
+                android:layout_marginLeft="3dp"
+                android:layout_marginBottom="3dp"
+                android:src="@mipmap/demo"
+                android:layout_centerHorizontal="true"
+
+
+                android:orientation="vertical">
+
+                <com.app.session.customview.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="left"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/demo_icon"
+                    app:border_color="@color/white"
+                    app:border_width="@dimen/value2"
+                    />
+
+                <com.app.session.utility.DynamicHeightTextView
+                    android:id="@+id/txt_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="navin nimade"
+
+                    android:layout_marginLeft="1dp"
+                    android:maxLines="2"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:edittextfont="OpenSans-Bold.ttf" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

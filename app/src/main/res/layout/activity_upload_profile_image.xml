@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.session.activity.UploadProfileImageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+<include layout="@layout/toolbar_default"
+    android:id="@+id/toolbar"></include>
+        <RelativeLayout
+            android:id="@+id/relative_layout_profile_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp">
+
+            <com.app.session.customview.CircleImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/profile_large"
+                app:border_color="@color/black"
+                app:border_width="1dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/imgProfile"
+                android:src="@mipmap/camera" />
+
+        </RelativeLayout>
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="@string/reg_upload_img"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+
+            app:edittextfont="OpenSans-Bold.ttf" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="80dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtBack"
+                style="@style/ButtonRippleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/orange_btn_bg"
+                android:gravity="center"
+                android:drawableLeft="@mipmap/backs"
+                android:padding="10dp"
+                android:text="@string/back"
+                android:textColor="@color/orange_theme"
+                android:textSize="16sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtNext"
+                style="@style/ButtonRippleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableRight="@mipmap/right"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/orange_btn_bg"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/next"
+                android:textColor="@color/orange_theme"
+                android:textSize="16sp"
+                app:edittextfont="OpenSans-Bold.ttf" />
+        </LinearLayout>
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtSkipp"
+            style="@style/ButtonRippleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/orange_btn_bg"
+            android:visibility="gone"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:text="@string/next"
+            android:textColor="@color/orange_theme"
+            android:textSize="16sp"
+            app:edittextfont="OpenSans-Bold.ttf" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbars"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+
+android:elevation="@dimen/value5"
+    app:titleTextColor="@android:color/white">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginLeft="20dp"
+            app:edittextfont="OpenSans-Bold.ttf" />
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_alignParentRight="true"
+      >
+      <ImageView
+          android:id="@+id/imgsearch"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:padding="5dp"
+
+          android:src="@mipmap/search" />
+
+      <ImageView
+          android:id="@+id/img_msg"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="5dp"
+
+              android:src="@mipmap/envelope" />
+        <ImageView
+            android:id="@+id/imgnotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+
+                android:src="@mipmap/notification_icon" />
+        <ImageView
+            android:id="@+id/imgLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
+            android:src="@mipmap/setting" />
+  </LinearLayout>
+    </RelativeLayout>
+</androidx.appcompat.widget.Toolbar>

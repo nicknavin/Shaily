@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical">
+
+
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/txtlang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        
+        android:drawableLeft="@mipmap/lang_icon"
+        android:drawableRight="@mipmap/edit_icon"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="@string/back"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:edittextfont="OpenSans-Bold.ttf"
+        android:visibility="gone"/>
+
+    <com.app.session.customview.CustomEditText
+        android:id="@+id/edt_cv"
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
+        android:background="@drawable/rectangle_box"
+        android:gravity="top"
+        android:maxLength="1000"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:edittextfont="OpenSans-Regular.ttf" />
+</LinearLayout>

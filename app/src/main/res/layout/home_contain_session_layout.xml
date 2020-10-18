@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            android:background="#F7F7F7"
+            >
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/ic_back_arrow" />
+
+            <com.app.session.customview.CustomEditText
+                android:id="@+id/edt_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/imgBack"
+                android:background="@drawable/search_edittxt_bg"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/search"
+                android:imeOptions="actionSearch"
+                android:inputType="textCapSentences|textAutoCorrect"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:minLines="1"
+                android:singleLine="true"
+                app:edittextfont="Roboto-Regular.ttf"
+                app:edittextfontHint="Roboto-Regular.ttf"
+                android:textColor="#8d9191"
+                android:textColorHint="#8d9191" />
+
+
+
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:elevation="10dp"
+            app:cardElevation="10dp"
+          android:visibility="gone"  >
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout_favourite"
+                style="@style/Widget.Design.TabLayout"
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+
+                android:layout_height="33dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                app:tabGravity="fill"
+                android:clipToPadding="false"
+                app:tabMinWidth="45dp"
+                app:tabBackground="@drawable/tab_layout_selector"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="scrollable"
+
+                app:tabRippleColor="@color/transparent"
+
+                />
+        </androidx.cardview.widget.CardView>
+
+
+
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewpager_favourite"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

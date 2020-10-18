@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_default"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+
+            android:gravity="center"
+            android:orientation="vertical">
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/verification"
+                android:textColor="#6F6D6E"
+                android:textSize="18sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_otp_bg"
+                android:paddingTop="@dimen/value10"
+                android:paddingBottom="@dimen/value10"
+                android:text="@string/otp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/btn_color"
+                android:textSize="15sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/confirmation"
+                android:textColor="@color/txt_app"
+                android:textSize="14sp"
+                app:edittextfont="Roboto-Regular.ttf" />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/text_patientContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:text="@string/confirmation_text"
+                android:textColor="@color/txt_app"
+                android:textSize="14sp"
+                app:edittextfont="Roboto-Regular.ttf" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/LoginTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:boxBackgroundColor="@color/white"
+                android:focusable="true"
+                android:screenReaderFocusable="true"
+                android:layout_marginTop="20dp"
+                android:textColorHint="@color/txt_app"
+                android:hint="@string/otp_code">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_otp"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:textCursorDrawable="@color/black"
+                    android:textSize="15sp"
+
+                    android:textColor="@color/txt_app"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLines="1"
+
+                    app:edittextfont="Roboto-Regular.ttf"
+                    app:edittextfontHint="Roboto-Regular.ttf"  />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.app.session.customview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/msg_otp1"
+                android:textColor="@color/btn_color"
+                android:textSize="14sp"
+                app:edittextfont="Roboto-Bold.ttf"
+                 />
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txt_Resend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+
+                android:text="@string/resend_code_btn"
+                android:textColor="@color/btn_color"
+                android:textSize="14sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+
+            <RelativeLayout
+                android:id="@+id/lay_bottem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="100dp"
+                android:orientation="horizontal"
+                >
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtBack"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/btn_line_bg"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/back"
+                    android:textColor="@color/btn_color"
+                    android:textSize="16sp"
+                    app:edittextfont="Roboto-Bold.ttf" />
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtDone"
+
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:text="@string/verify"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/btn_line_bg"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/value5"
+                    android:paddingTop="@dimen/value5"
+
+                    android:textColor="@color/btn_color"
+                    android:textSize="16sp"
+                    app:edittextfont="Roboto-Bold.ttf" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

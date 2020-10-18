@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.ProfileHomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="2.5"
+                android:gravity="center">
+
+                <com.app.session.customview.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/profile_large"
+                    app:border_color="@color/colorPrimaryDark"
+                    app:border_width="2dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+
+                android:layout_marginRight="10dp"
+                android:layout_weight="7.5"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:weightSum="4">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txt_follwr_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:singleLine="true"
+                            android:text="0"
+                            android:textColor="#262626"
+                            android:textSize="16sp"
+                            app:edittextfont="OpenSans-Regular.ttf" />
+
+                        <com.app.session.customview.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txt_follwr_count"
+                            android:singleLine="true"
+                            android:text="@string/followers"
+                            android:textColor="#9B9B9B"
+                            android:textSize="16sp"
+                            app:edittextfont="Roboto-Regular.ttf"  />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"
+                        android:gravity="center"
+
+                        android:orientation="vertical">
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txt_follwng_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="#262626"
+                            android:textSize="16sp"
+                            app:edittextfont="OpenSans-Regular.ttf" />
+
+                        <com.app.session.customview.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txt_follwng_count"
+
+                            android:gravity="center"
+                            android:text="@string/following"
+                            android:textColor="#9B9B9B"
+                            android:textSize="16sp"
+                            app:edittextfont="Roboto-Regular.ttf" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.app.session.customview.CustomTextView
+                    android:id="@+id/btn_editprof"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/value10"
+                    android:layout_marginTop="@dimen/value5"
+                    android:background="@drawable/sqaure_box"
+                    android:padding="@dimen/value5"
+                    android:text="@string/edit_profile"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <com.app.session.customview.CustomTextView
+            android:id="@+id/txtUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="Navin Nimade"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+
+            app:edittextfont="Roboto-Bold.ttf" />
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/Widget.Design.TabLayout"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabIndicatorHeight="3dp"
+        app:tabBackground="@drawable/selector_tab_indicator"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/colorPrimaryDark"
+        app:tabIndicatorColor="@color/colorPrimaryDark"
+        />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+</LinearLayout>
