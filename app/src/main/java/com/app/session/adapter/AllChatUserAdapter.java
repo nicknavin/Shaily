@@ -12,6 +12,7 @@ import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiCallback;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.model.ChatedBody;
+import com.app.session.utility.Utility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -68,6 +69,11 @@ public class AllChatUserAdapter extends RecyclerView.Adapter<AllChatUserAdapter.
                   .diskCacheStrategy(DiskCacheStrategy.ALL)
                   .into(holder.imgProfile);
       }
+      String time =chatedBody.getChatedPersonsBody().getCreatedAt();
+     String [] d= time.split("T");
+     String fds=d[1].replace("Z","");
+       String ds= Utility.getTimeSlot(fds);
+      holder.txtTimeStamp.setText(ds);
 
       holder.txtChatMsg.setText(chatedBody.getChatedPersonsBody().getMessage());
 holder.layChatUser.setOnClickListener(new View.OnClickListener() {
@@ -96,17 +102,19 @@ holder.layChatUser.setOnClickListener(new View.OnClickListener() {
     }
 
     class ChatUserHolder extends RecyclerView.ViewHolder {
-        public CustomTextView txtUserName,txtChatMsg,txtTimeStamp;
+        public CustomTextView txtUserName,txtChatMsg,txtTimeStamp,txtMsgCount;
         CircleImageView imgProfile;
-        RelativeLayout layChatUser;
+        RelativeLayout layChatUser,layNotification;
         public ChatUserHolder(View itemView)
         {
             super(itemView);
+            txtMsgCount = (CustomTextView) itemView.findViewById(R.id.txtMsgCount);
             txtTimeStamp = (CustomTextView) itemView.findViewById(R.id.txtTimeStamp);
             txtChatMsg = (CustomTextView) itemView.findViewById(R.id.txtChatMsg);
             txtUserName = (CustomTextView) itemView.findViewById(R.id.txtUserName);
             imgProfile=(CircleImageView)itemView.findViewById(R.id.imgProfile);
             layChatUser=(RelativeLayout)itemView.findViewById(R.id.layChatUser);
+            layNotification=(RelativeLayout)itemView.findViewById(R.id.layNotification);
         }
     }
 

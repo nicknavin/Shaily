@@ -81,6 +81,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceResultRece
     public static Location lastLocation;
     public String profileUrl="";
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +98,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceResultRece
         user_name = DataPrefrence.getPref(context, Constant.USER_NAME, "");
         is_consultant = DataPrefrence.getPref(context, Constant.IS_CONSULTANT, "");
         is_company = DataPrefrence.getPref(context, Constant.IS_COMPANY, "");
+
         startTransition();
 //        buildGoogleApiClient();
 //        createLocationRequest();

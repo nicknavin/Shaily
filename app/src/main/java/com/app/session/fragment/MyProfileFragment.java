@@ -625,9 +625,13 @@ LinearLayoutManager linearLayoutManager;
                             User user=root.getUserBody().getUser();
                             userName = user.getUser_name();
 
-                            ((MyProfileActivityNew)getActivity()).txtSubsciber.setText(""+root.getUserBody().getFollowers());
-                            ((MyProfileActivityNew)getActivity()).txtUserName.setText(root.getUserBody().getUser().getUser_name());
-                            ((MyProfileActivityNew)getActivity()).profileUrl=Urls.BASE_IMAGES_URL+root.getUserBody().getUser().getImageUrl();
+
+                            if (((MyProfileActivityNew)getActivity()).txtSubsciber!=null)
+                            {
+                                ((MyProfileActivityNew)getActivity()).txtSubsciber.setText(""+root.getUserBody().getFollowers());
+                                ((MyProfileActivityNew)getActivity()).txtUserName.setText(root.getUserBody().getUser().getUser_name());
+                                ((MyProfileActivityNew)getActivity()).profileUrl=Urls.BASE_IMAGES_URL+root.getUserBody().getUser().getImageUrl();
+                            }
 
                             if(!user.getImageUrl().isEmpty()&&user.getImageUrl()!=null)
                             {

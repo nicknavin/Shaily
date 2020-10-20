@@ -12,10 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ChatUserActivity"></activity>
+        <activity android:name=".activity.ExpertFollowingsActivity"></activity>
+        <activity android:name=".activity.ExpertFollowersActivity" />
+        <activity android:name=".activity.ChattedUserActivity" />
         <activity
             android:name=".activity.VideoPlayerActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"></activity>
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
         <activity android:name=".activity.DocumentActivity" />
         <activity android:name=".activity.ShowStoryActivity" />
         <activity android:name=".activity.HomeLandingPageActivity" />
@@ -31,6 +33,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ExpertProfilePageActivity"
+            android:configChanges="orientation|screenSize|layoutDirection" />
+        <activity
+            android:name=".activity.FollowingExpertProfilePageActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
         <activity android:name=".activity.ConsultantStoryActivity" />
         <activity android:name=".activity.HomeConsultantActivity" />
@@ -303,10 +308,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.STORAGE" /> <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
     <!-- <uses-permission android:name="android.permission.READ_SMS" /> -->
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />

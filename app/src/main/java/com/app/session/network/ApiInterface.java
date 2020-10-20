@@ -29,6 +29,7 @@ import com.app.session.model.ReqDeleteCategory;
 import com.app.session.model.ReqDeleteStory;
 import com.app.session.model.ReqFollowUser;
 import com.app.session.model.ReqGetUser;
+import com.app.session.model.ReqMessageRead;
 import com.app.session.model.ReqStory;
 import com.app.session.model.ReqSubscribeGroupStories;
 import com.app.session.model.ReqSubscriptionStories;
@@ -37,6 +38,7 @@ import com.app.session.model.ReqUserProfile;
 import com.app.session.model.RequestUpdateCategory;
 import com.app.session.model.Root;
 import com.app.session.model.RootChatMessage;
+import com.app.session.model.RootFollowers;
 import com.app.session.model.SearchUser;
 import com.app.session.model.SendStoryResponseRoot;
 import com.app.session.model.StoryId;
@@ -429,6 +431,10 @@ public interface ApiInterface {
     public Call<Root> reqsendUserUnFollow(@Header("Authorization") String token, @Body ReqFollowUser reqFollowUser);
 
     @Headers("Content-Type: application/json")
+    @POST("followers")
+    public Call<RootFollowers> reqFollowers(@Header("Authorization") String token, @Body UserId userId);
+
+    @Headers("Content-Type: application/json")
     @POST("getSubscribedSubscriptionGroups")
     public Call<SubscriptionGroupRoot> reqGetSubscribedSubscriptionGroups(@Header("Authorization") String token, @Body UserId reqFollowUser);
 
@@ -486,6 +492,10 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("clearChat")
     public Call<Root> reqClearChat(@Header("Authorization") String token, @Body ClearChat clearChat);
+
+    @Headers("Content-Type: application/json")
+    @POST("messageRead")
+    public Call<Root> reqReadMsg(@Header("Authorization") String token, @Body ReqMessageRead reqMessageRead);
 
 
 

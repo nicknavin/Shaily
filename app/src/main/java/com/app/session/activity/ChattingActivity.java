@@ -38,6 +38,7 @@ import com.app.session.model.ClearChat;
 import com.app.session.model.Conversation;
 import com.app.session.model.LoadMessage;
 import com.app.session.model.MessageChat;
+import com.app.session.model.ReqMessageRead;
 import com.app.session.model.Root;
 import com.app.session.model.RootChatMessage;
 import com.app.session.network.ApiClient;
@@ -89,15 +90,15 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     private AudioRecordView audioRecordView;
     private RecyclerView recyclerViewMessages;
     int load = 0;
-    int total_pages=0, pageno = 1;
+    int total_pages = 0, pageno = 1;
     CircleImageView imgProfilepic;
-    CustomTextView txtUserName,txtTyping;
+    CustomTextView txtUserName, txtTyping;
     ChatAdapter chatAdapter;
     Conversation conversation;
-    ArrayList<ChatMessage> chatMessageArrayList=new ArrayList<>();
-    LinkedList<ChatMessage> chatMessageLinkedList=new LinkedList<>();
+
+    LinkedList<ChatMessage> chatMessageLinkedList = new LinkedList<>();
     private static final String TAG = "ChatActivity";
-    String receiverID = "", receiverName = "",url="",senderProfileUrl="";
+    String receiverID = "", receiverName = "", url = "", senderProfileUrl = "";
     private long time;
     private Socket mSocket;
     private Boolean isConnected = true;
@@ -110,24 +111,36 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     public boolean isForCamera = false;
     private Uri mCameraImageUri, mImageCaptureUri, mDocumentUri;
     byte[] ByteArray;
-    String story_type = "",selectedDocumentPath="",docName = "",selectedVideoPath="";
+    String story_type = "", selectedDocumentPath = "", docName = "", selectedVideoPath = "";
     File imageFile;
     Bitmap videoThumbBitmap;
     File audioFile = null;
     private Handler mTypingHandler = new Handler();
     private boolean mTyping = false;
     private static final int TYPING_TIMER_LENGTH = 600;
+    String roomOne="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         connectWithSocket();
+        initView();
+        readMessage();
+
+    }
+
+    private void initView()
+    {
         if (getIntent().getStringExtra("ID") != null) {
             receiverID = getIntent().getStringExtra("ID");
-            System.out.println("receiverID : "+receiverID);
+            System.out.println("receiverID : " + receiverID);
+            roomOne=userId+"."+receiverID;
         }
-        if (getIntent().getStringExtra("NAME") != null) {
+        if (getIntent().getStringExtra("NAME") != null)
+        {
             receiverName = getIntent().getStringExtra("NAME");
+            System.out.println("receiverName : "+receiverName);
         }
         if (getIntent().getStringExtra("URL") != null) {
             url = getIntent().getStringExtra("URL");
@@ -145,9 +158,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         containerView.findViewById(R.id.layBack).setOnClickListener(this);
         containerView.findViewById(R.id.imgSetting).setOnClickListener(this);
-        imgProfilepic=  containerView.findViewById(R.id.imgProfilepic);
-        txtTyping=  containerView.findViewById(R.id.txtTyping);
-        txtUserName=  containerView.findViewById(R.id.txtUserName);
+        imgProfilepic = containerView.findViewById(R.id.imgProfilepic);
+        txtTyping = containerView.findViewById(R.id.txtTyping);
+        txtUserName = containerView.findViewById(R.id.txtUserName);
         txtUserName.setText(receiverName);
         Glide.with(context)
                 .load(url)
@@ -160,16 +173,17 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         audioRecordView.removeAttachmentOptionAnimation(false);
 
-       //setUpRecyclerListener();
+        //setUpRecyclerListener();
         swipeRefreshLayout = containerView.findViewById(R.id.swipeRefreshLayout);
         setUpRecyclerView(containerView);
-      //  setUpRecyclerListener();
+        //  setUpRecyclerListener();
         loadChatting();
         setSwipeLayout();
     }
 
-    private void setUpRecyclerView(View containerView)
-    {
+
+
+    private void setUpRecyclerView(View containerView) {
         recyclerViewMessages = containerView.findViewById(R.id.recyclerViewMessages);
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerViewMessages.setLayoutManager(linearLayoutManager);
@@ -188,14 +202,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(pageno<total_pages) {
+                if (pageno < total_pages) {
                     load = total_pages - pageno;
                     swipeRefreshLayout.setRefreshing(true);
                     loadChattingMore();
                     swipeRefreshLayout.setRefreshing(false);
-                }
-                else
-                {
+                } else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -223,8 +235,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 String msg = audioRecordView.getMessageView().getText().toString().trim();
                 audioRecordView.getMessageView().setText("");
                 //messageAdapter.add(new Message(msg));
@@ -233,19 +244,15 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         });
 
 
-
         audioRecordView.getMessageView().addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int count)
-            {
-                if(count>0)
-                {
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int count) {
+                if (count > 0) {
                     if (!mTyping) {
                         mTyping = true;
                         messageTyping();
@@ -302,10 +309,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.layBack:
                 finish();
                 break;
@@ -317,12 +322,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
-
     @Override
-    public void onClick(AttachmentOption attachmentOption)
-    {
-        switch (attachmentOption.getId())
-        {
+    public void onClick(AttachmentOption attachmentOption) {
+        switch (attachmentOption.getId()) {
 
             case AttachmentOption.DOCUMENT_ID:
                 showToast("Document Clicked");
@@ -348,14 +350,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
-
-
     public void connectWithSocket() {
         try {
             IO.Options opts = new IO.Options();
-            opts.transports = new String[] { Polling.NAME };
+            opts.transports = new String[]{Polling.NAME};
 //            Socket mSocket = IO.socket("http://example.com/", opts);
-            mSocket = IO.socket(Constant.CHAT_SERVER_URL,opts);
+            mSocket = IO.socket(Constant.CHAT_SERVER_URL, opts);
 
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -372,32 +372,26 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            JSONObject data = new JSONObject();
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 
                     {
-                        if(null!=userId)
+                        if (null != userId)
                             try {
+                                JSONObject data = new JSONObject();
                                 data.put("userId", userId);
+                                mSocket.emit("join", data);
+
+                                JSONObject jsonRoom=new JSONObject();
+                                jsonRoom.put("roomOne",roomOne);
+                                mSocket.emit("connected_both", jsonRoom);
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        System.out.println("json "+data);
-                        mSocket.emit("join", data);
                         showToast("connect");
-
-//                        Toast.makeText(getActivity().getApplicationContext(),
-//                                R.string.connect, Toast.LENGTH_LONG).show();
-//                        try {
-//                            IO.Options options = new IO.Options();
-//                            options.transports = new String[] { WebSocket.NAME, Polling.NAME};
-//                            mSocket = IO.socket(Constant.CHAT_SERVER_URL, options);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-                       // showToast("connect");
                         isConnected = true;
                     }
                 }
@@ -407,14 +401,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
-        public void call(final Object... args)
-        {
-            runOnUiThread(new Runnable()
-            {
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Log.i(TAG, "diconnected");
-                    System.out.println("DATA"+args[0]);
+                    System.out.println("DATA" + args[0]);
                     isConnected = false;
                     showToast("diconnected");
                     mSocket.connect();
@@ -428,14 +420,13 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     private Emitter.Listener onConnectError = new Emitter.Listener() {
         @Override
-        public void call(Object... args)
-        {
+        public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Log.e(TAG, "Error connecting");
-                    showToast("Error connecting"+args[0]);
-                    System.out.println("DATA"+args[0]);
+                    showToast("Error connecting" + args[0]);
+                    System.out.println("DATA" + args[0]);
                     mSocket.connect();
                     //Toast.makeText(getActivity().getApplicationContext(),R.string.error_connect, Toast.LENGTH_LONG).show();
                 }
@@ -455,7 +446,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                     MessageChat messageChat = new MessageChat();
                     try {
 
-                        ChatMessage chatMessage=new ChatMessage();
+                        ChatMessage chatMessage = new ChatMessage();
                         chatMessage.setSenderId(data.getString("userId"));
                         chatMessage.setReciverId(data.getString("reciverId"));
                         chatMessage.setMessage(data.getString("message"));
@@ -472,8 +463,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                     }
 
 
-
-                 //   conversation.getListMessageData().add(messageChat);
+                    //   conversation.getListMessageData().add(messageChat);
 
 
                 }
@@ -481,25 +471,23 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         }
     };
 
-    private Emitter.Listener onTyping=new Emitter.Listener() {
+    private Emitter.Listener onTyping = new Emitter.Listener() {
 
         @Override
-        public void call(Object... args)
-        {
+        public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     //{"type":true,"typing":"typing.."}
-                    if(args.length>0) {
+                    if (args.length > 0) {
                         if (txtTyping != null) {
                             try {
                                 JSONObject data = (JSONObject) args[0];
 
-                                boolean type=data.getBoolean("type");
+                                boolean type = data.getBoolean("type");
 
-                                System.out.println("data "+data.toString());
-                                if(type) {
+                                System.out.println("data " + data.toString());
+                                if (type) {
                                     txtTyping.setText(" typing... ");
                                 }
                                 mTypingHandler.removeCallbacks(onTypingTimeout);
@@ -515,13 +503,14 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         }
     };
 
-    private void messageTyping()
-    {
+    private void messageTyping() {
         if (!mSocket.connected()) return;
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("reciverId",receiverID);
-            jsonObject.put("typing",true);
+            jsonObject.put("reciverId", receiverID);
+            jsonObject.put("userId", userId);
+            jsonObject.put("userName", login_user_id);
+            jsonObject.put("typing", true);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -529,35 +518,33 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         mSocket.emit("isTyping", jsonObject, new Ack() {
             @Override
-            public void call(Object... args)
-            {
+            public void call(Object... args) {
 
-                if (args.length>0)
-                {
-                    System.out.println("typing......"+args[0]);
+                if (args.length > 0) {
+                    System.out.println("typing......" + args[0]);
                 }
             }
         });
     }
-    private void SendMessage(String message)
-    {
+
+    private void SendMessage(String message) {
         if (!mSocket.connected()) return;
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("reciverId",receiverID);
-            jsonObject.put("userId",userId);
-            jsonObject.put("message",message);
-            jsonObject.put("senderName",login_user_id);
-            jsonObject.put("reciverName",receiverName);
-            jsonObject.put("reciverProfileUrl",url);
-            jsonObject.put("senderProfileUrl",profileUrl);
-            jsonObject.put("createdAt",Utility.getTime1());
+            jsonObject.put("reciverId", receiverID);
+            jsonObject.put("userId", userId);
+            jsonObject.put("message", message);
+            jsonObject.put("senderName", login_user_id);
+            jsonObject.put("reciverName", receiverName);
+            jsonObject.put("reciverProfileUrl", url);
+            jsonObject.put("senderProfileUrl", profileUrl);
+            jsonObject.put("createdAt", Utility.getTime1());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        ChatMessage chatMessage=new ChatMessage();
+        ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSenderId(userId);
         chatMessage.setReciverId(receiverID);
         chatMessage.setMessage(message);
@@ -571,14 +558,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             @Override
             public void call(Object... args) {
 
-                if (args.length>0) {
+                if (args.length > 0) {
 
                 }
             }
         });
     }
-
-
 
 
     private boolean isSocketConnected() {
@@ -595,8 +580,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
-
-
     private void scrollToBottom() {
         linearLayoutManager.scrollToPosition(chatMessageLinkedList.size() - 1);
     }
@@ -605,8 +588,15 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     public void onDestroy() {
         super.onDestroy();
 
-        mSocket.disconnect();
+        try {
+            JSONObject jsonRoom=new JSONObject();
+            jsonRoom.put("roomOne",roomOne);
+            mSocket.emit("leaveRoom", jsonRoom);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        mSocket.disconnect();
         mSocket.off(Socket.EVENT_CONNECT, onConnect);
         mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
         mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
@@ -614,37 +604,37 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mSocket.off(Constant.NEW_MESSAGE, onNewMessage);
 
     }
+
     public void loadChatting() {
-        if (Utility.isConnectingToInternet(context))
-        {
-            LoadMessage loadMessage=new LoadMessage();
+        if (Utility.isConnectingToInternet(context)) {
+            LoadMessage loadMessage = new LoadMessage();
             loadMessage.setSenderId(userId);
             loadMessage.setReciverId(receiverID);
             loadMessage.setLoad(load);
 
             ApiInterface apiInterface = ApiClient.getClient(Urls.PRIVATEMESSAGE_URL).create(ApiInterface.class);
-            Call<RootChatMessage> call  =apiInterface.reqLoadPreviousMsg(accessToken,loadMessage);
+            Call<RootChatMessage> call = apiInterface.reqLoadPreviousMsg(accessToken, loadMessage);
 
             call.enqueue(new Callback<RootChatMessage>() {
                 @Override
-                public void onResponse(Call<RootChatMessage> call, Response<RootChatMessage> response)
-                {
-                    RootChatMessage rootChatMessage=response.body();
-                    if(rootChatMessage.getStatus()==200)
+                public void onResponse(Call<RootChatMessage> call, Response<RootChatMessage> response) {
+                    if (response.body()!=null)
                     {
-                        ChatMessageBody chatMessageBody =rootChatMessage.getChatMessageBody();
-                        total_pages=chatMessageBody.getTotal_Page();
-                        loading=false;
-                        LinkedList<ChatMessage> list =new LinkedList<>();
-                        list=chatMessageBody.getChatMessages();
-                        for(ChatMessage chatMessage:list )
-                        {
-                            chatMessageLinkedList.addLast(chatMessage);
+                        RootChatMessage rootChatMessage = response.body();
+                        if (rootChatMessage.getStatus() == 200) {
+                            ChatMessageBody chatMessageBody = rootChatMessage.getChatMessageBody();
+                            total_pages = chatMessageBody.getTotal_Page();
+                            loading = false;
+                            LinkedList<ChatMessage> list = new LinkedList<>();
+                            list = chatMessageBody.getChatMessages();
+                            for (ChatMessage chatMessage : list) {
+                                chatMessageLinkedList.addLast(chatMessage);
+                            }
+    //                        chatAdapter = new ChatAdapter(context, chatMessageArrayList, userId);
+    //                        recyclerViewMessages.setAdapter(chatAdapter);
+                            chatAdapter.notifyDataSetChanged();
+                            scrollToBottom();
                         }
-//                        chatAdapter = new ChatAdapter(context, chatMessageArrayList, userId);
-//                        recyclerViewMessages.setAdapter(chatAdapter);
-                        chatAdapter.notifyDataSetChanged();
-                        scrollToBottom();
                     }
 
                 }
@@ -654,13 +644,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
                 }
             });
-
-
-
-
-
-
-
 
 
         } else {
@@ -669,43 +652,38 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
     public void loadChattingMore() {
-        if (Utility.isConnectingToInternet(context))
-        {
-            LoadMessage loadMessage=new LoadMessage();
+        if (Utility.isConnectingToInternet(context)) {
+            LoadMessage loadMessage = new LoadMessage();
             loadMessage.setSenderId(userId);
             loadMessage.setReciverId(receiverID);
             loadMessage.setLoad(load);
 
             ApiInterface apiInterface = ApiClient.getClient(Urls.PRIVATEMESSAGE_URL).create(ApiInterface.class);
-            Call<RootChatMessage> call  =apiInterface.reqLoadPreviousMsg(accessToken,loadMessage);
+            Call<RootChatMessage> call = apiInterface.reqLoadPreviousMsg(accessToken, loadMessage);
 
             call.enqueue(new Callback<RootChatMessage>() {
                 @Override
-                public void onResponse(Call<RootChatMessage> call, Response<RootChatMessage> response)
-                {
-                    RootChatMessage rootChatMessage=response.body();
-                    if(rootChatMessage.getStatus()==200)
-                    {
-                        ChatMessageBody chatMessageBody =rootChatMessage.getChatMessageBody();
-                        total_pages=chatMessageBody.getTotal_Page();
-                        if(pageno <=total_pages)
-                        {
-                            loading=true;
+                public void onResponse(Call<RootChatMessage> call, Response<RootChatMessage> response) {
+                    RootChatMessage rootChatMessage = response.body();
+                    if (rootChatMessage.getStatus() == 200) {
+                        ChatMessageBody chatMessageBody = rootChatMessage.getChatMessageBody();
+                        total_pages = chatMessageBody.getTotal_Page();
+                        if (pageno <= total_pages) {
+                            loading = true;
                             pageno++;
                         }
-                        loading=true;
-                        LinkedList<ChatMessage> list =new LinkedList<>();
-                        list=chatMessageBody.getChatMessages();
-                        for(int i =list.size()-1;i>0;i--)
-                        {
-                            ChatMessage chatMessage=list.get(i);
+                        loading = true;
+                        LinkedList<ChatMessage> list = new LinkedList<>();
+                        list = chatMessageBody.getChatMessages();
+                        for (int i = list.size() - 1; i > 0; i--) {
+                            ChatMessage chatMessage = list.get(i);
                             chatMessageLinkedList.addFirst(chatMessage);
                         }
 
 //                        chatAdapter = new ChatAdapter(context, chatMessageArrayList, userId);
 //                        recyclerViewMessages.setAdapter(chatAdapter);
                         chatAdapter.notifyDataSetChanged();
-                       // scrollToBottom();
+                        // scrollToBottom();
                     }
 
                 }
@@ -717,49 +695,70 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             });
 
 
-
-
-
-
-
-
-
         } else {
             showInternetConnectionToast();
         }
     }
 
 
+    public void clearChatting() {
+        if (Utility.isConnectingToInternet(context)) {
 
-    public void clearChatting()
-    {
-        if (Utility.isConnectingToInternet(context))
-        {
-
-            ClearChat clearChat=new ClearChat();
+            ClearChat clearChat = new ClearChat();
             clearChat.setSenderId(userId);
             clearChat.setReciverId(receiverID);
 
-
+            showLoading();
             ApiInterface apiInterface = ApiClient.getClient(Urls.PRIVATEMESSAGE_URL).create(ApiInterface.class);
-            Call<Root> call  =apiInterface.reqClearChat(accessToken,clearChat);
+            Call<Root> call = apiInterface.reqClearChat(accessToken, clearChat);
             call.enqueue(new Callback<Root>() {
                 @Override
-                public void onResponse(Call<Root> call, Response<Root> response)
-                {
-                    if(response.body()!=null)
-                    {
-                        if(response.body().getStatus()==200)
-                        {
-                            chatMessageArrayList.clear();
-                            chatAdapter.notifyDataSetChanged();
+                public void onResponse(Call<Root> call, Response<Root> response) {
+                    dismiss_loading();
+                    if (response.body() != null) {
+                        if (response.body().getStatus() == 200) {
+                            chatMessageLinkedList.clear();
+                            chatAdapter = new ChatAdapter(context, chatMessageLinkedList, userId);
+                            recyclerViewMessages.setAdapter(chatAdapter);
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Root> call, Throwable t) {
+                    dismiss_loading();
+                }
+            });
+        } else {
+            showInternetConnectionToast();
+        }
+    }
 
+    public void readMessage()
+    {
+        if (Utility.isConnectingToInternet(context)) {
+
+            ReqMessageRead reqMessageRead = new ReqMessageRead();
+            reqMessageRead.setUserId(userId);
+            reqMessageRead.setReciverId(receiverID);
+            showLoading();
+            ApiInterface apiInterface = ApiClient.getClient(Urls.PRIVATEMESSAGE_URL).create(ApiInterface.class);
+            Call<Root> call = apiInterface.reqReadMsg(accessToken, reqMessageRead);
+            call.enqueue(new Callback<Root>() {
+                @Override
+                public void onResponse(Call<Root> call, Response<Root> response) {
+                    dismiss_loading();
+                    if (response.body() != null) {
+                        if (response.body().getStatus() == 200)
+                        {
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Root> call, Throwable t) {
+                    dismiss_loading();
                 }
             });
         } else {
@@ -916,7 +915,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             videoThumbBitmap = bm;
 
 
-
 //                            ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
 //                            bm.compress(Bitmap.CompressFormat.PNG, 100, datasecond);
 //                            ByteArray = datasecond.toByteArray();
@@ -964,8 +962,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 //                        if (docName.contains(".xls")) {
 //                            imgDoc.setImageResource(R.mipmap.xls_story);
 //                        }
-
-
 
 
                     } catch (Exception e) {
@@ -1149,19 +1145,17 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         return result;
     }
 
-    private void pickFile()
-    {
+    private void pickFile() {
         Intent intent_upload = new Intent();
         intent_upload.setType("audio/*");
         intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent_upload,1);
+        startActivityForResult(intent_upload, 1);
     }
+
     private Runnable onTypingTimeout = new Runnable() {
         @Override
         public void run() {
-            if (!mTyping) return;
 
-            mTyping = false;
             if (txtTyping != null) {
                 txtTyping.setText(null);
             }

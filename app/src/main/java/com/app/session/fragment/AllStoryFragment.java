@@ -228,7 +228,10 @@ dismiss_loading();
                                 public void result(int position)
                                 {
                                     Intent intent=new Intent(getContext(), ExpertProfilePageActivity.class);
-                                    intent.putExtra("ID",allUserBodyArrayList.get(position).getId());
+                                    intent.putExtra("ID",consultUserArrayList.get(position).getId());
+                                    intent.putExtra("NAME",consultUserArrayList.get(position).getLoginUserId());
+                                    intent.putExtra("URL", Urls.BASE_IMAGES_URL +consultUserArrayList.get(position).getImageUrl());
+                                    startActivity(intent);
                                     startActivity(intent);
                                 }
                             });

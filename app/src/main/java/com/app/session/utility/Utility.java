@@ -1491,8 +1491,8 @@ public class Utility {
         System.out.println("timeStamp " + timeStamp);
         return timeStamp;
     }
-public static String getTime1() {
 
+     public static String getTime1() {
         TimeZone tz = TimeZone.getDefault();
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String timeStamp1 = new SimpleDateFormat("HH:mm:ss.SSS").format(Calendar.getInstance().getTime());
@@ -1500,6 +1500,24 @@ public static String getTime1() {
         String stmap=timeStamp+"T"+timeStamp1+"Z";
         return stmap;
     }
+
+    public static String getTimeSlot(String time) {
+        String date_birth = "";
+        try {
+
+            SimpleDateFormat format1 = new SimpleDateFormat("HH:mm:ss.SSS");
+            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+            Date date = format1.parse(time);
+            System.out.println(format2.format(date));
+            date_birth = format2.format(date).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date_birth;
+
+
+    }
+
 
     public static String getTimeOnly() {
 

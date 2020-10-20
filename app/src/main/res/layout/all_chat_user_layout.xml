@@ -68,10 +68,12 @@ android:id="@+id/layChatUser"
         android:textSize="14sp"
         app:edittextfont="OpenSans-Regular.ttf" />
     <RelativeLayout
+        android:id="@+id/layNotification"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
+        android:visibility="gone"
         android:layout_gravity="center"
         android:background="@drawable/circle">
         <com.app.session.customview.CustomTextView

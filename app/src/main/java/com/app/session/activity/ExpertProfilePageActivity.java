@@ -118,7 +118,7 @@ LinearLayout laySubsView;
     LinkedList<UserStory> storyDataArrayList=new LinkedList<>();
     public boolean flag = false;
 
-    String id="",name="",url="";
+    String id="",name="",url="",loginIDName="";
 boolean followStatus;
 
 
@@ -154,7 +154,7 @@ boolean followStatus;
         }
         if(getIntent().getStringExtra("NAME")!=null)
         {
-            name=getIntent().getStringExtra("NAME");
+            loginIDName=getIntent().getStringExtra("NAME");
         } if(getIntent().getStringExtra("URL")!=null)
         {
             url=getIntent().getStringExtra("URL");
@@ -202,6 +202,11 @@ boolean followStatus;
             txtSubscriber.setVisibility(View.GONE);
             imgChat.setVisibility(View.GONE);
         }
+
+        if(userId.isEmpty())
+        {
+            imgChat.setVisibility(View.GONE);
+        }
         txtExplore=(CustomTextView)findViewById(R.id.txtExplore);
         txtUserName=(CustomTextView)findViewById(R.id.txtGroupName);
         imgProfile=(CircleImageView)findViewById(R.id.imgGroupCover);
@@ -222,7 +227,7 @@ boolean followStatus;
             public void onClick(View view) {
                 Intent intent=new Intent(context,ChattingActivity.class);
                 intent.putExtra("ID",id);
-                intent.putExtra("NAME",name);
+                intent.putExtra("NAME",loginIDName);
                 intent.putExtra("URL",url);
                 startActivity(intent);
             }
@@ -438,6 +443,7 @@ boolean followStatus;
                             followStatus = root.getUserBody().isFollow();
                             statusSubscribe();
                             txtUserName.setText(user.getUser_name());
+                            loginIDName=user.getLogin_user_id();
                             txtExplore.setText(user.getUser_name());
                             if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
                                 groupiconUrl=Urls.BASE_IMAGES_URL+user.getImageUrl();

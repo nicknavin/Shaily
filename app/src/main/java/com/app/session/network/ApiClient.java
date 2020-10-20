@@ -23,6 +23,10 @@ public class ApiClient {
 
     public static Retrofit getClient(String url)
     {
+        if(retrofit!=null)
+        {
+            retrofit=null;
+        }
         if (retrofit==null)
         {
             retrofit = new Retrofit.Builder()

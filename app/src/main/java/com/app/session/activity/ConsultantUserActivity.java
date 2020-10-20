@@ -213,12 +213,12 @@ public class ConsultantUserActivity extends BaseTabActivity implements View.OnCl
         TabMenu1.setIndicator(createTabView(context.getResources().getString(R.string.story)));
         if(tab==0) {
 
-            TabMenu1.setContent(new Intent(this, MyProfileActivityNew.class));
+            TabMenu1.setContent(new Intent(getApplicationContext(), MyProfileActivityNew.class));
         }
         if(tab==1) {
-            TabMenu1.setContent(new Intent(this, ExploreActivity.class));
+            TabMenu1.setContent(new Intent(getApplicationContext(), ExpertFollowingsActivity.class));
         }if(tab==2) {
-            TabMenu1.setContent(new Intent(this, ChatUserActivity.class));
+            TabMenu1.setContent(new Intent(getApplicationContext(), ChattedUserActivity.class));
         }
 
         TabHostWindow.addTab(TabMenu1);

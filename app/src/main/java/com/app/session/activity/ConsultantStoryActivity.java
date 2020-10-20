@@ -399,8 +399,8 @@ public class ConsultantStoryActivity extends BaseActivity implements PopupMenu.O
                     {
                         SubscriptionGroupRoot root=response.body();
                         subscriptionGroupsList=root.getSubscriptionGroupBodies();
-                        System.out.println("subsID "+subscriptionGroupsList.get(0).get_id());
-                        System.out.println("subsGrp "+subscriptionGroupsList.get(0).getSubscription_group_cd());
+                      //  System.out.println("subsID "+subscriptionGroupsList.get(0).get_id());
+                       // System.out.println("subsGrp "+subscriptionGroupsList.get(0).getSubscription_group_cd());
                         SampleDemoAdapter sampleDemoAdapter=new SampleDemoAdapter(context, subscriptionGroupsList, new ApiItemCallback() {
                             @Override
                             public void result(int position)
