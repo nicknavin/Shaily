@@ -164,8 +164,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         txtUserName.setText(receiverName);
         Glide.with(context)
                 .load(url)
-                .placeholder(R.mipmap.profile_image)
-                .error(R.mipmap.profile_image)
+                .placeholder(R.mipmap.profile_icon)
+                .error(R.mipmap.profile_icon)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imgProfilepic);
 
@@ -365,6 +365,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.on(Constant.NEW_MESSAGE, onNewMessage);
+        mSocket.on(Constant.IS_ON, isOnline);
         mSocket.on(Constant.TYPING, onTyping);
         mSocket.connect();
     }
@@ -383,11 +384,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                                 JSONObject data = new JSONObject();
                                 data.put("userId", userId);
                                 mSocket.emit("join", data);
-
-                                JSONObject jsonRoom=new JSONObject();
-                                jsonRoom.put("roomOne",roomOne);
-                                mSocket.emit("connected_both", jsonRoom);
-
+                                connectedBoth();
+                                sendOnlineStatus();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -448,14 +446,20 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
                         ChatMessage chatMessage = new ChatMessage();
                         chatMessage.setSenderId(data.getString("userId"));
-                        chatMessage.setReciverId(data.getString("reciverId"));
+                        if(!data.isNull("reciverId")) {
+                            chatMessage.setReciverId(data.getString("reciverId"));
+                        }
                         chatMessage.setMessage(data.getString("message"));
                         chatMessage.setIsRead(true);
                         chatMessage.setReciverName(receiverName);
                         chatMessage.setSenderName(user_name);
-                        chatMessageLinkedList.addLast(chatMessage);
-                        chatAdapter.notifyDataSetChanged();
-                        scrollToBottom();
+                        //if(receiverID.equals(chatMessage.getSenderId()))
+                        {
+                            chatMessageLinkedList.addLast(chatMessage);
+                            chatAdapter.notifyDataSetChanged();
+
+                            scrollToBottom();
+                        }
 
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
@@ -472,7 +476,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     };
 
     private Emitter.Listener onTyping = new Emitter.Listener() {
-
         @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
@@ -487,8 +490,13 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                                 boolean type = data.getBoolean("type");
 
                                 System.out.println("data " + data.toString());
+                                //{"type":true,"typing":"typing..","typerUserId":"5f413256c4b8ce176fc80a8f","userName":"bluebird"}
                                 if (type) {
-                                    txtTyping.setText(" typing... ");
+                                    if(receiverID.equals(data.getString("typerUserId")))
+                                    {
+                                        txtTyping.setVisibility(View.VISIBLE);
+                                        txtTyping.setText("typing...");
+                                    }
                                 }
                                 mTypingHandler.removeCallbacks(onTypingTimeout);
                                 mTypingHandler.postDelayed(onTypingTimeout, TYPING_TIMER_LENGTH);
@@ -502,6 +510,59 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         }
     };
+
+    private Emitter.Listener isOnline=new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (args.length > 0) {
+                        if (txtTyping != null) {
+                            JSONObject data = (JSONObject) args[0];
+                            txtTyping.setVisibility(View.VISIBLE);
+                            txtTyping.setText("online");
+
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+
+
+    private void sendOnlineStatus()
+    {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("reciverId", receiverID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSocket.emit(Constant.IS_ONLINE, jsonObject, new Ack() {
+            @Override
+            public void call(Object... args) {
+
+                if (args.length > 0) {
+
+                }
+            }
+        });
+    }
+
+    private void connectedBoth()
+    {
+        try {
+            JSONObject jsonRoom=new JSONObject();
+            jsonRoom.put("roomOne",roomOne);
+            mSocket.emit("connected_both", jsonRoom);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void messageTyping() {
         if (!mSocket.connected()) return;
@@ -564,6 +625,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             }
         });
     }
+
+
 
 
     private boolean isSocketConnected() {
@@ -943,7 +1006,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
             }
 
-            if (requestCode == Constant.PICKFILE_RESULT_CODE) {
+            if (requestCode == Constant.PICKFILE_RESULT_CODE)
+            {
                 if (data != null) {
                     try {
                         mDocumentUri = data.getData();
@@ -1157,7 +1221,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         public void run() {
 
             if (txtTyping != null) {
-                txtTyping.setText(null);
+                txtTyping.setVisibility(View.VISIBLE);
+                txtTyping.setText("online");
             }
         }
     };

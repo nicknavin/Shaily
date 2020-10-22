@@ -39,6 +39,7 @@ android:id="@+id/layChatUser"
                 android:textSize="15sp"
                 android:text="Rahul sharma"
                 app:edittextfont="Roboto-Bold.ttf" />
+
             <com.app.session.customview.CustomTextView
                 android:id="@+id/txtChatMsg"
                 android:layout_width="wrap_content"
@@ -46,8 +47,20 @@ android:id="@+id/layChatUser"
                 android:textColor="#757575"
                 android:textSize="15sp"
                 android:minLines="1"
+                android:maxLines="1"
                 android:ellipsize="end"
                 android:text="hi how are you.lcome"
+                app:edittextfont="OpenSans-Regular.ttf" />
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtTyping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green"
+                android:textSize="12sp"
+                android:minLines="1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="typing..."
                 app:edittextfont="OpenSans-Regular.ttf" />
         </LinearLayout>
     </LinearLayout>

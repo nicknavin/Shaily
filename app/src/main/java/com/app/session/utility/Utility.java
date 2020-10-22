@@ -1496,22 +1496,27 @@ public class Utility {
         TimeZone tz = TimeZone.getDefault();
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String timeStamp1 = new SimpleDateFormat("HH:mm:ss.SSS").format(Calendar.getInstance().getTime());
-        System.out.println("timeStamp " + timeStamp);
+
         String stmap=timeStamp+"T"+timeStamp1+"Z";
+         System.out.println("timeStamp " + stmap);
         return stmap;
     }
 
     public static String getTimeSlot(String time) {
         String date_birth = "";
-        try {
+        if (!time.isEmpty()) {
+            String [] str= time.split("T");
+            time=str[1].replace("Z","");
+            try {
 
-            SimpleDateFormat format1 = new SimpleDateFormat("HH:mm:ss.SSS");
-            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
-            Date date = format1.parse(time);
-            System.out.println(format2.format(date));
-            date_birth = format2.format(date).toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
+                SimpleDateFormat format1 = new SimpleDateFormat("HH:mm:ss.SSS");
+                SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+                Date date = format1.parse(time);
+                System.out.println(format2.format(date));
+                date_birth = format2.format(date).toString();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return date_birth;
 

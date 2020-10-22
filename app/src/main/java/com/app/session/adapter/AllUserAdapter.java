@@ -42,7 +42,7 @@ public class AllUserAdapter extends RecyclerView.Adapter<AllUserAdapter.ViewHold
         this.context = context;
         myStoriesList = list;
         this.callback = callback;
-
+        mArrayList=list;
     }
 
 

@@ -9,7 +9,9 @@ import retrofit2.Response;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
 import com.app.session.R;
 import com.app.session.adapter.AllChatUserAdapter;
@@ -50,6 +52,9 @@ public class ChattedUserActivity extends BaseActivity
     AllChatUserAdapter allChatUserAdapter;
     private Socket mSocket;
     private Boolean isConnected = true;
+    private Handler mTypingHandler = new Handler();
+    private static final int TYPING_TIMER_LENGTH = 600;
+    ArrayList<ChatedBody> chatedPersonsList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +97,7 @@ public class ChattedUserActivity extends BaseActivity
                    if (response.body()!=null) {
                        if(response.body().getStatus()==200)
                        {
-                           ArrayList<ChatedBody> chatedPersonsList =response.body().getChatedPersonsBody();
+                           chatedPersonsList =response.body().getChatedPersonsBody();
                            allChatUserAdapter =new AllChatUserAdapter(context, chatedPersonsList, userId, new ApiItemCallback() {
                                @Override
                                public void result(int position)
@@ -260,15 +265,17 @@ public class ChattedUserActivity extends BaseActivity
                         chatMessage.setMessage(data.getString("message"));
                         chatMessage.setIsRead(true);
 
-
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
                         return;
                     }
+                    int position=0;
+//                    ChatedBody chatedBody=new ChatedBody();
+//                    chatedBody.getChatedPersonsBody().setMessage();
+//                    chatedPersonsList.add(position,chatedBody);
 
 
 
-                    //   conversation.getListMessageData().add(messageChat);
 
 
                 }
@@ -291,7 +298,7 @@ public class ChattedUserActivity extends BaseActivity
                         {
                             //{"type":true,"typing":"typing..","typerUserId":"5f437ef1c4b8ce176fc80a91","userName":"demo5"}
                             try {
-
+                                //{"type":true,"typing":"typing..","typerUserId":"5f413256c4b8ce176fc80a8f","userName":"bluebird"}
 
 
                                 JSONObject data = (JSONObject) args[0];
@@ -301,10 +308,12 @@ public class ChattedUserActivity extends BaseActivity
                                 System.out.println("data "+data.toString());
                                 if(type) {
                                     String typerUserId=data.getString("typerUserId");
+                                    allChatUserAdapter.onTyping(typerUserId);
                                   //  txtTyping.setText(" typing... ");
                                 }
-//                                mTypingHandler.removeCallbacks(onTypingTimeout);
-//                                mTypingHandler.postDelayed(onTypingTimeout, TYPING_TIMER_LENGTH);
+
+                                mTypingHandler.removeCallbacks(onTypingTimeout);
+                                mTypingHandler.postDelayed(onTypingTimeout, TYPING_TIMER_LENGTH);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -318,7 +327,13 @@ public class ChattedUserActivity extends BaseActivity
 
 
 
+    private Runnable onTypingTimeout = new Runnable() {
+        @Override
+        public void run() {
 
+         allChatUserAdapter.onTyping("");
+        }
+    };
 
 
 }

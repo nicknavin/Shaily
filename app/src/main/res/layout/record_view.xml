@@ -315,14 +315,19 @@
         app:cardElevation="2dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
-        app:contentPadding="0dp">
-
+        app:contentPadding="0dp"
+        >
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/circle_audio">
         <ImageView
             android:id="@+id/imageAudio"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/record_audio_ic" />
-
+            android:layout_margin="5dp"
+            android:src="@drawable/microphone" />
+</RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -345,13 +350,17 @@
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
         app:contentPadding="0dp">
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/circle_audio">
         <ImageView
             android:id="@+id/imageStop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/stop_record_ic" />
-
+            android:layout_margin="10dp"
+            android:src="@drawable/send" />
+</RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -374,12 +383,18 @@
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
         app:contentPadding="0dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_audio">
+
 
         <ImageView
             android:id="@+id/imageSend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/send_msg_ic" />
-
+            android:layout_margin="10dp"
+            android:src="@drawable/send" />
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>

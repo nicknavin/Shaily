@@ -2,22 +2,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout2"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:paddingTop="2dp"
     android:paddingBottom="2dp"
     android:paddingRight="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
     android:layout_height="wrap_content">
-
+<com.app.session.customview.CircleImageView
+    android:layout_width="35dp"
+    android:layout_height="35dp"
+    android:src="@mipmap/profile_icon"
+    android:layout_alignParentLeft="true"
+    android:id="@+id/imgFriend"/>
 
     <com.app.session.customview.CustomTextView
         android:id="@+id/textContentFriend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:text="hello"
         android:textSize="18sp"
-        android:padding="5dp"
-
+        android:layout_marginLeft="5dp"
+        android:padding="8dp"
+        android:layout_toRightOf="@+id/imgFriend"
+        android:maxWidth="300dp"
+        android:textColor="#767676"
         android:background="@drawable/background_left"/>
-
+    <com.app.session.customview.CustomTextView
+        android:id="@+id/textMSgTime"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="15:50"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="#767676"
+       android:layout_toRightOf="@+id/textContentFriend"
+        />
 </RelativeLayout>

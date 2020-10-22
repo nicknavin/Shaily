@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FAFAFA</color>
     <color name="colorPrimaryDark">#CCCCCC</color>
     <color name="whatspp_theme">#075E54</color>
+    <color name="send">#4DCCDF</color>
     <color name="colorAccent">#000000</color>
     <color name="text_color">#000000</color>
     <color name="bg_tran">#99FFFFFF</color>

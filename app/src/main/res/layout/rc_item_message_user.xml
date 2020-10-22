@@ -8,22 +8,40 @@
     android:paddingBottom="2dp"
     android:paddingLeft="5dp">
 
+
     <RelativeLayout
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_width="300dp"
+        android:layout_width="350dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content" >
         <com.app.session.customview.CustomTextView
-            android:layout_width="wrap_content"
+            android:id="@+id/textMSgTime"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_right"
-            android:text="hello"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:id="@+id/textContentUser"
-            android:textSize="18sp"
-            android:textColor="#020202"
-            android:padding="5dp"/>
+            android:text="15:50"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:textColor="#767676"
+            android:gravity="center"
+            android:layout_toLeftOf="@+id/textContentUser"
+            />
+
+            <com.app.session.customview.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_right"
+                android:text="hello"
+                android:maxWidth="280dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/textContentUser"
+                android:textSize="18sp"
+                android:textColor="#ffffff"
+                android:padding="8dp"/>
+
+
     </RelativeLayout>
 
 </RelativeLayout>

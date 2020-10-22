@@ -78,6 +78,7 @@ holder.txtItemName.setTag(language);
     @Override
     public int getItemCount() {
 
+
         return languageArrayList.size();
     }
 
@@ -100,8 +101,8 @@ holder.txtItemName.setTag(language);
 
                     for (Language androidVersion : mArrayList) {
 
-                        if (androidVersion.getEnglish_name().toLowerCase().contains(charString) || androidVersion.getEnglish_name().toLowerCase().contains(charString) || androidVersion.getEnglish_name().toLowerCase().contains(charString)) {
-
+                        if (androidVersion.getName().toLowerCase().contains(charString))
+                        {
                             filteredList.add(androidVersion);
                         }
                     }
@@ -115,8 +116,10 @@ holder.txtItemName.setTag(language);
             }
 
             @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults)
+            {
                 languageArrayList = (ArrayList<Language>) filterResults.values;
+
                 notifyDataSetChanged();
             }
         };

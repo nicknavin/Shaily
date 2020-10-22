@@ -16,6 +16,7 @@ import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.model.ChatMessage;
 import com.app.session.model.Conversation;
+import com.app.session.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,7 +35,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public ChatAdapter(Context ctxt,LinkedList<ChatMessage> list ,String senderID)
     {
         this.context=ctxt;
-
         this.senderID=senderID;
         chatMessageArrayList=list;
 
@@ -63,12 +63,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof ItemMessageFriendHolder)
         {
             ((ItemMessageFriendHolder) holder).txtContent.setText(chatMessageArrayList.get(position).getMessage());
+         //   ((ItemMessageFriendHolder) holder).textMSgTime.setText(Utility.getTimeSlot(chatMessageArrayList.get(position).getCreatedAt()));
 
         }
          else if (holder instanceof ItemMessageUserHolder)
         {
             ((ItemMessageUserHolder) holder).txtContent.setText(chatMessageArrayList.get(position).getMessage());
+           // ((ItemMessageUserHolder) holder).textMSgTime.setText(Utility.getTimeSlot(chatMessageArrayList.get(position).getCreatedAt()));
         }
+
     }
 
     @Override
@@ -86,23 +89,25 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
     class ItemMessageUserHolder extends RecyclerView.ViewHolder {
-        public CustomTextView txtContent;
+        public CustomTextView txtContent,textMSgTime;
 
 
         public ItemMessageUserHolder(View itemView) {
             super(itemView);
             txtContent = (CustomTextView) itemView.findViewById(R.id.textContentUser);
+            textMSgTime = (CustomTextView) itemView.findViewById(R.id.textMSgTime);
 
         }
     }
 
     class ItemMessageFriendHolder extends RecyclerView.ViewHolder {
-        public CustomTextView txtContent;
+        public CustomTextView txtContent,textMSgTime;
 
 
         public ItemMessageFriendHolder(View itemView) {
             super(itemView);
             txtContent = (CustomTextView) itemView.findViewById(R.id.textContentFriend);
+            textMSgTime = (CustomTextView) itemView.findViewById(R.id.textMSgTime);
 
         }
     }
