@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.app.session.Circle;
 import com.app.session.R;
 import com.app.session.adapter.AllSubscriptionStoryAdapter;
 import com.app.session.adapter.SampleDemoAdapter;

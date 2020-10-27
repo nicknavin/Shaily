@@ -4,6 +4,7 @@ package com.app.session.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 public class ChatMessage{
@@ -34,6 +35,14 @@ public class ChatMessage{
 
 	@SerializedName("message")
 	private String message;
+
+	@SerializedName("reciverProfileUrl")
+	private String reciverProfileUrl;
+
+	@SerializedName("senderProfileUrl")
+	private String senderProfileUrl;
+
+
 
 	public void setReciverId(String reciverId){
 		this.reciverId = reciverId;
@@ -105,5 +114,52 @@ public class ChatMessage{
 
 	public String getMessage(){
 		return message;
+	}
+
+	public boolean isRead() {
+		return isRead;
+	}
+
+	public void setRead(boolean read) {
+		isRead = read;
+	}
+
+	public String getReciverProfileUrl() {
+		return reciverProfileUrl;
+	}
+
+	public void setReciverProfileUrl(String reciverProfileUrl) {
+		this.reciverProfileUrl = reciverProfileUrl;
+	}
+
+	public String getSenderProfileUrl() {
+		return senderProfileUrl;
+	}
+
+	public void setSenderProfileUrl(String senderProfileUrl) {
+		this.senderProfileUrl = senderProfileUrl;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ChatMessage)) return false;
+		ChatMessage that = (ChatMessage) o;
+		return getV() == that.getV() &&
+				isRead() == that.isRead() &&
+				getReciverId().equals(that.getReciverId()) &&
+				getCreatedAt().equals(that.getCreatedAt()) &&
+				getSenderId().equals(that.getSenderId()) &&
+				getSenderName().equals(that.getSenderName()) &&
+				getReciverName().equals(that.getReciverName()) &&
+				getId().equals(that.getId()) &&
+				getMessage().equals(that.getMessage()) &&
+				getReciverProfileUrl().equals(that.getReciverProfileUrl()) &&
+				getSenderProfileUrl().equals(that.getSenderProfileUrl());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getReciverId(), getCreatedAt(), getSenderId(), getSenderName(), getReciverName(), getV(), isRead(), getId(), getMessage(), getReciverProfileUrl(), getSenderProfileUrl());
 	}
 }

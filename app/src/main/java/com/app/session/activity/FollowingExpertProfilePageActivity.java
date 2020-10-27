@@ -106,7 +106,6 @@ public class FollowingExpertProfilePageActivity extends BaseActivity implements 
     int total_pages = 0;
     public LinkedList<StoryModel> allStories = new LinkedList<>();
     LinearLayoutManager linearLayoutManager;
-
     ImageView imgChat;
 
 
@@ -333,9 +332,32 @@ public class FollowingExpertProfilePageActivity extends BaseActivity implements 
         recyclerView.setLayoutManager(linearLayoutManager);
         userSubscriptionStoryAdapter = new ExpertUserSubscriptionStoryAdapter(context, allStories, "userName", groupiconUrl, new ObjectCallback() {
             @Override
-            public void getObject(Object object, int position, View view) {
+            public void getObject(Object object, int position, View view)
+            {
                 StoryModel storyShare = (StoryModel) object;
-                if (view.getId() == R.id.layVideo) {
+                if(view.getId()==R.id.layTops)
+                {
+                    if(storyShare.getStoryType().equals("image"))
+                    {
+                        UserStory userStory = new UserStory();
+                        userStory.setId(userStory.getId());
+                        userStory.setThumbnail_url(userStory.getThumbnail_url());
+                        userStory.setStoryUrl(storyShare.getStoryUrl());
+                        userStory.setStoryText(storyShare.getStoryText());
+                        userStory.setStoryType(storyShare.getStoryType());
+                        userStory.setUserDetails(storyShare.getUserDetails());
+                        userStory.setStoryTitle(storyShare.getStoryTitle());
+                        userStory.setDaysAgo(storyShare.getDaysAgo());
+                        userStory.setViews(storyShare.getViews());
+                        userStory.setDisplay_doc_name(storyShare.getDisplay_doc_name());
+
+                        Intent intent = new Intent(context, StoryPageDetailActivity.class);
+                        intent.putExtra("DATA", userStory);
+                        startActivity(intent);
+                    }
+                }
+                else if (view.getId() == R.id.layVideo)
+                {
 
                     if (storyShare.getStoryType().equals("video_url") || storyShare.getStoryUrl().contains("youtu.be")) {
                         String id = Utility.extractYTId(storyShare.getStoryUrl());
@@ -350,7 +372,8 @@ public class FollowingExpertProfilePageActivity extends BaseActivity implements 
                         startActivityForResult(intent, Constant.PAGE_REFRESH);
                     }
                 }
-                if (view.getId() == R.id.imgShare) {
+                if (view.getId() == R.id.imgShare)
+                {
                     String url = "";
                     if (storyShare.getStoryType().equals("audio")) {
                         url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
@@ -393,16 +416,11 @@ public class FollowingExpertProfilePageActivity extends BaseActivity implements 
 
 
                 }
-                if (view.getId() == R.id.imgRemove) {
+                if (view.getId() == R.id.imgRemove)
+                {
                     showMenu(view);
-                } else if (!userId.isEmpty()) {
-                    if (position == -1) {
-                        startActivity(new Intent(context, SubscriptionGroupProfileActivity.class));
-                    }
-
-                } else {
-
-
+                }
+                else {
                     StoryModel storyModel = (StoryModel) object;
                     UserStory userStory = new UserStory();
                     SubscriptionId subscriptionId = new SubscriptionId();

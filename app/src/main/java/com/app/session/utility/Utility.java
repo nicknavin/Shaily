@@ -71,6 +71,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -126,40 +128,9 @@ public class Utility {
         return imageFile;
     }
 
-    public static String change_DateFormate(String date_formate) {
-        String change_date = "";
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-        DateFormat formatter2 = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.US);
-        try {
-            Date date = formatter.parse(date_formate);
-            change_date = formatter2.format(date);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return change_date;
-
-    }
 
 
-    public static String getDays(String date_formate) {
-        String[] dates = date_formate.split("T");
-        date_formate = dates[0];
 
-
-        String change_date = "";
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        DateFormat formatter2 = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.US);
-        try {
-            Date date = formatter.parse(date_formate);
-            change_date = formatter2.format(date);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return change_date;
-
-    }
 
     public static String getCalculatedDate(String date) {
         String[] dates = date.split("T");
@@ -1491,6 +1462,51 @@ public class Utility {
         System.out.println("timeStamp " + timeStamp);
         return timeStamp;
     }
+    public static String getDays(String date_formate) {
+        String[] dates = date_formate.split("T");
+        date_formate = dates[0];
+
+
+        String change_date = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat formatter2 = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.US);
+        try {
+            Date date = formatter.parse(date_formate);
+            change_date = formatter2.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return change_date;
+
+    }
+    public static String change_DateFormate(String date_formate) {
+        String change_date = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        DateFormat formatter2 = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.US);
+        try {
+            Date date = formatter.parse(date_formate);
+            change_date = formatter2.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return change_date;
+
+    }
+
+    public static String getLocalTime() {
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
+                Locale.getDefault());
+        Date currentLocalTime = calendar.getTime();
+
+        DateFormat date = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String localTime = date.format(currentLocalTime);
+        System.out.println(localTime + "  TimeZone   ");
+        return localTime;
+    }
+
 
      public static String getTime1() {
         TimeZone tz = TimeZone.getDefault();
@@ -1503,25 +1519,53 @@ public class Utility {
     }
 
     public static String getTimeSlot(String time) {
-        String date_birth = "";
-        if (!time.isEmpty()) {
-            String [] str= time.split("T");
-            time=str[1].replace("Z","");
-            try {
+        String timeSlot="";
+        try {
 
-                SimpleDateFormat format1 = new SimpleDateFormat("HH:mm:ss.SSS");
-                SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
-                Date date = format1.parse(time);
-                System.out.println(format2.format(date));
-                date_birth = format2.format(date).toString();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.getDefault());
+
+            //  final DateFormat formatter = DateFormat.getDateTimeInstance();
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            final Date timezone = formatter.parse(time);
+            formatter.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+            System.out.println(formatter.format(timezone));
+            time= formatter.format(timezone);
+            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+            Date date = formatter.parse(time);
+            System.out.println(format2.format(date));
+            timeSlot = format2.format(date).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        return date_birth;
+        return timeSlot;
 
 
     }
+
+    public static String getChatTime(String time)
+    {
+        String timeSlot="";
+        try {
+
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.getDefault());
+
+          //  final DateFormat formatter = DateFormat.getDateTimeInstance();
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            final Date timezone = formatter.parse(time);
+            formatter.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+            System.out.println(formatter.format(timezone));
+            time= formatter.format(timezone);
+            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+            Date date = formatter.parse(time);
+            System.out.println(format2.format(date));
+            timeSlot = format2.format(date).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+       }
+        return timeSlot;
+    }
+
 
 
     public static String getTimeOnly() {

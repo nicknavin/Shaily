@@ -114,7 +114,7 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
     ArrayList<UserStory> storyDataArrayList = new ArrayList<>();
     MyProfileFragment myProfileFragment;
     public boolean flag = false;
-    public CustomTextView txtSubsciber;
+    public CustomTextView txtSubsciber=null;
 
     public int pageno = 1;
     public int total_pages = 0;

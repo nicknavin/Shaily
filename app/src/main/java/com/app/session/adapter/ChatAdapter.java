@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.app.session.customview.CustomTextView;
 import com.app.session.model.ChatMessage;
 import com.app.session.model.Conversation;
 import com.app.session.utility.Utility;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -63,13 +66,37 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof ItemMessageFriendHolder)
         {
             ((ItemMessageFriendHolder) holder).txtContent.setText(chatMessageArrayList.get(position).getMessage());
-         //   ((ItemMessageFriendHolder) holder).textMSgTime.setText(Utility.getTimeSlot(chatMessageArrayList.get(position).getCreatedAt()));
+            if(chatMessageArrayList.get(position).getCreatedAt()!=null&&!chatMessageArrayList.get(position).getCreatedAt().isEmpty())
+            {
+                if(chatMessageArrayList.get(position).getCreatedAt().contains("T")) {
+                    ((ItemMessageFriendHolder) holder).textMSgTime.setText(Utility.getTimeSlot(chatMessageArrayList.get(position).getCreatedAt()));
+                }
 
+
+            }
+            Glide.with(context)
+                    .load(chatMessageArrayList.get(position).getReciverProfileUrl())
+                    .placeholder(R.mipmap.profile_icon)
+                    .error(R.mipmap.profile_icon)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(((ItemMessageFriendHolder) holder).imgFriend);
+            Typeface face = Typeface.createFromAsset(context.getAssets(),
+                    "HelveticaNeueMed.ttf");
+            ((ItemMessageFriendHolder) holder).txtContent.setTypeface(face);
+            ((ItemMessageFriendHolder) holder).textMSgTime.setTypeface(face);
         }
          else if (holder instanceof ItemMessageUserHolder)
         {
             ((ItemMessageUserHolder) holder).txtContent.setText(chatMessageArrayList.get(position).getMessage());
-           // ((ItemMessageUserHolder) holder).textMSgTime.setText(Utility.getTimeSlot(chatMessageArrayList.get(position).getCreatedAt()));
+            if(chatMessageArrayList.get(position).getCreatedAt()!=null&&!chatMessageArrayList.get(position).getCreatedAt().isEmpty()) {
+                if(chatMessageArrayList.get(position).getCreatedAt().contains("T")) {
+                    ((ItemMessageUserHolder) holder).textMSgTime.setText(Utility.getTimeSlot(chatMessageArrayList.get(position).getCreatedAt()));
+                }
+            }
+            Typeface face = Typeface.createFromAsset(context.getAssets(),
+                    "HelveticaNeueMed.ttf");
+            ((ItemMessageUserHolder) holder).txtContent.setTypeface(face);
+            ((ItemMessageUserHolder) holder).textMSgTime.setTypeface(face);
         }
 
     }
@@ -77,7 +104,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemViewType(int position)
     {
-        return chatMessageArrayList.get(position).getSenderId().equals(senderID)?VIEW_TYPE_USER_MESSAGE:VIEW_TYPE_FRIEND_MESSAGE;
+            return chatMessageArrayList.get(position).getSenderId().equals(senderID)?VIEW_TYPE_USER_MESSAGE:VIEW_TYPE_FRIEND_MESSAGE;
     }
 
     @Override
@@ -102,12 +129,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     class ItemMessageFriendHolder extends RecyclerView.ViewHolder {
         public CustomTextView txtContent,textMSgTime;
-
-
+        CircleImageView imgFriend;
         public ItemMessageFriendHolder(View itemView) {
             super(itemView);
             txtContent = (CustomTextView) itemView.findViewById(R.id.textContentFriend);
             textMSgTime = (CustomTextView) itemView.findViewById(R.id.textMSgTime);
+            imgFriend=(CircleImageView)itemView.findViewById(R.id.imgFriend);
 
         }
     }

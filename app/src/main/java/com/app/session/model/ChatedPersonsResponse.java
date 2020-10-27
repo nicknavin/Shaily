@@ -12,6 +12,8 @@ public class ChatedPersonsResponse
     @SerializedName("message")
     private String message;
 
+
+
     @SerializedName("body")
     private ArrayList <ChatedBody> chatedPersonsBody;
 
@@ -38,4 +40,6 @@ public class ChatedPersonsResponse
     public void setChatedPersonsBody(ArrayList<ChatedBody> chatedPersonsBody) {
         this.chatedPersonsBody = chatedPersonsBody;
     }
+
+
 }

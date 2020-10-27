@@ -52,7 +52,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.engineio.client.transports.Polling;
-import com.github.nkzawa.engineio.client.transports.WebSocket;
 import com.github.nkzawa.socketio.client.Ack;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -67,7 +66,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import androidx.core.content.FileProvider;
@@ -119,7 +117,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     private boolean mTyping = false;
     private static final int TYPING_TIMER_LENGTH = 600;
     String roomOne="";
-
+    boolean flagMobile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +125,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         connectWithSocket();
         initView();
         readMessage();
+
 
     }
 
@@ -177,7 +176,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         swipeRefreshLayout = containerView.findViewById(R.id.swipeRefreshLayout);
         setUpRecyclerView(containerView);
         //  setUpRecyclerListener();
-        loadChatting();
+        allLoadChatting();
         setSwipeLayout();
     }
 
@@ -239,6 +238,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 String msg = audioRecordView.getMessageView().getText().toString().trim();
                 audioRecordView.getMessageView().setText("");
                 //messageAdapter.add(new Message(msg));
+    //                msg="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore";
                 SendMessage(msg);
             }
         });
@@ -440,7 +440,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 public void run() {
                     /*{"message":"gg","userId":"5f413256c4b8ce176fc80a8f","senderName":"Fadel Bohamad ","reciverId":"5f3cfba45a1d392b092e3fb8","reciverName":"navin nimade jii"}*/
                     JSONObject data = (JSONObject) args[0];
-
+                    System.out.println("msg : "+data.toString());
                     MessageChat messageChat = new MessageChat();
                     try {
 
@@ -449,17 +449,24 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                         if(!data.isNull("reciverId")) {
                             chatMessage.setReciverId(data.getString("reciverId"));
                         }
+                        chatMessage.setCreatedAt(data.getString("createdAt"));
                         chatMessage.setMessage(data.getString("message"));
                         chatMessage.setIsRead(true);
                         chatMessage.setReciverName(receiverName);
                         chatMessage.setSenderName(user_name);
-                        //if(receiverID.equals(chatMessage.getSenderId()))
+                        if(receiverID.equals(chatMessage.getSenderId()))//freind
                         {
                             chatMessageLinkedList.addLast(chatMessage);
                             chatAdapter.notifyDataSetChanged();
-
                             scrollToBottom();
                         }
+                        if(userId.equals(chatMessage.getSenderId()))//user
+                        {
+                            chatMessageLinkedList.addLast(chatMessage);
+                            chatAdapter.notifyDataSetChanged();
+                            scrollToBottom();
+                        }
+                        flagMobile=false;
 
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
@@ -588,7 +595,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         });
     }
 
-    private void SendMessage(String message) {
+    private void SendMessage(String message)
+    {
+        flagMobile=true;
         if (!mSocket.connected()) return;
         JSONObject jsonObject = new JSONObject();
         try {
@@ -599,22 +608,23 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             jsonObject.put("reciverName", receiverName);
             jsonObject.put("reciverProfileUrl", url);
             jsonObject.put("senderProfileUrl", profileUrl);
-            jsonObject.put("createdAt", Utility.getTime1());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSenderId(userId);
-        chatMessage.setReciverId(receiverID);
-        chatMessage.setMessage(message);
-        chatMessage.setIsRead(true);
-        chatMessage.setReciverName(receiverName);
-        chatMessage.setSenderName(user_name);
-        chatMessageLinkedList.addLast(chatMessage);
-        chatAdapter.notifyDataSetChanged();
-        scrollToBottom();
+//        ChatMessage chatMessage = new ChatMessage();
+//        chatMessage.setSenderId(userId);
+//        chatMessage.setReciverId(receiverID);
+//        chatMessage.setMessage(message);
+//        chatMessage.setIsRead(true);
+//        chatMessage.setReciverName(receiverName);
+//        chatMessage.setSenderName(user_name);
+//        chatMessage.setCreatedAt(Utility.getLocalTime());
+//        chatMessageLinkedList.addLast(chatMessage);
+//        chatAdapter.notifyDataSetChanged();
+//        scrollToBottom();
         mSocket.emit("privateMessage", jsonObject, new Ack() {
             @Override
             public void call(Object... args) {
@@ -668,7 +678,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     }
 
-    public void loadChatting() {
+    public void allLoadChatting() {
         if (Utility.isConnectingToInternet(context)) {
             LoadMessage loadMessage = new LoadMessage();
             loadMessage.setSenderId(userId);
@@ -1226,4 +1236,37 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             }
         }
     };
+
+
+    public void sendFileMessage()
+    {
+        if (Utility.isConnectingToInternet(context)) {
+
+            ReqMessageRead reqMessageRead = new ReqMessageRead();
+            reqMessageRead.setUserId(userId);
+            reqMessageRead.setReciverId(receiverID);
+            showLoading();
+            ApiInterface apiInterface = ApiClient.getClient(Urls.PRIVATEMESSAGE_URL).create(ApiInterface.class);
+            Call<Root> call = apiInterface.reqReadMsg(accessToken, reqMessageRead);
+            call.enqueue(new Callback<Root>() {
+                @Override
+                public void onResponse(Call<Root> call, Response<Root> response) {
+                    dismiss_loading();
+                    if (response.body() != null) {
+                        if (response.body().getStatus() == 200)
+                        {
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Root> call, Throwable t) {
+                    dismiss_loading();
+                }
+            });
+        } else {
+            showInternetConnectionToast();
+        }
+    }
 }

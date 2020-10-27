@@ -61,7 +61,8 @@ public class StoryPageDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_page_detail);
-        if (getIntent().getParcelableExtra("DATA") != null) {
+        if (getIntent().getParcelableExtra("DATA") != null)
+        {
             storyData = getIntent().getParcelableExtra("DATA");
         }
         initView();

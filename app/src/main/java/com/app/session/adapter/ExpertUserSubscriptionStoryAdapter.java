@@ -79,21 +79,6 @@ String userName,userUrl;
             holder.bindHolderToVoice(context, userName, userUrl, storyData, position, apiCallback, 10000);
         }
 
-
-
-//holder.youTubeView.initialize(Config.DEVELOPER_KEY, new YouTubePlayer.OnInitializedListener() {
-//    @Override
-//    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-////        String youtube="https://youtu.be/GtJizVWPYBA";
-////            String id =extractYTId(youtube);
-////            youTubePlayer.loadVideo(id);
-//    }
-//
-//    @Override
-//    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-//
-//    }
-//});
     }
 
 
@@ -149,6 +134,7 @@ String userName,userUrl;
         LinearLayout layDocument;
         ImageView imgDoc;
         CustomTextView txtDoc;
+
         public ViewHolder(View view) {
             super(view);
 
@@ -156,6 +142,7 @@ String userName,userUrl;
         public static ViewHolder createVoiceViewHolder(View view)
         {
             ViewHolder holder = new ViewHolder(view);
+
             holder.rey_loading = (ProgressView) view.findViewById(R.id.rey_loading);
             holder.layDocument = (LinearLayout) view.findViewById(R.id.layDocument);
             holder.imgDoc = (ImageView) view.findViewById(R.id.imgDoc);
@@ -525,7 +512,7 @@ String url = Utility.getYoutubeThumbnailUrlFromVideoUrl(userStory.getStoryUrl())
                          //   mPlayer.release();
                         }
                     }
-                    UserStory data =(UserStory)view.getTag();
+                    StoryModel data =(StoryModel)view.getTag();
                     apiCallback.getObject(data,position,view);
 
                 }
@@ -543,7 +530,7 @@ String url = Utility.getYoutubeThumbnailUrlFromVideoUrl(userStory.getStoryUrl())
                          //   mPlayer.release();
                         }
                     }
-                    UserStory data =(UserStory)view.getTag();
+                    StoryModel data =(StoryModel)view.getTag();
                     apiCallback.getObject(data,position,view);
 
                 }

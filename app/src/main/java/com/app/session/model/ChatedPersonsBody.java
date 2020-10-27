@@ -38,6 +38,8 @@ public class ChatedPersonsBody
 	@SerializedName("_id")
 	private String id;
 
+
+
 	@SerializedName("message")
 	private String message;
 
@@ -136,4 +138,6 @@ public class ChatedPersonsBody
 	public void setSenderProfileUrl(String senderProfileUrl) {
 		this.senderProfileUrl = senderProfileUrl;
 	}
+
+
 }

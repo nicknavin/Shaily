@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.app.session.R;
 import com.app.session.adapter.AllChatUserAdapter;
@@ -42,11 +43,11 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ChattedUserActivity extends BaseActivity
 {
     private static final String TAG = "ChatActivity";
-
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     AllChatUserAdapter allChatUserAdapter;
@@ -55,18 +56,19 @@ public class ChattedUserActivity extends BaseActivity
     private Handler mTypingHandler = new Handler();
     private static final int TYPING_TIMER_LENGTH = 600;
     ArrayList<ChatedBody> chatedPersonsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_user);
-
         initView();
-        connectWithSocket();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        connectWithSocket();
         getChatedPersons();
     }
 
@@ -253,26 +255,39 @@ public class ChattedUserActivity extends BaseActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    /*{"message":"gg","userId":"5f413256c4b8ce176fc80a8f","senderName":"Fadel Bohamad ","reciverId":"5f3cfba45a1d392b092e3fb8","reciverName":"navin nimade jii"}*/
-                    JSONObject data = (JSONObject) args[0];
+                    //{"message":"sfsdfsdf","userId":"5f437ef1c4b8ce176fc80a91","senderName":"demo5","reciverId":"5f3cfba45a1d392b092e3fb8","reciverName":"demo1","msg_notification_reciver":4,"createdAt":"2020-10-22T13:38:24.850Z"}
 
+                    JSONObject data = (JSONObject) args[0];
+                    System.out.println("msg : "+data.toString() );
                     MessageChat messageChat = new MessageChat();
                     try {
 
-                        ChatMessage chatMessage=new ChatMessage();
-                        chatMessage.setSenderId(data.getString("userId"));
-                        chatMessage.setReciverId(data.getString("reciverId"));
-                        chatMessage.setMessage(data.getString("message"));
-                        chatMessage.setIsRead(true);
+                        String senderID=data.getString("userId");
+                        String message=data.getString("message");
+                        String notification=data.getString("msg_notification_reciver");
+
+
+                        for(int i=0;i<chatedPersonsList.size();i++)
+                        {
+                            ChatedBody chatedBody=chatedPersonsList.get(i);
+                            if(chatedBody.getChatedPersonsBody().getSenderId().equals(senderID))
+                            {
+                                chatedPersonsList.get(i).getChatedPersonsBody().setMessage(message);
+                                chatedPersonsList.get(i).setNotification(notification);
+                                Collections.swap(chatedPersonsList,0,i);
+                                allChatUserAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+
+
+
 
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
                         return;
                     }
-                    int position=0;
-//                    ChatedBody chatedBody=new ChatedBody();
-//                    chatedBody.getChatedPersonsBody().setMessage();
-//                    chatedPersonsList.add(position,chatedBody);
+
 
 
 
@@ -336,4 +351,15 @@ public class ChattedUserActivity extends BaseActivity
     };
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSocket.disconnect();
+
+        mSocket.off(Socket.EVENT_CONNECT, onConnect);
+        mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
+        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
+        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        mSocket.off(Constant.NEW_MESSAGE, onNewMessage);
+    }
 }
