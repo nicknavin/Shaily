@@ -15,7 +15,27 @@
     android:src="@mipmap/profile_icon"
     android:layout_alignParentLeft="true"
     android:id="@+id/imgFriend"/>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/lay"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_left"
+    android:layout_toRightOf="@+id/imgFriend">
+    <ImageView
+        android:id="@+id/imgChat"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@mipmap/demo"
 
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+
+        />
     <com.app.session.customview.CustomTextView
         android:id="@+id/textContentFriend"
         android:layout_width="wrap_content"
@@ -24,10 +44,14 @@
         android:textSize="16sp"
         android:layout_marginLeft="5dp"
         android:padding="10dp"
-        android:layout_toRightOf="@+id/imgFriend"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/imgChat"
         android:maxWidth="260dp"
         android:textColor="#767676"
-        android:background="@drawable/background_left"/>
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
     <com.app.session.customview.CustomTextView
         android:id="@+id/textMSgTime"
         android:layout_width="70dp"
@@ -37,6 +61,6 @@
         android:gravity="center"
         android:padding="5dp"
         android:textColor="#767676"
-       android:layout_toRightOf="@+id/textContentFriend"
+       android:layout_toRightOf="@+id/lay"
         />
 </RelativeLayout>

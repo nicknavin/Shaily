@@ -92,7 +92,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("set_user_language")
-    public Call<ResponseBody> callUpdateLanguage(@Field("user_cd") String user_cd,@Field("token_id") String token_id,@Field("language_cd") String language_cd);
+    public Call<ResponseBody> callUpdateLanguage(@Field("user_cd") String user_cd, @Field("token_id") String token_id, @Field("language_cd") String language_cd);
 
     @FormUrlEncoded
     @POST("get_country")
@@ -100,11 +100,11 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("check_otp")
-    public Call<ResponseBody> callCheckOTP(@Field("mobile_no") String mobile_no,@Field("otp") String otp);
+    public Call<ResponseBody> callCheckOTP(@Field("mobile_no") String mobile_no, @Field("otp") String otp);
 
     @FormUrlEncoded
     @POST("send_otp")
-    public Call<ResponseBody> callSendOTP(@Field("mobile_no") String mobile_no,@Field("dial_cd") String dial_cd);
+    public Call<ResponseBody> callSendOTP(@Field("mobile_no") String mobile_no, @Field("dial_cd") String dial_cd);
 
     @FormUrlEncoded
     @POST("user_register")
@@ -121,7 +121,7 @@ public interface ApiInterface {
                                                @Field("gender") String gender,
                                                @Field("brief_cv") String brief_cv,
                                                @Field("myBase64String") String myBase64String
-                                               );
+    );
 
     @FormUrlEncoded
     @POST("get_category")
@@ -129,11 +129,11 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("set_consultant_specialties")
-    public Call<ResponseBody> callUpdateCategory(@Field("user_cd") String user_cd,@Field("token_id") String token_id,@Field("category_cd") String category_cd,@Field("country_cd") String country_cd);
+    public Call<ResponseBody> callUpdateCategory(@Field("user_cd") String user_cd, @Field("token_id") String token_id, @Field("category_cd") String category_cd, @Field("country_cd") String country_cd);
 
     @FormUrlEncoded
     @POST("remove_category")
-    public Call<ResponseBody> callRemoveCategory(@Field("user_cd") String user_cd,@Field("token_id") String token_id,@Field("category_cd") String category_cd);
+    public Call<ResponseBody> callRemoveCategory(@Field("user_cd") String user_cd, @Field("token_id") String token_id, @Field("category_cd") String category_cd);
 
 
     @FormUrlEncoded
@@ -150,7 +150,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("update_user_name")
-    public Call<ResponseBody> callUpdateUserName(@Field("user_cd") String user_cd, @Field("token_id") String token_id,@Field("user_name") String user_name, @Field("gender") String gender);
+    public Call<ResponseBody> callUpdateUserName(@Field("user_cd") String user_cd, @Field("token_id") String token_id, @Field("user_name") String user_name, @Field("gender") String gender);
 
     @POST("get_currency_ref")
     public Call<CurrencyRefResponse> GetCurrencyRef();
@@ -177,28 +177,24 @@ public interface ApiInterface {
     public Call<ResponseBody> sendMyStoryImg(@Query("name") String name, @Part MultipartBody.Part file);
 
 
-
     @Multipart
     @POST("set_remark_audio")
     public Call<ResponseBody> callSendStory(@Part("user_cd") RequestBody user_cd,
-                                               @Part("token_id") RequestBody token_id,
-                                               @Part("story_type") RequestBody story_type,
-                                               @Part("story_title") RequestBody story_title,
-                                               @Part("story_time") RequestBody story_time,
-                                               @Part("story_text") RequestBody story_text,
-                                               @Part("thumbnail_text") RequestBody thumbnail_text,
-                                               @Part("subscription_group_cd") RequestBody subscription_group_cd,
-                                               @Part("language_cd") RequestBody language_cd,
-                                               @Part MultipartBody.Part storyImage
-                                            );
+                                            @Part("token_id") RequestBody token_id,
+                                            @Part("story_type") RequestBody story_type,
+                                            @Part("story_title") RequestBody story_title,
+                                            @Part("story_time") RequestBody story_time,
+                                            @Part("story_text") RequestBody story_text,
+                                            @Part("thumbnail_text") RequestBody thumbnail_text,
+                                            @Part("subscription_group_cd") RequestBody subscription_group_cd,
+                                            @Part("language_cd") RequestBody language_cd,
+                                            @Part MultipartBody.Part storyImage
+    );
 
 
 
 
     /*---------------------------------------------New API--------------------------------------------------------------------*/
-
-
-
 
 
     @Headers("Content-Type: application/json")
@@ -249,12 +245,11 @@ public interface ApiInterface {
     public Call<UserProfileRoot> reqGetUserProfile(@Body ReqUserProfile reqUserProfile);
 
 
-
     @Headers("Content-Type: application/json")
     @POST("getUserSubscriptionGroups")
     public Call<SubscriptionGroupRoot> reqGetUserSubscriptionGroups(@Header("Authorization") String token, @Body UserId jsonObject);
 
-   @Headers("Content-Type: application/json")
+    @Headers("Content-Type: application/json")
     @POST("upateUserLanguage")
     public Call<ResponseBody> reqUpateUserLanguage(@Header("Authorization") String token, @Body JsonObject jsonObject);
 
@@ -269,8 +264,8 @@ public interface ApiInterface {
 
     @Multipart
     @POST("updateProfileImage")
-    public Call<ResponseBody> reqUpdateProfileImage(@Header("Authorization") String token,@Part("user_id") RequestBody user_cd,
-                                            @Part MultipartBody.Part storyImage
+    public Call<ResponseBody> reqUpdateProfileImage(@Header("Authorization") String token, @Part("user_id") RequestBody user_cd,
+                                                    @Part MultipartBody.Part storyImage
     );
 
     @GET("getCurrencies")
@@ -281,15 +276,14 @@ public interface ApiInterface {
     @POST("addSubscription")
     public Call<ResponseBody> reqAddSubscription(@Header("Authorization") String token,
                                                  @Part("user_id") RequestBody user_cd,
-                                                @Part("language_id") RequestBody language_id,
-                                                @Part("category_id") RequestBody category_id,
-                                                @Part("currency_id") RequestBody currency_id,
-                                                @Part("subscription_price") RequestBody subscription_price,
-                                                @Part("group_description") RequestBody group_description,
-                                                @Part("group_name") RequestBody group_name,
-                                                @Part MultipartBody.Part storyImage
+                                                 @Part("language_id") RequestBody language_id,
+                                                 @Part("category_id") RequestBody category_id,
+                                                 @Part("currency_id") RequestBody currency_id,
+                                                 @Part("subscription_price") RequestBody subscription_price,
+                                                 @Part("group_description") RequestBody group_description,
+                                                 @Part("group_name") RequestBody group_name,
+                                                 @Part MultipartBody.Part storyImage
     );
-
 
 
     @Headers("Content-Type: application/json")
@@ -335,91 +329,86 @@ public interface ApiInterface {
     @Multipart
     @POST("updateBriefThumbnail")
     public Call<ResponseBody> reqUpdateBriefThumbnail(@Header("Authorization") String token,
-                                    @Part("user_id") RequestBody user_cd,
-                                    @Part("language_id") RequestBody language_id,
-                                    @Part MultipartBody.Part storyImage
+                                                      @Part("user_id") RequestBody user_cd,
+                                                      @Part("language_id") RequestBody language_id,
+                                                      @Part MultipartBody.Part storyImage
     );
-
-
-
 
 
     @Multipart
     @POST("sendStory")
-    public Call<SendStoryResponseRoot>reqSendsStory(@Header("Authorization") String token,
-                                                    @Part("user_id") RequestBody user_cd,
-                                                    @Part("subscription_id") RequestBody subscription_id,
-                                                    @Part("story_type") RequestBody story_type,
-                                                    @Part("story_title") RequestBody story_title,
-                                                    @Part("story_text") RequestBody story_text,
-                                                    @Part("video_url") RequestBody video_url,
-                                                    @Part MultipartBody.Part storyImage
+    public Call<SendStoryResponseRoot> reqSendsStory(@Header("Authorization") String token,
+                                                     @Part("user_id") RequestBody user_cd,
+                                                     @Part("subscription_id") RequestBody subscription_id,
+                                                     @Part("story_type") RequestBody story_type,
+                                                     @Part("story_title") RequestBody story_title,
+                                                     @Part("story_text") RequestBody story_text,
+                                                     @Part("video_url") RequestBody video_url,
+                                                     @Part MultipartBody.Part storyImage
     );
+
     @Multipart
     @POST("sendStory")
     public Call<SendStoryResponseRoot> reqUserSendsStory(@Header("Authorization") String token,
-                                                 @Part("user_id") RequestBody user_cd,
-                                                 @Part("story_type") RequestBody story_type,
-                                                 @Part("story_title") RequestBody story_title,
-                                                 @Part("story_text") RequestBody story_text,
-                                                 @Part("video_url") RequestBody video_url,
-                                                 @Part MultipartBody.Part storyImage
+                                                         @Part("user_id") RequestBody user_cd,
+                                                         @Part("story_type") RequestBody story_type,
+                                                         @Part("story_title") RequestBody story_title,
+                                                         @Part("story_text") RequestBody story_text,
+                                                         @Part("video_url") RequestBody video_url,
+                                                         @Part MultipartBody.Part storyImage
     );
 
     @Multipart
     @POST("sendStory")
     public Call<SendStoryResponseRoot> callSendStory1(@Header("Authorization") String token,
-                                             @Part("user_id") RequestBody user_cd,
-                                             @Part("subscription_id") RequestBody subscription_id,
-                                             @Part("story_type") RequestBody story_type,
-                                             @Part("story_title") RequestBody story_title,
-                                             @Part("story_text") RequestBody story_text,
-                                             @Part("video_url") RequestBody video_url,
-                                             @Part MultipartBody.Part storyImage
-    );
-
-    @Multipart
-    @POST("sendStory")
-    public Call<SendStoryResponseRoot> callUserSendStory1(@Header("Authorization") String token,
-                                     @Part("user_id") RequestBody user_cd,
-
-                                     @Part("story_type") RequestBody story_type,
-                                     @Part("story_title") RequestBody story_title,
-                                     @Part("story_text") RequestBody story_text,
-                                     @Part("video_url") RequestBody video_url,
-                                     @Part MultipartBody.Part storyImage
-    );
-
-
-
-/*..................................Send File..............................*/
-
-
-    @Multipart
-    @POST("sendAnyDoc")
-    public Call<SendStoryResponseRoot> callSendStoryDocFile(@Header("Authorization") String token,
                                                       @Part("user_id") RequestBody user_cd,
                                                       @Part("subscription_id") RequestBody subscription_id,
                                                       @Part("story_type") RequestBody story_type,
                                                       @Part("story_title") RequestBody story_title,
                                                       @Part("story_text") RequestBody story_text,
-                                                      @Part("doc_name") RequestBody doc_name,
-                                                      @Part MultipartBody.Part docFile
+                                                      @Part("video_url") RequestBody video_url,
+                                                      @Part MultipartBody.Part storyImage
+    );
+
+    @Multipart
+    @POST("sendStory")
+    public Call<SendStoryResponseRoot> callUserSendStory1(@Header("Authorization") String token,
+                                                          @Part("user_id") RequestBody user_cd,
+
+                                                          @Part("story_type") RequestBody story_type,
+                                                          @Part("story_title") RequestBody story_title,
+                                                          @Part("story_text") RequestBody story_text,
+                                                          @Part("video_url") RequestBody video_url,
+                                                          @Part MultipartBody.Part storyImage
+    );
+
+
+
+    /*..................................Send File..............................*/
+
+
+    @Multipart
+    @POST("sendAnyDoc")
+    public Call<SendStoryResponseRoot> callSendStoryDocFile(@Header("Authorization") String token,
+                                                            @Part("user_id") RequestBody user_cd,
+                                                            @Part("subscription_id") RequestBody subscription_id,
+                                                            @Part("story_type") RequestBody story_type,
+                                                            @Part("story_title") RequestBody story_title,
+                                                            @Part("story_text") RequestBody story_text,
+                                                            @Part("doc_name") RequestBody doc_name,
+                                                            @Part MultipartBody.Part docFile
     );
 
     @Multipart
     @POST("sendAnyDoc")
     public Call<SendStoryResponseRoot> callUserSendStoryDocFile(@Header("Authorization") String token,
-                                                          @Part("user_id") RequestBody user_cd,
-                                                          @Part("story_type") RequestBody story_type,
-                                                          @Part("story_title") RequestBody story_title,
-                                                          @Part("story_text") RequestBody story_text,
-                                                          @Part("doc_name") RequestBody doc_name,
-                                                          @Part MultipartBody.Part docFile
+                                                                @Part("user_id") RequestBody user_cd,
+                                                                @Part("story_type") RequestBody story_type,
+                                                                @Part("story_title") RequestBody story_title,
+                                                                @Part("story_text") RequestBody story_text,
+                                                                @Part("doc_name") RequestBody doc_name,
+                                                                @Part MultipartBody.Part docFile
     );
-
-
-
 
 
     @Headers("Content-Type: application/json")
@@ -443,8 +432,6 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("getuserSubscribedAllStroies")
     public Call<SubscribedAllStroiesRoot> reqGetuserSubscribedAllStroies(@Header("Authorization") String token, @Body ReqSubscribeGroupStories reqFollowUser);
-
-
 
 
     @Headers("Content-Type: application/json")
@@ -496,6 +483,7 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("messageRead")
     public Call<Root> reqReadMsg(@Header("Authorization") String token, @Body ReqMessageRead reqMessageRead);
+
 
 
 

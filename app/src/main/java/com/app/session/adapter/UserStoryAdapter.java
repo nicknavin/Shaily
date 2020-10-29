@@ -158,6 +158,7 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
 
         }
 
+
         public static ViewHolder createVoiceViewHolder(View view) {
             ViewHolder holder = new ViewHolder(view);
             holder.rey_loading=(ProgressView)view.findViewById(R.id.rey_loading);
@@ -185,7 +186,16 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
             holder.txtStoryTitle = (CustomTextView) view.findViewById(R.id.txtStoryTitle);
             holder.txtStoryDiscription = (ReadMoreTextView) view.findViewById(R.id.txtStoryDiscription);
             holder.txt_progress = (CustomTextView) view.findViewById(R.id.txt_progress);
-            holder.mPlayer = new MediaPlayer();
+            if(holder.mPlayer!=null)
+            {
+                holder.mPlayer.release();
+                holder.mPlayer=null;
+                holder.mPlayer = new MediaPlayer();
+            }
+            else
+            {
+                holder.mPlayer = new MediaPlayer();
+            }
             holder.isPlaying = false;
 
 
@@ -538,7 +548,7 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
                     if (mPlayer != null) {
                         if (mPlayer.isPlaying()) {
                             mPlayer.stop();
-                            //   mPlayer.release();
+                            mPlayer.release();
                         }
                     }
                     StoryModel data = (StoryModel) view.getTag();
@@ -553,7 +563,7 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
                     if (mPlayer != null) {
                         if (mPlayer.isPlaying()) {
                             mPlayer.stop();
-                            //   mPlayer.release();
+                               mPlayer.release();
                         }
                     }
                     StoryModel data = (StoryModel) view.getTag();
@@ -568,7 +578,7 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
                     if (mPlayer != null) {
                         if (mPlayer.isPlaying()) {
                             mPlayer.stop();
-                            //   mPlayer.release();
+                               mPlayer.release();
                         }
                     }
                     StoryModel data = (StoryModel) view.getTag();
@@ -618,6 +628,14 @@ else
             return matcher.group();
         }
         return null;
+    }
+
+    public void mpl(ViewHolder holder)
+    {
+        if(holder.mPlayer!=null) {
+            holder.mPlayer.release();
+            holder.mPlayer=null;
+        }
     }
 
 }

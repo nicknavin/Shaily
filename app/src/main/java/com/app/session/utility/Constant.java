@@ -9,6 +9,7 @@ public class Constant {
 
     public static final String CHAT_SERVER_URL = "https://www.sessionway.com/";
     public static final String NEW_MESSAGE = "new_message";
+    public static final String FILES_EVENT = "files";
     public static final String IS_ON = "isOn";
     public static final String IS_ONLINE = "isOnline";
     public static  String IS_TYPING = "isTyping";

@@ -1154,7 +1154,13 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    protected void onDestroy()
+    {
 
+
+        super.onDestroy();
+    }
 }
 
 

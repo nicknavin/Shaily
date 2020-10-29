@@ -118,7 +118,7 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
     CustomEditText edtGroupName, edtSubscriptionprice, edt_cv;
     Bitmap bmGroupCover = null,bmVideoCover=null;
     String videoCoverImg = "", videoCoverImgName="";
-ImageView imgVideoCover;
+    ImageView imgVideoCover;
     ArrayList<UserLangauges> userLangaugesArrayList;
     File imageFile;
     @Override

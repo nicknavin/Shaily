@@ -144,7 +144,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
     CustomTextView txt_progress;
     SeekBar audio_seekBar;
     MediaPlayer mPlayer=null;
-    private ServiceResultReceiver mServiceResultReceiver;
+
     public static final String RECEIVER = "receiver";
     private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
     CheckBox audio_play;
@@ -185,7 +185,8 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription_story);
         initGetYouTube();
-        if(getIntent().getParcelableExtra(RECEIVER)!=null) {
+        if(getIntent().getParcelableExtra(RECEIVER)!=null)
+        {
             mResultReceiver = getIntent().getParcelableExtra(RECEIVER);
 
         }
@@ -949,7 +950,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
         Intent mIntent = new Intent(this, FileUploadService.class);
         mIntent.putExtra("mFilePath", selectedVideoPath);
         mIntent.putExtra("FileName", "");
-        mIntent.putExtra("VIDEO_THUMB", videoThumbBitmap);
+        mIntent.putExtra("VIDEO_THUMB", videoThumbBitmap);//this for image
         mIntent.putExtra("TYPE", "story");
         mIntent.putExtra("USER_ID", userId);
         mIntent.putExtra("TOKEN", accessToken);
@@ -966,9 +967,9 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
 
         mIntent.putExtra("DATA", reqSendStory);
 //        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.putExtra("REC",mResultReceiver);
+        mIntent.putExtra(RECEIVER,mResultReceiver);
         mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(this, mIntent);
+        FileUploadService.enqueueWork(context, mIntent);
         finish();
     }
 

@@ -4,6 +4,9 @@
     android:id="@+id/layout1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_gravity="right"
     android:paddingTop="2dp"
     android:paddingBottom="2dp"
     android:paddingLeft="5dp">
@@ -24,22 +27,72 @@
             android:textSize="14sp"
             android:padding="5dp"
             android:textColor="#767676"
-            android:gravity="center"
-            android:layout_toLeftOf="@+id/textContentUser"
+            app:edittextfont="HelveticaNeueMed.ttf"
+            android:layout_toLeftOf="@+id/lay"
             />
 
+        <LinearLayout
+            android:id="@+id/lay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/layImage"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:background="@drawable/background_right"
+                android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imgChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 android:maxHeight="300dp"
+                android:src="@mipmap/demode"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_margin="3dp"
+                android:layout_gravity="center"
+                />
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/rey_loading"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:max="50"
+                    android:layout_centerInParent="true"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    android:visibility="gone"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/chatloadingstyle" />
+            </RelativeLayout>
             <com.app.session.customview.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_right"
-                android:text="hello"
-                android:maxWidth="280dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:text="a"
+                android:layout_below="@+id/imgChat"
                 android:id="@+id/textContentUser"
                 android:textSize="16sp"
                 android:textColor="#ffffff"
-                android:padding="10dp"/>
+                android:background="@drawable/background_right"
+                android:letterSpacing="0.04"
+                android:lineSpacingExtra="3sp"
+                android:paddingStart="9dp"
+                android:paddingLeft="9dp"
+                android:paddingTop="7dp"
+                android:paddingEnd="9dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="7dp"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                app:edittextfont="HelveticaNeueMed.ttf"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
 
 
     </RelativeLayout>

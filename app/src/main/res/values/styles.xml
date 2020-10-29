@@ -42,6 +42,14 @@
         <item name="cpd_strokeColors">@array/progress_download1</item>
         <item name="cpd_maxSweepAngle">180</item>
     </style>
+    <style name="chatloadingstyle" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_inAnimDuration">400</item>
+        <item name="cpd_inStepPercent">0.5</item>
+        <item name="cpd_inStepColors">@array/chat_progress_download1</item>
+        <item name="cpd_outAnimDuration">400</item>
+        <item name="cpd_strokeColors">@array/chat_progress_download1</item>
+        <item name="cpd_maxSweepAngle">180</item>
+    </style>
     <style name="InOutColorsCircularProgressDrawableStylenew" parent="Material.Drawable.CircularProgress">
         <item name="cpd_inAnimDuration">800</item>
         <item name="cpd_inStepPercent">0.5</item>

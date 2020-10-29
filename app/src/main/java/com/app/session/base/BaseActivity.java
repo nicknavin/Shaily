@@ -59,7 +59,7 @@ import retrofit2.Response;
  * Created by Vikas Sharma on 14/11/16.
  */
 
-public class BaseActivity extends AppCompatActivity implements ServiceResultReceiver.Receiver {
+public class BaseActivity extends AppCompatActivity  {
 //implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     protected ProgressDialog mProgressDialog;
 
@@ -432,9 +432,5 @@ public class BaseActivity extends AppCompatActivity implements ServiceResultRece
         }
     }
 
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData)
-    {
 
-    }
 }

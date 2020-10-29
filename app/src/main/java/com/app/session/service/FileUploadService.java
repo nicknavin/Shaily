@@ -12,7 +12,12 @@ import android.util.Log;
 import com.app.session.R;
 
 import com.app.session.activity.ConsultantStoryActivity;
+import com.app.session.api.Urls;
+import com.app.session.model.ChatMessage;
+import com.app.session.model.ChatMessageFile;
 import com.app.session.model.ReqSendStory;
+import com.app.session.network.ApiClient;
+import com.app.session.network.ApiInterface;
 import com.app.session.notification.NotificationHelper;
 import com.app.session.receiver.FileProgressReceiver;
 import com.app.session.receiver.RetryJobReceiver;
@@ -71,8 +76,12 @@ public class FileUploadService extends JobIntentService {
     public static final int FAIL = 1234;
     static final int DOWNLOAD_JOB_ID = 1000;
     ReqSendStory sendStory;
+    ChatMessage chatMessageFile;
     /*...................Story parameter.........................*/
     RequestBody reqStoryText, reqStoryTitle, reqStoryType, reqSubscriptionId, reqVideoUrl, reqDocFileName;
+
+    RequestBody reqSenderId,reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye;
+
     RequestBody requestfile = null;
     MultipartBody.Part productimg = null;
 
@@ -97,8 +106,14 @@ public class FileUploadService extends JobIntentService {
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ACTION_DOWNLOAD:
-
-                    mResultReceiver = intent.getParcelableExtra("REC");
+//                    if(intent.getParcelableExtra("REC")!=null)
+//                    {
+//                        mResultReceiver = intent.getParcelableExtra("REC");
+//                    }
+//                    else
+//                    {
+                        mResultReceiver = intent.getParcelableExtra(RECEIVER);
+//                    }
 //                    for(int i=0;i<10;i++){
 //                        try {
 //                            Thread.sleep(1000);
@@ -115,23 +130,40 @@ public class FileUploadService extends JobIntentService {
 
 
         // get file file here
-        mFilePath = intent.getStringExtra("mFilePath");
-        mFileName = intent.getStringExtra("FileName");
-        languageId = intent.getStringExtra("LANGUAGE_ID");
+        if(intent.getStringExtra("mFilePath")!=null) {
+            mFilePath = intent.getStringExtra("mFilePath");
+        }
+        if(intent.getStringExtra("FileName")!=null) {
+            mFileName = intent.getStringExtra("FileName");
+        }
+        if(intent.getStringExtra("LANGUAGE_ID")!=null) {
+            languageId = intent.getStringExtra("LANGUAGE_ID");
+        }
+        if(intent.getStringExtra("USER_ID")!=null)
+        {
         userId = intent.getStringExtra("USER_ID");
+        }
         token = intent.getStringExtra("TOKEN");
-        if (intent.getStringExtra("TYPE") != null) {
+        if (intent.getStringExtra("TYPE") != null)
+        {
             requestType = intent.getStringExtra("TYPE");
             if (requestType.equals("story"))
             {
                 if (intent.getParcelableExtra("DATA") != null) {
                     sendStory = intent.getParcelableExtra("DATA");
                 }
-                if ((Bitmap) intent.getParcelableExtra("VIDEO_THUMB") != null) {
 
-                    videoThumbBitmap = (Bitmap) intent.getParcelableExtra("VIDEO_THUMB");
 
-                }
+            }
+
+            if(requestType.equals("CHAT"))
+            {
+             chatMessageFile =intent.getParcelableExtra("CHAT_DATA");
+
+            }
+            if ((Bitmap) intent.getParcelableExtra("VIDEO_THUMB") != null) {
+
+                videoThumbBitmap = (Bitmap) intent.getParcelableExtra("VIDEO_THUMB");
 
             }
         }
@@ -161,6 +193,21 @@ public class FileUploadService extends JobIntentService {
 
             }
         }
+        else if (requestType.equals("CHAT"))
+        {
+            imageFile = persistImage(videoThumbBitmap, "story_image");
+            requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+
+
+            reqSenderId= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getSenderId());
+            reqsenderName= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getSenderName());
+            reqsenderProfileUrl= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getSenderProfileUrl());
+            reqReciverId= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getReciverId());
+            reqReciverName= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getReciverName());
+            reqReciverProfileUrl= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getReciverProfileUrl());
+            reqFileTye= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getMessageType());
+            productimg = MultipartBody.Part.createFormData("file", "image.jpg", requestfile);
+        }
 
 
         if (mFilePath == null) {
@@ -170,7 +217,12 @@ public class FileUploadService extends JobIntentService {
         if (requestType.equals("story")) {
 
             apiService = RetrofitInstance.getApiStoryService();
-        } else {
+        }
+        else if(requestType.equals("CHAT"))
+        {
+            apiService= RetrofitInstance.getApiChat();
+        }
+        else {
             apiService = RetrofitInstance.getApiService();
         }
 
@@ -225,10 +277,15 @@ public class FileUploadService extends JobIntentService {
                     }
 
 
-                } else {
+                }
+
+                else if(requestType.equals("CHAT"))
+                {
+                    responseBody = apiService.reqSendMsg(token, reqSenderId, reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye,FileUploadService.this.createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
+                }
+
+                else {
                     responseBody = apiService.onFileUpload(token, usercd, language_Id, FileUploadService.this.createMultipartBody(mFilePath, emitter)).blockingGet();
-
-
                 }
                 emitter.onComplete();
             }
@@ -261,14 +318,7 @@ public class FileUploadService extends JobIntentService {
     }
 
 
-    private void calldfdsf() {
-//        try {
-//            String data= responseBody.string();
-//            System.out.println("video upload result  "+data);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
+
 
     File imageFile;
 
@@ -298,7 +348,7 @@ public class FileUploadService extends JobIntentService {
          */
 
         try {
-
+            System.out.println("throwable.toString(): "+throwable.toString());
             Bundle bundle = new Bundle();
 
             if (responseBody != null) {
@@ -368,12 +418,14 @@ public class FileUploadService extends JobIntentService {
 
         Bundle bundle = new Bundle();
         bundle.putInt("progress", (int) (100 * progress));
-        if(!flag) {
-            bundle.putParcelable("IMAGE", videoThumbBitmap);
-            bundle.putString("TYPE", sendStory.getStoryType());
-            bundle.putString("FILENAME", sendStory.getDocFileName());
-            System.out.println("filename"+sendStory.getDocFileName());
-            flag=true;
+        if (requestType.equals("story")) {
+            if (!flag) {
+                bundle.putParcelable("IMAGE", videoThumbBitmap);
+                bundle.putString("TYPE", sendStory.getStoryType());
+                bundle.putString("FILENAME", sendStory.getDocFileName());
+                System.out.println("filename" + sendStory.getDocFileName());
+                flag = true;
+            }
         }
         mResultReceiver.send(SHOW_RESULT, bundle);
 
@@ -398,7 +450,7 @@ public class FileUploadService extends JobIntentService {
 //            bundle.putString("DATA", data);
 //            mResultReceiver.send(STATUS, bundle);
 //
-//            System.out.println("video upload result  " + data);
+            System.out.println("req upload result  " + data);
         } catch (IOException e) {
             e.printStackTrace();
         }

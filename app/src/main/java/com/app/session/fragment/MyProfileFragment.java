@@ -332,7 +332,7 @@ LinearLayoutManager linearLayoutManager;
                 String url = Urls.BASE_IMAGES_URL + briefCv.getVideo_thumbnail();
                 System.out.println("cover_img" + url);
                 layPlaceholder.setVisibility(View.GONE);
-                rey_loading.start();
+//                rey_loading.start();
                 Glide.with(context)
                         .load(url)
                         .placeholder(R.drawable.black_ripple_btn_bg_squre)
@@ -639,7 +639,9 @@ LinearLayoutManager linearLayoutManager;
                             brief_cvList=user.getBriefCV();
                             if (refresh == 0)
                             {
-                                setBriefLayout(brief_cvList.get(mParam1));
+                                if(brief_cvList.size()>0) {
+                                    setBriefLayout(brief_cvList.get(mParam1));
+                                }
                             }
 
                         }

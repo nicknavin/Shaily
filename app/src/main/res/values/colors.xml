@@ -123,7 +123,11 @@
         <item>#99999999</item>
         <item>#95999999</item>
         <item>#90999999</item>
+    </array>
+    <array name="chat_progress_download1">
 
+        <item>#4DCCDF</item>
+        <item>#4DCCDF</item>
 
     </array>
     <array name="progress_snap">

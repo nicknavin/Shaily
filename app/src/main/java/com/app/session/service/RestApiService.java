@@ -135,7 +135,18 @@ public interface RestApiService {
 
 
 
-
+    @Multipart
+    @POST("chatFileUpload")
+    public Single<ResponseBody> reqSendMsg(@Header("Authorization") String token,
+                                                  @Part("senderId") RequestBody senderId,
+                                                  @Part("senderName") RequestBody senderName,
+                                                  @Part("senderProfileUrl") RequestBody senderProfileUrl,
+                                                  @Part("reciverId") RequestBody reciverId,
+                                                  @Part("reciverName") RequestBody reciverName,
+                                                  @Part("reciverProfileUrl") RequestBody reciverProfileUrl,
+                                                  @Part("messageType") RequestBody messageType,
+                                                  @Part MultipartBody.Part chatFile
+    );
 
 
 
