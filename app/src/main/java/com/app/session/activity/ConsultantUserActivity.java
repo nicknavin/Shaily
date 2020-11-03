@@ -211,14 +211,22 @@ public class ConsultantUserActivity extends BaseTabActivity implements View.OnCl
         TabHostWindow.clearAllTabs();
         TabMenu1= TabHostWindow.newTabSpec(context.getResources().getString(R.string.story));
         TabMenu1.setIndicator(createTabView(context.getResources().getString(R.string.story)));
+        Intent intent;
         if(tab==0) {
 
-            TabMenu1.setContent(new Intent(getApplicationContext(), MyProfileActivityNew.class));
+intent=new Intent(getApplicationContext(), MyProfileActivityNew.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            TabMenu1.setContent(intent);
         }
         if(tab==1) {
-            TabMenu1.setContent(new Intent(getApplicationContext(), ExpertFollowingsActivity.class));
+            intent=new Intent(getApplicationContext(), ExpertFollowingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            TabMenu1.setContent(intent);
+
         }if(tab==2) {
-            TabMenu1.setContent(new Intent(getApplicationContext(), ChattedUserActivity.class));
+             intent=new Intent(getApplicationContext(), ChattedUserActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            TabMenu1.setContent(intent);
         }
 
         TabHostWindow.addTab(TabMenu1);

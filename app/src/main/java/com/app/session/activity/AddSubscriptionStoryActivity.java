@@ -513,7 +513,8 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
     private void initAudio() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         audioFileName = "AUD_" + timeStamp + "_" + ".mp3";
-        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath();
+        outputFile = context.getFilesDir().getAbsolutePath();
         outputFile += "/AudioRecording.mp3";
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
 
@@ -651,7 +652,8 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
                     imgSend.setClickable(false);
                     if (story_type.equals("audio")) {
 
-                        if (mPlayer != null) {
+                        if (mPlayer != null)
+                        {
                             if (mPlayer.isPlaying()) {
                                 stopRecording();
 
@@ -767,7 +769,6 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
         }
         imgMick.setEnabled(false);
         imgStory.setVisibility(View.GONE);
-
         layAudio.setVisibility(View.VISIBLE);
         initAudio();
         callRecord();
@@ -1846,6 +1847,15 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if(mPlayer!=null)
+        {
+            if(mPlayer.isPlaying())
+            {
+                mPlayer.stop();
+            }
+            mPlayer.release();
+            mPlayer=null;
+        }
         rey_loading.stop();
         finish();
     }

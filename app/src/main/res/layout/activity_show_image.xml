@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+     <RelativeLayout
+    android:id="@+id/laytop"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- This initially-hidden ImageView will hold the expanded/zoomed version of
+         the images above. Without transformations applied, it takes up the entire
+         screen. To achieve the "zoom" animation, this view's bounds are animated
+         from the bounds of the thumbnail button above, to its final laid-out
+         bounds.
+         -->
+
+    <ImageView
+        android:id="@+id/expanded_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/demo"
+        android:contentDescription="@string/description_zoom_touch_close" />
+</RelativeLayout>
+    <RelativeLayout
+        android:layout_alignTop="@+id/laytop"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/ripplewhite">
+        <ImageView
+            android:id="@+id/imgCross"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:src="@mipmap/ic_close"
+            android:visibility="gone"
+            android:tint="@color/black_txt"></ImageView>
+    </RelativeLayout>
+
+    </RelativeLayout>
+</FrameLayout>

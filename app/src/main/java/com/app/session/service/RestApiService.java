@@ -145,6 +145,8 @@ public interface RestApiService {
                                                   @Part("reciverName") RequestBody reciverName,
                                                   @Part("reciverProfileUrl") RequestBody reciverProfileUrl,
                                                   @Part("messageType") RequestBody messageType,
+                                                  @Part("displayFileName") RequestBody displayFileName,
+                                                  @Part("durationTime") RequestBody durationTime,
                                                   @Part MultipartBody.Part chatFile
     );
 

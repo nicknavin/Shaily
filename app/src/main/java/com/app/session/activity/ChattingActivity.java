@@ -1,16 +1,28 @@
 package com.app.session.activity;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -20,19 +32,28 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 
+import com.app.session.BuildConfig;
 import com.app.session.R;
 import com.app.session.adapter.ChatAdapter;
 import com.app.session.api.Urls;
 import com.app.session.audio_record_view.AttachmentOption;
 import com.app.session.audio_record_view.AttachmentOptionsListener;
 import com.app.session.audio_record_view.AudioRecordView;
+import com.app.session.audioplayer.AudioStatus;
+import com.app.session.audioplayer.MediaPlayerUtils;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
+import com.app.session.interfaces.ChatCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
+import com.app.session.model.Chat;
 import com.app.session.model.ChatMessage;
 import com.app.session.model.ChatMessageBody;
 import com.app.session.model.ChatMessageFile;
@@ -63,13 +84,22 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -89,7 +119,7 @@ import static com.app.session.thumby.ThumbyActivity.EXTRA_THUMBNAIL_POSITION;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_URI;
 import static com.app.session.thumby.ThumbyActivity.VIDEO_PATH;
 
-public class ChattingActivity extends BaseActivity implements AudioRecordView.RecordingListener, View.OnClickListener, AttachmentOptionsListener, ServiceResultReceiver.Receiver {
+public class ChattingActivity extends BaseActivity implements AudioRecordView.RecordingListener, View.OnClickListener, AttachmentOptionsListener, ServiceResultReceiver.Receiver, MediaPlayerUtils.Listener {
 
     private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
     public static final String RECEIVER = "receiver";
@@ -126,6 +156,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     private static final int TYPING_TIMER_LENGTH = 600;
     String roomOne = "";
     boolean flagMobile;
+    public LinkedList<AudioStatus> audioStatusList = new LinkedList<>();
+    private Parcelable state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +170,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     }
 
+    View containerView;
     private void initView() {
         if (getIntent().getStringExtra("ID") != null) {
             receiverID = getIntent().getStringExtra("ID");
@@ -157,7 +190,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         // this is to make your layout the root of audio record view, root layout supposed to be empty..
         audioRecordView.initView((FrameLayout) findViewById(R.id.layoutMain));
         // this is to provide the container layout to the audio record view..
-        View containerView = audioRecordView.setContainerView(R.layout.layout_chatting);
+        containerView = audioRecordView.setContainerView(R.layout.layout_chatting);
+
         audioRecordView.setRecordingListener(this);
         setListener();
         audioRecordView.getMessageView().requestFocus();
@@ -194,7 +228,35 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         recyclerViewMessages.setLayoutManager(linearLayoutManager);
 
         recyclerViewMessages.setHasFixedSize(false);
-        chatAdapter = new ChatAdapter(context, chatMessageLinkedList, userId);
+        chatAdapter = new ChatAdapter(context, chatMessageLinkedList, userId, new ChatCallback() {
+            @Override
+            public void result(ChatMessage chatMessage, int position, View view)
+            {
+                if(chatMessage.getMessageType().equals("docs"))
+                {
+                    if(chatMessage.getUri()!=null&&!chatMessage.getUri().isEmpty()){
+                        Uri uri =Uri.parse(chatMessage.getUri());
+                        Utility.displayDocument(context,uri);
+                    }
+                    else {
+                        new DownloadFile(chatMessage.getDisplayFileName()).execute(chatMessage.getFile());
+                    }
+                }
+                else if (chatMessage.getMessageType().equals("image"))
+                {
+                    if (chatMessage.getPath() != null && !chatMessage.getPath().isEmpty())
+                    {
+                        showImage(0,chatMessage.getPath());
+
+                    }
+                    else
+                    {
+                        showImage(1,chatMessage.getFile());
+                    }
+
+                }
+            }
+        });
         recyclerViewMessages.setAdapter(chatAdapter);
         recyclerViewMessages.setItemAnimator(new DefaultItemAnimator());
     }
@@ -283,6 +345,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         debug("started");
 
         time = System.currentTimeMillis() / (1000);
+        setAudioPermission();
     }
 
     @Override
@@ -299,6 +362,11 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
 
         if (recordTime > 1) {
+            stopRecording();
+
+            System.out.println("audio file path " + outputFile);
+            sendFile("audio", outputFile,"","00:00","");
+
             //messageAdapter.add(new Message(recordTime));
         }
     }
@@ -307,6 +375,65 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     public void onRecordingCanceled() {
         showToast("canceled");
         debug("canceled");
+        callRecordingCancel();
+    }
+
+    public void callRecordingCancel() {
+
+        if (isRecordring) {
+            this.cancelRecording();
+        }
+
+        if (!outputFile.isEmpty()) {
+            File file = new File(outputFile);
+            if (file != null) {
+                // Utils.printLog(context, "AudioFRG:", "File deleted...");
+                file.delete();
+            }
+        }
+
+    }
+
+    public void cancelRecording() {
+
+        if (audioRecorder != null) {
+            try {
+                showToast(context.getResources().getString(R.string.msg_audio_stop));
+                audioRecorder.stop();
+            } catch (RuntimeException stopException) {
+//                Utils.printLog(context, "AudioMsgFrag:", "Runtime exception.This is thrown intentionally if stop is called just after start");
+            } finally {
+                audioRecorder.release();
+                audioRecorder = null;
+                isRecordring = false;
+//                record.setImageResource(com.applozic.mobicomkit.uiwidgets.R.drawable.applozic_audio_normal);
+//                audioRecordingText.setText(getResources().getText(com.applozic.mobicomkit.uiwidgets.R.string.start_text));
+                countDownTimer.cancel();
+            }
+
+        }
+        cnt = 0;
+        sec = 0;
+        audioTime = 0;
+    }
+
+
+    public void setAudioPermission() {
+
+        if (Build.VERSION.SDK_INT >= PermissionsUtils.SDK_INT_MARSHMALLOW) {
+            if (!PermissionsUtils.getInstance(context).isPermissionGranted(context, Manifest.permission.READ_EXTERNAL_STORAGE, "Read External Storage")) {
+                return;
+            }
+            if (!PermissionsUtils.getInstance(context).isPermissionGranted(context, Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write External Storage")) {
+                return;
+            }
+            if (!PermissionsUtils.getInstance(context).isPermissionGranted(context, Manifest.permission.RECORD_AUDIO, "Record Audio")) {
+                return;
+            }
+        }
+        initAudio();
+        callRecord();
+
     }
 
 
@@ -334,6 +461,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
             case AttachmentOption.DOCUMENT_ID:
                 showToast("Document Clicked");
+                openFile(mDocumentUri);
                 break;
             case AttachmentOption.CAMERA_ID:
                 showToast("Camera Clicked");
@@ -345,6 +473,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 break;
             case AttachmentOption.AUDIO_ID:
                 showToast("Audio Clicked");
+                pickAudioFile();
                 break;
             case AttachmentOption.LOCATION_ID:
                 showToast("Location Clicked");
@@ -430,7 +559,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 @Override
                 public void run() {
                     Log.e(TAG, "Error connecting");
-                    showToast("Error connecting" + args[0]);
+                   // showToast("Error connecting" + args[0]);
                     System.out.println("DATA" + args[0]);
                     mSocket.connect();
                     //Toast.makeText(getActivity().getApplicationContext(),R.string.error_connect, Toast.LENGTH_LONG).show();
@@ -461,6 +590,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                         chatMessage.setIsRead(true);
                         chatMessage.setReciverName(receiverName);
                         chatMessage.setSenderName(user_name);
+                        chatMessage.setMessageType(data.getString("messageType"));
                         if (receiverID.equals(chatMessage.getSenderId()))//freind
                         {
                             chatMessageLinkedList.addLast(chatMessage);
@@ -722,7 +852,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
         mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.off(Constant.NEW_MESSAGE, onNewMessage);
-
+        MediaPlayerUtils.releaseMediaPlayer();
     }
 
     public void allLoadChatting() {
@@ -748,6 +878,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             list = chatMessageBody.getChatMessages();
                             for (ChatMessage chatMessage : list) {
                                 chatMessageLinkedList.addLast(chatMessage);
+                            }
+                            for (int i = 0; i < chatMessageLinkedList.size(); i++) {
+
+                                {
+                                    audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
+                                }
                             }
                             //                        chatAdapter = new ChatAdapter(context, chatMessageArrayList, userId);
                             //                        recyclerViewMessages.setAdapter(chatAdapter);
@@ -799,6 +935,10 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             chatMessageLinkedList.addFirst(chatMessage);
                         }
 
+                        for (int i = 0; i < chatMessageLinkedList.size(); i++) {
+                            audioStatusList.addFirst(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
+                        }
+
 //                        chatAdapter = new ChatAdapter(context, chatMessageArrayList, userId);
 //                        recyclerViewMessages.setAdapter(chatAdapter);
                         chatAdapter.notifyDataSetChanged();
@@ -837,7 +977,37 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                     if (response.body() != null) {
                         if (response.body().getStatus() == 200) {
                             chatMessageLinkedList.clear();
-                            chatAdapter = new ChatAdapter(context, chatMessageLinkedList, userId);
+                            chatAdapter = new ChatAdapter(context, chatMessageLinkedList, userId, new ChatCallback() {
+                                @Override
+                                public void result(ChatMessage chatMessage, int position, View view)
+                                {
+
+                                        if(chatMessage.getMessageType().equals("docs"))
+                                        {
+                                            if(chatMessage.getPath()!=null&&!chatMessage.getPath().isEmpty()){
+                                               Uri uri= Uri.fromFile(new File(chatMessage.getPath()));
+
+                                                Utility.displayDocument(context,uri);
+                                            }
+                                            else {
+                                                new DownloadFile(chatMessage.getDisplayFileName()).execute(chatMessage.getFile());
+                                            }
+                                        }
+                                        else if (chatMessage.getMessageType().equals("image"))
+                                        {
+                                            if (chatMessage.getPath() != null && !chatMessage.getPath().isEmpty())
+                                            {
+                                                showImage(0,chatMessage.getPath());
+
+                                            }
+                                            else
+                                            {
+                                                showImage(1,chatMessage.getFile());
+                                            }
+                                        }
+
+                                }
+                            });
                             recyclerViewMessages.setAdapter(chatAdapter);
                         }
                     }
@@ -948,6 +1118,37 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
+    public void pickAudioFile() {
+        if (Build.VERSION.SDK_INT >= PermissionsUtils.SDK_INT_MARSHMALLOW) {
+            if (!PermissionsUtils.getInstance(context).isPermissionGranted(context, Manifest.permission.READ_EXTERNAL_STORAGE, "Read External Storage")) {
+                return;
+            }
+            if (!PermissionsUtils.getInstance(context).isPermissionGranted(context, Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write External Storage")) {
+                return;
+            }
+
+        }
+
+        String[] mimeTypes ={"audio/mp3", "audio/mpeg"};
+//        Intent intent = new Intent();
+//        intent.setType("audio/mp3");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intent, Constant.PICK_AUDIO_CODE);
+        if (Build.VERSION.SDK_INT < 19) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            startActivityForResult(intent, Constant.PICK_AUDIO_CODE);
+        } else {
+
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, Constant.PICK_AUDIO_CODE);
+        }
+
+
+
+    }
+
+
     public void Gallery() {
 
         if (Build.VERSION.SDK_INT < 19) {
@@ -982,6 +1183,37 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
 
     }
+
+
+    private void openFile(Uri pickerInitialUri) {
+        String[] mimeTypesS =
+                {"application/zip", "application/pdf", "application/msword", "application/vnd.ms-powerpoint", "application/vnd.ms-excel", "text/plain"};
+        String[] mimeTypes =
+                {"application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+                        "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+                        "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+                        "text/plain",
+                        "application/pdf",
+                        "application/zip"};
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setType(mimeTypes.length == 1 ? mimeTypes[0] : "*/*");
+            if (mimeTypes.length > 0) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            }
+        } else {
+            String mimeTypesStr = "";
+            for (String mimeType : mimeTypes) {
+                mimeTypesStr += mimeType + "|";
+            }
+            intent.setType(mimeTypesStr.substring(0, mimeTypesStr.length() - 1));
+        }
+        startActivityForResult(Intent.createChooser(intent, "ChooseFile"), Constant.PICKFILE_RESULT_CODE);
+    }
+
+
 
 
     @Override
@@ -1027,7 +1259,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             ByteArray = null;
                             Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
                             videoThumbBitmap = bm;
-                            sendFile("image",resultUri.toString());
+                            sendFile("image", resultUri.toString(),"","0","");
 
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -1055,20 +1287,11 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                     try {
                         mDocumentUri = data.getData();
 
-                        selectedDocumentPath = getRealPathFromUri(mDocumentUri);
+                        String uri =mDocumentUri.toString();
+                        selectedDocumentPath = Utility.getRealPathFromUri(context,mDocumentUri);
                         docName = getFileName(mDocumentUri);
-//                        if (docName.contains(".doc")) {
-//                            imgDoc.setImageResource(R.mipmap.docs_story);
-//                        }
-//                        if (docName.contains(".pdf")) {
-//                            imgDoc.setImageResource(R.mipmap.pdf_story);
-//                        }
-//                        if (docName.contains(".zip")) {
-//                            imgDoc.setImageResource(R.mipmap.zip_story);
-//                        }
-//                        if (docName.contains(".xls")) {
-//                            imgDoc.setImageResource(R.mipmap.xls_story);
-//                        }
+                        sendFile("docs",selectedDocumentPath,docName,"0",uri);
+
 
 
                     } catch (Exception e) {
@@ -1104,6 +1327,38 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
             }
 
+            if (requestCode == Constant.PICK_AUDIO_CODE) {
+                if (data != null) {
+                    try {
+                        mDocumentUri = data.getData();
+                        selectedDocumentPath = Utility.getRealPathFromUri(context,mDocumentUri);
+                        docName = getFileName(mDocumentUri);
+                        long milliseconds=Utility.getAudioDuration(context,selectedDocumentPath);
+
+
+                        Double minxutes = (double)((milliseconds / 1000) / 60);
+                        long minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds);
+                        System.out.println("minutes "+minutes);
+                        // long seconds = (milliseconds / 1000);
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds);
+                        String duration="";
+                        if(minutes>0){
+                            duration=""+minutes+":00";
+                        }
+                        else
+                        {
+                            duration="00:0"+seconds;
+                        }
+
+
+                        sendFile("audio", selectedDocumentPath,docName,duration,"");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
 
         }
 
@@ -1128,106 +1383,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     }
 
-    public String getRealPathFromUri(final Uri uri) {
-        // DocumentProvider
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
 
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-            // Return the remote address
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-
-            return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    private String getDataColumn(Context context, Uri uri, String selection,
-                                 String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    private boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    private boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    private boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    private boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
 
 
     public String getFileName(Uri uri) {
@@ -1272,8 +1428,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     ChatMessage chatMessageFile;
     private ServiceResultReceiver mServiceResultReceiver;
 
-    private void sendFile(String fileType,String path)
-    {
+    private void sendFile(String fileType, String path,String fileName,String duration,String uri) {
 
         mServiceResultReceiver = new ServiceResultReceiver(new Handler());
         mServiceResultReceiver.setReceiver(this);
@@ -1287,6 +1442,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         chatMessageFile.setMessageType(fileType);
         chatMessageFile.setPath(path);
         chatMessageFile.setUpload(false);
+        chatMessageFile.setDisplayFileName(fileName);
+        chatMessageFile.setDurationTime(duration);
+        chatMessageFile.setUri(uri);
 
         Intent mIntent = new Intent(this, FileUploadService.class);
         mIntent.putExtra("mFilePath", selectedVideoPath);
@@ -1297,15 +1455,14 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mIntent.putExtra("TOKEN", accessToken);
         mIntent.putExtra("LANGUAGE_ID", "cd");
         mIntent.putExtra("CHAT_DATA", chatMessageFile);
-
         mIntent.putExtra(RECEIVER, mServiceResultReceiver);
         mIntent.setAction(ACTION_DOWNLOAD);
         FileUploadService.enqueueWork(context, mIntent);
         sendFileMsg();
     }
 
-
     private void sendFileMsg() {
+        audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
         chatMessageLinkedList.addLast(chatMessageFile);
         chatAdapter.notifyDataSetChanged();
         scrollToBottom();
@@ -1337,5 +1494,479 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         }
     }
+
+
+    private String outputFile = null, audioFileName = "";
+    private int cnt;
+    private boolean isRecordring;
+    CountDownTimer countDownTimer;
+    int sec = 0;
+    long audioTime = 0;
+    private MediaRecorder audioRecorder;
+
+    public void callRecord() {
+        try {
+            showToast(context.getResources().getString(R.string.msg_audio_start));
+            if (isRecordring) {
+                this.stopRecording();
+                countDownTimer.cancel();
+            } else {
+                if (audioRecorder == null) {
+                    prepareMediaRecorder();
+                }
+//                audioRecordingText.setText(getResources().getString(com.applozic.mobicomkit.uiwidgets.R.string.stop));
+                audioRecorder.prepare();
+                audioRecorder.start();
+                isRecordring = true;
+//                record.setImageResource(com.applozic.mobicomkit.uiwidgets.R.drawable.applozic_audio_mic_inverted);
+//                t.cancel();
+                countDownTimer.start();
+//                cnt = 0;
+            }
+
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initAudio() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        audioFileName = "AUD_" + timeStamp + "_" + ".mp3";
+//        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath();
+        outputFile = context.getFilesDir().getAbsolutePath();
+        String name = "/" + Utility.getTime() + "/AudioRecording.mp3";
+        outputFile += audioFileName;
+        countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                cnt++;
+                sec++;
+                long millis = cnt;
+                audioTime = millis;
+                //  sec=(int)millis;
+                int seconds = (int) (millis / 60);
+                int minutes = seconds / 60;
+                seconds = seconds % 60;
+                if (sec == 60) {
+                    sec = 0;
+                }
+
+//                txtAudioTimer.setText(String.format("%02d:%02d", seconds, sec));
+////                txtAudioTimer.setText(String.format("%02d:%02d", minutes, seconds));
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+
+    }
+
+    public void stopRecording() {
+        if (audioRecorder != null) {
+            try {
+                showToast(context.getResources().getString(R.string.msg_audio_stop));
+                audioRecorder.stop();
+            } catch (RuntimeException stopException) {
+//                Utils.printLog(context, "AudioMsgFrag:", "Runtime exception.This is thrown intentionally if stop is called just after start");
+            } finally {
+                audioRecorder.release();
+                audioRecorder = null;
+                isRecordring = false;
+//                record.setImageResource(com.applozic.mobicomkit.uiwidgets.R.drawable.applozic_audio_normal);
+//                audioRecordingText.setText(getResources().getText(com.applozic.mobicomkit.uiwidgets.R.string.start_text));
+                countDownTimer.cancel();
+            }
+
+        }
+
+    }
+
+    public MediaRecorder prepareMediaRecorder() {
+
+        audioRecorder = new MediaRecorder();
+        audioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        audioRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        audioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        audioRecorder.setAudioEncodingBitRate(256);
+        audioRecorder.setAudioChannels(1);
+        audioRecorder.setAudioSamplingRate(44100);
+        audioRecorder.setOutputFile(outputFile);
+        return audioRecorder;
+
+    }
+
+
+    @Override
+    public void onAudioUpdate(int currentPosition) {
+        int playingAudioPosition = -1;
+        for (int i = 0; i < audioStatusList.size(); i++) {
+            AudioStatus audioStatus = audioStatusList.get(i);
+            if (audioStatus.getAudioState() == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
+                playingAudioPosition = i;
+                break;
+            }
+        }
+
+        if (playingAudioPosition != -1) {
+//            AudioListAdapter.ViewHolder holder
+//                    = (AudioListAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(playingAudioPosition);
+//            if (holder != null) {
+//                holder.seekBarAudio.setProgress(currentPosition);
+//            }
+
+            System.out.println("playingAudioPosition " + playingAudioPosition);
+            int value = chatAdapter.getItemViewType(playingAudioPosition);
+            System.out.println("value " + value);
+
+            if (value == 1) {
+                ChatAdapter.ItemMessageFriendHolder friendHolder = (ChatAdapter.ItemMessageFriendHolder) recyclerViewMessages.findViewHolderForAdapterPosition(playingAudioPosition);
+                if (friendHolder != null) {
+                    friendHolder.progressBar2.setProgress(currentPosition);
+                }
+            } else if (value == 0) {
+                ChatAdapter.ItemMessageUserHolder userHolder = (ChatAdapter.ItemMessageUserHolder) recyclerViewMessages.findViewHolderForAdapterPosition(playingAudioPosition);
+                if (userHolder != null) {
+                    userHolder.progressBar2.setProgress(currentPosition);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAudioComplete() {
+        state = recyclerViewMessages.getLayoutManager().onSaveInstanceState();
+
+        audioStatusList.clear();
+        for (int i = 0; i < chatMessageLinkedList.size(); i++) {
+            audioStatusList.add(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
+        }
+        //setRecyclerViewAdapter(contactList);
+        chatAdapter.notifyDataSetChanged();
+
+
+        // Main position of RecyclerView when loaded again
+        if (state != null) {
+            recyclerViewMessages.getLayoutManager().onRestoreInstanceState(state);
+        }
+    }
+
+    private void displayPdf(Uri uri)
+    {
+
+//        Uri uri = getFileUri(this, fileName);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        // FLAG_GRANT_READ_URI_PERMISSION is needed on API 24+ so the activity opening the file can read it
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        if (intent.resolveActivity(getPackageManager()) == null) {
+            // Show an error
+        } else {
+            startActivity(intent);
+        }
+    }
+    public File getFile(Context context, String fileName)
+    {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return null;
+        }
+
+        File storageDir = context.getExternalFilesDir(null);
+        return new File(storageDir, fileName);
+    }
+
+    public Uri getFileUri(Context context, String fileName) {
+        File file = getFile(context, fileName);
+        return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+    }
+
+
+    private class DownloadFile extends AsyncTask<String, Integer, File> {
+
+
+        String fileName="";
+
+        DownloadFile(String fileName)
+        {
+
+            this.fileName=fileName;
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoading();
+        }
+
+        @Override
+        protected File doInBackground(String... strings) {
+            int count;
+            try {
+                URL url = new URL(strings[0]);
+                URLConnection conexion = url.openConnection();
+                conexion.connect();
+                // this will be useful so that you can show a tipical 0-100% progress bar
+                int lenghtOfFile = conexion.getContentLength();
+
+                // downlod the file
+                File filesDir = context.getFilesDir();
+                File audioFile = new File(filesDir, fileName);
+                if(audioFile.exists())
+                {
+                    audioFile.delete();
+
+                }
+                audioFile.createNewFile();
+                InputStream input = new BufferedInputStream(url.openStream());
+//                OutputStream output = new FileOutputStream("/sdcard/somewhere/nameofthefile.mp3");
+                OutputStream output = new FileOutputStream(audioFile);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    publishProgress((int) (total * 100 / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+                return audioFile;
+            } catch (Exception e) {
+                String s = e.toString();
+                System.out.println(e.toString());
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            dismiss_loading();
+
+            if (file != null) {
+
+                    String sharePath = file.getPath();
+                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+                    Utility.displayDocument(context,uri);
+
+
+            }
+
+        }
+
+    }
+
+
+
+    public void showImage(int type,String url)
+    {
+
+
+        final Dialog dd = new Dialog(context);
+        try {
+            dd.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dd.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dd.setContentView(R.layout.activity_show_image);
+            dd.getWindow().setLayout(-1, -2);
+            dd.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+            ImageView  imageViewexpand=(ImageView) dd.findViewById(R.id.expanded_image);
+            ImageView  close=(ImageView) dd.findViewById(R.id.imgCross);
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dd.dismiss();
+                }
+            });
+            if(type==1) {
+                Glide.with(context)
+                        .load(url)
+                        .placeholder(R.mipmap.profile_icon)
+                        .error(R.mipmap.profile_icon)
+                        .into(imageViewexpand);
+            }
+            else
+            {
+                Uri resultUri = Uri.parse(url);
+                Glide.with(context)
+                        .load(new File(resultUri.getPath()))
+                        .placeholder(R.mipmap.profile_icon)
+                        .error(R.mipmap.profile_icon)
+                        .into(imageViewexpand);
+            }
+            dd.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Log.d(TAG, "Exception: " + e.getMessage());
+        }
+
+
+
+
+
+    }
+
+    private Animator currentAnimator;
+
+    // The system "short" animation time duration, in milliseconds. This
+    // duration is ideal for subtle animations or animations that occur
+    // very frequently.
+    private int shortAnimationDuration;
+    private void zoomImageFromThumb(final View thumbView, int imageResId) {
+        // If there's an animation in progress, cancel it
+        // immediately and proceed with this one.
+        if (currentAnimator != null) {
+            currentAnimator.cancel();
+        }
+
+        // Load the high-resolution "zoomed-in" image.
+
+        final ImageView expandedImageView = containerView.findViewById(
+                R.id.expanded_image);
+        expandedImageView.setImageResource(imageResId);
+
+        // Calculate the starting and ending bounds for the zoomed-in image.
+        // This step involves lots of math. Yay, math.
+        final Rect startBounds = new Rect();
+        final Rect finalBounds = new Rect();
+        final Point globalOffset = new Point();
+
+        // The start bounds are the global visible rectangle of the thumbnail,
+        // and the final bounds are the global visible rectangle of the container
+        // view. Also set the container view's offset as the origin for the
+        // bounds, since that's the origin for the positioning animation
+        // properties (X, Y).
+        thumbView.getGlobalVisibleRect(startBounds);
+        findViewById(R.id.container)
+                .getGlobalVisibleRect(finalBounds, globalOffset);
+        startBounds.offset(-globalOffset.x, -globalOffset.y);
+        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+        // Adjust the start bounds to be the same aspect ratio as the final
+        // bounds using the "center crop" technique. This prevents undesirable
+        // stretching during the animation. Also calculate the start scaling
+        // factor (the end scaling factor is always 1.0).
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            // Extend start bounds horizontally
+            startScale = (float) startBounds.height() / finalBounds.height();
+            float startWidth = startScale * finalBounds.width();
+            float deltaWidth = (startWidth - startBounds.width()) / 2;
+            startBounds.left -= deltaWidth;
+            startBounds.right += deltaWidth;
+        } else {
+            // Extend start bounds vertically
+            startScale = (float) startBounds.width() / finalBounds.width();
+            float startHeight = startScale * finalBounds.height();
+            float deltaHeight = (startHeight - startBounds.height()) / 2;
+            startBounds.top -= deltaHeight;
+            startBounds.bottom += deltaHeight;
+        }
+
+        // Hide the thumbnail and show the zoomed-in view. When the animation
+        // begins, it will position the zoomed-in view in the place of the
+        // thumbnail.
+        thumbView.setAlpha(0f);
+        expandedImageView.setVisibility(View.VISIBLE);
+
+        // Set the pivot point for SCALE_X and SCALE_Y transformations
+        // to the top-left corner of the zoomed-in view (the default
+        // is the center of the view).
+        expandedImageView.setPivotX(0f);
+        expandedImageView.setPivotY(0f);
+
+        // Construct and run the parallel animation of the four translation and
+        // scale properties (X, Y, SCALE_X, and SCALE_Y).
+        AnimatorSet set = new AnimatorSet();
+        set
+                .play(ObjectAnimator.ofFloat(expandedImageView, View.X,
+                        startBounds.left, finalBounds.left))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.Y,
+                        startBounds.top, finalBounds.top))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
+                        startScale, 1f))
+                .with(ObjectAnimator.ofFloat(expandedImageView,
+                        View.SCALE_Y, startScale, 1f));
+        set.setDuration(shortAnimationDuration);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                currentAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                currentAnimator = null;
+            }
+        });
+        set.start();
+        currentAnimator = set;
+
+        // Upon clicking the zoomed-in image, it should zoom back down
+        // to the original bounds and show the thumbnail instead of
+        // the expanded image.
+        final float startScaleFinal = startScale;
+        expandedImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentAnimator != null) {
+                    currentAnimator.cancel();
+                }
+
+                // Animate the four positioning/sizing properties in parallel,
+                // back to their original values.
+                AnimatorSet set = new AnimatorSet();
+                set.play(ObjectAnimator
+                        .ofFloat(expandedImageView, View.X, startBounds.left))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.Y,startBounds.top))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.SCALE_X, startScaleFinal))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.SCALE_Y, startScaleFinal));
+                set.setDuration(shortAnimationDuration);
+                set.setInterpolator(new DecelerateInterpolator());
+                set.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        thumbView.setAlpha(1f);
+                        expandedImageView.setVisibility(View.GONE);
+                        currentAnimator = null;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        thumbView.setAlpha(1f);
+                        expandedImageView.setVisibility(View.GONE);
+                        currentAnimator = null;
+                    }
+                });
+                set.start();
+                currentAnimator = set;
+            }
+        });
+    }
+
+
+
 
 }

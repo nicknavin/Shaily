@@ -80,7 +80,7 @@ public class FileUploadService extends JobIntentService {
     /*...................Story parameter.........................*/
     RequestBody reqStoryText, reqStoryTitle, reqStoryType, reqSubscriptionId, reqVideoUrl, reqDocFileName;
 
-    RequestBody reqSenderId,reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye;
+    RequestBody reqSenderId,reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye,reqFileName,reqFileDuartion;
 
     RequestBody requestfile = null;
     MultipartBody.Part productimg = null;
@@ -187,7 +187,8 @@ public class FileUploadService extends JobIntentService {
                 {
                     productimg = MultipartBody.Part.createFormData("file", "image.jpg", requestfile);
 
-                } else if (sendStory.getStoryType().equals("video")) {
+                } else if (sendStory.getStoryType().equals("video"))
+                {
                     productimg = MultipartBody.Part.createFormData("thumbnail", "image.jpg", requestfile);
                 }
 
@@ -195,9 +196,12 @@ public class FileUploadService extends JobIntentService {
         }
         else if (requestType.equals("CHAT"))
         {
-            imageFile = persistImage(videoThumbBitmap, "story_image");
-            requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-
+            if(chatMessageFile.getMessageType().equals("image"))
+            {
+                imageFile = persistImage(videoThumbBitmap, "story_image");
+                requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+                productimg = MultipartBody.Part.createFormData("file", "image.jpg", requestfile);
+            }
 
             reqSenderId= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getSenderId());
             reqsenderName= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getSenderName());
@@ -206,7 +210,9 @@ public class FileUploadService extends JobIntentService {
             reqReciverName= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getReciverName());
             reqReciverProfileUrl= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getReciverProfileUrl());
             reqFileTye= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getMessageType());
-            productimg = MultipartBody.Part.createFormData("file", "image.jpg", requestfile);
+            reqFileName= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getDisplayFileName());
+            reqFileDuartion= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getDurationTime());
+
         }
 
 
@@ -263,27 +269,30 @@ public class FileUploadService extends JobIntentService {
                     else if (sendStory.getStoryType().equals("audio"))
                     {
                         File file = new File(sendStory.getDocFilePath());
-
-
                         if (sendStory.getSubscription_id().isEmpty()) {
-
                             responseBody = apiService.callUserSendAudioStory1(token,usercd,reqStoryType,reqStoryTitle,reqStoryText,reqVideoUrl,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
-
                         } else {
                             responseBody = apiService.callSendAudioStory1(token,usercd,reqSubscriptionId,reqStoryType,reqStoryTitle,reqStoryText,reqVideoUrl,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
                         }
-
-
                     }
 
-
                 }
-
                 else if(requestType.equals("CHAT"))
                 {
-                    responseBody = apiService.reqSendMsg(token, reqSenderId, reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye,FileUploadService.this.createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
+                    if(chatMessageFile.getMessageType().equals("image")) {
+                        responseBody = apiService.reqSendMsg(token, reqSenderId, reqsenderName, reqsenderProfileUrl, reqReciverId, reqReciverName, reqReciverProfileUrl, reqFileTye, reqFileName,reqFileDuartion,FileUploadService.this.createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
+                    }
+                    else if (chatMessageFile.getMessageType().equals("audio"))
+                    {
+                        File file = new File(chatMessageFile.getPath());
+                        responseBody = apiService.reqSendMsg(token, reqSenderId, reqsenderName, reqsenderProfileUrl, reqReciverId, reqReciverName, reqReciverProfileUrl, reqFileTye,  reqFileName,reqFileDuartion,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
+                    }
+                    else if (chatMessageFile.getMessageType().equals("docs"))
+                    {
+                        File file = new File(chatMessageFile.getPath());
+                        responseBody = apiService.reqSendMsg(token, reqSenderId, reqsenderName, reqsenderProfileUrl, reqReciverId, reqReciverName, reqReciverProfileUrl, reqFileTye,  reqFileName,reqFileDuartion,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "multipart/form-data", file, emitter)).blockingGet();
+                    }
                 }
-
                 else {
                     responseBody = apiService.onFileUpload(token, usercd, language_Id, FileUploadService.this.createMultipartBody(mFilePath, emitter)).blockingGet();
                 }

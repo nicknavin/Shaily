@@ -23,7 +23,7 @@ android:id="@+id/layChatUser"
             android:layout_height="55dp"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
-            android:src="@mipmap/demo"/>
+            android:src="@mipmap/profile_icon"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

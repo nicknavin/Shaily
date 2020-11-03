@@ -333,12 +333,16 @@ LinearLayoutManager linearLayoutManager;
                 System.out.println("cover_img" + url);
                 layPlaceholder.setVisibility(View.GONE);
 //                rey_loading.start();
-                Glide.with(context)
-                        .load(url)
-                        .placeholder(R.drawable.black_ripple_btn_bg_squre)
-                        .error(R.drawable.black_ripple_btn_bg_squre)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imgBriefCV);
+                try {
+                    Glide.with(context)
+                            .load(url)
+                            .placeholder(R.drawable.black_ripple_btn_bg_squre)
+                            .error(R.drawable.black_ripple_btn_bg_squre)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imgBriefCV);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 //                Picasso.with(context).load(url).into(imgBriefCV);
 
             } else {

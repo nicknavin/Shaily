@@ -56,11 +56,16 @@ public class ChatMessage implements Parcelable {
 
     private String path;
 
+    private String uri;
+
     private boolean upload;
 
+    @SerializedName("displayFileName")
+    private String displayFileName;
 
-    public ChatMessage() {
-    }
+@SerializedName("durationTime")
+    private String durationTime;
+
 
     protected ChatMessage(Parcel in) {
         reciverId = in.readString();
@@ -77,6 +82,10 @@ public class ChatMessage implements Parcelable {
         messageType = in.readString();
         file = in.readString();
         path = in.readString();
+        uri = in.readString();
+        upload = in.readByte() != 0;
+        displayFileName = in.readString();
+        durationTime = in.readString();
     }
 
     public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
@@ -91,159 +100,24 @@ public class ChatMessage implements Parcelable {
         }
     };
 
-    public void setReciverId(String reciverId) {
-        this.reciverId = reciverId;
+    public String getDisplayFileName() {
+        return displayFileName;
     }
 
-    public String getReciverId() {
-        return reciverId;
+    public void setDisplayFileName(String displayFileName)
+    {
+        this.displayFileName = displayFileName;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public String getDurationTime() {
+        return durationTime;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public void setDurationTime(String durationTime) {
+        this.durationTime = durationTime;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
-    }
-
-    public String getSenderName() {
-        return senderName;
-    }
-
-    public void setReciverName(String reciverName) {
-        this.reciverName = reciverName;
-    }
-
-    public String getReciverName() {
-        return reciverName;
-    }
-
-    public void setV(int V) {
-        this.V = V;
-    }
-
-    public int getV() {
-        return V;
-    }
-
-    public void setIsRead(boolean isRead) {
-        this.isRead = isRead;
-    }
-
-    public boolean isIsRead() {
-        return isRead;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
-    public String getReciverProfileUrl() {
-        return reciverProfileUrl;
-    }
-
-    public void setReciverProfileUrl(String reciverProfileUrl) {
-        this.reciverProfileUrl = reciverProfileUrl;
-    }
-
-    public String getSenderProfileUrl() {
-        return senderProfileUrl;
-    }
-
-    public void setSenderProfileUrl(String senderProfileUrl) {
-        this.senderProfileUrl = senderProfileUrl;
-    }
-
-    public String getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(String messageType) {
-        this.messageType = messageType;
-    }
-
-    public String getFile() {
-        return Urls.BASE_IMAGES_URL + file;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isUpload() {
-        return upload;
-    }
-
-    public void setUpload(boolean upload) {
-        this.upload = upload;
-    }
-
-    public static Creator<ChatMessage> getCREATOR() {
-        return CREATOR;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChatMessage)) return false;
-        ChatMessage that = (ChatMessage) o;
-        return getV() == that.getV() &&
-                isRead() == that.isRead() &&
-                getReciverId().equals(that.getReciverId()) &&
-                getCreatedAt().equals(that.getCreatedAt()) &&
-                getSenderId().equals(that.getSenderId()) &&
-                getSenderName().equals(that.getSenderName()) &&
-                getReciverName().equals(that.getReciverName()) &&
-                getId().equals(that.getId()) &&
-                getMessage().equals(that.getMessage()) &&
-                getReciverProfileUrl().equals(that.getReciverProfileUrl()) &&
-                getSenderProfileUrl().equals(that.getSenderProfileUrl());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getReciverId(), getCreatedAt(), getSenderId(), getSenderName(), getReciverName(), getV(), isRead(), getId(), getMessage(), getReciverProfileUrl(), getSenderProfileUrl());
+    public ChatMessage() {
     }
 
     @Override
@@ -267,5 +141,146 @@ public class ChatMessage implements Parcelable {
         parcel.writeString(messageType);
         parcel.writeString(file);
         parcel.writeString(path);
+        parcel.writeString(uri);
+        parcel.writeByte((byte) (upload ? 1 : 0));
+        parcel.writeString(displayFileName);
+        parcel.writeString(durationTime);
+    }
+
+    public String getReciverId() {
+        return reciverId;
+    }
+
+    public void setReciverId(String reciverId) {
+        this.reciverId = reciverId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public String getReciverName() {
+        return reciverName;
+    }
+
+    public void setReciverName(String reciverName) {
+        this.reciverName = reciverName;
+    }
+
+    public int getV() {
+        return V;
+    }
+
+    public void setV(int v) {
+        V = v;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setIsRead(boolean read) {
+        isRead = read;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getReciverProfileUrl() {
+        return reciverProfileUrl;
+    }
+
+    public void setReciverProfileUrl(String reciverProfileUrl) {
+        this.reciverProfileUrl = reciverProfileUrl;
+    }
+
+    public String getSenderProfileUrl() {
+        return senderProfileUrl;
+    }
+
+    public void setSenderProfileUrl(String senderProfileUrl) {
+        this.senderProfileUrl = senderProfileUrl;
+    }
+
+    @Nullable
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(@Nullable String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getFile() {
+        return Urls.BASE_IMAGES_URL + file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public boolean isUpload() {
+        return upload;
+    }
+
+    public void setUpload(boolean upload) {
+        this.upload = upload;
+    }
+
+    public static Creator<ChatMessage> getCREATOR() {
+        return CREATOR;
     }
 }

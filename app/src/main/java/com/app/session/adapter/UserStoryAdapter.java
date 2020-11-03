@@ -485,6 +485,7 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
                 };
 
                 String path = Urls.BASE_IMAGES_URL + userStory.getStoryUrl();
+                System.out.println("audio path "+path);
                 try {
                     mPlayer = new MediaPlayer();
                     mPlayer.setDataSource(path);

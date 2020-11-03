@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
@@ -38,6 +40,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -1798,6 +1801,16 @@ public class Utility {
 
     }
 
+public static long getAudioDuration(Context context,String path )
+{
+    Uri uri = Uri.parse(path);
+    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+    mmr.setDataSource(context,uri);
+    String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+    long millSecond = Integer.parseInt(durationStr);
+    return  millSecond;
+}
+
 
 
     public static Uri getLocalBitmapUri(Context context, Bitmap bmp) {
@@ -1824,52 +1837,133 @@ public class Utility {
     }
 
 
+    public static void displayDocument(Context context,Uri uri)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        ContentResolver cR = context.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String type = mime.getExtensionFromMimeType(cR.getType(uri));
+        System.out.println("mime type "+type);
+        if(type.contains("doc"))
+        {
+            type="msword";
+        }
+        else if(type.equals("xlsx"))
+        {
+            type="vnd.ms-excel";
+        }
 
-
-/*
-    public static void  clearData(Context context) {
-        DataPrefrence.setPref(context, Constant.USER_ID, "");
-        DataPrefrence.setPref(context, Constant.ACCESS_TOKEN, "");
+        intent.setDataAndType(uri, "application/" + type);
+        // FLAG_GRANT_READ_URI_PERMISSION is needed on API 24+ so the activity opening the file can read it
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (intent.resolveActivity(context.getPackageManager()) == null) {
+            // Show an error
+        } else {
+            context.startActivity(intent);
+        }
     }
-*/
-//    public static boolean isValidURL(String urlString)
-//    {
-//        try
-//        {
-//            URL url = new URL(urlString);
-//            url.toURI();
-//            return true;
-//        } catch (Exception exception)
-//        {
-//            return false;
-//        }
-//    }
-//    private void copyFile() throws IOException {
-//        File file = new File("/storage/emulated/0/WhatsApp/Media/WhatsApp Images/IMG-20160513-WA0003.jpg");
-//        if (!file.exists()) {
-//            return;
-//        }
-//
-//        if (flyerFolder.exists()) {
-//
-//            FileChannel source = null;
-//            FileChannel destination = null;
-//            source = new FileInputStream(file).getChannel();
-//            File myFile = new File(flyerFolder, "my_image_" + System.currentTimeMillis() + ".jpg");
-//            destination = new FileOutputStream(myFile).getChannel();
-//            if (destination != null && source != null) {
-//                destination.transferFrom(source, 0, source.size());
-//            }
-//            if (source != null) {
-//                source.close();
-//            }
-//            if (destination != null) {
-//                destination.close();
-//            }
-//        }
-//
-//
-//    }
+
+public static String getRealPathFromUri(Context context,final Uri uri) {
+        // DocumentProvider
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    private static String getDataColumn(Context context, Uri uri, String selection,
+                                 String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    private static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    private static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    private static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    private static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
 
 }// final class ends here
 

@@ -860,6 +860,12 @@ boolean followStatus;
             public void getObject(Object object, int position,View view)
             {
                 StoryModel storyShare=(StoryModel) object;
+                if(view.getId()==R.id.layDocument)
+                {
+                    url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
+                    String msg = storyShare.getStoryTitle() + "\n" + storyShare.getStoryText();
+                    new DownloadFile(msg,storyShare.getDisplay_doc_name(),"").execute(url);
+                }
                 if(view.getId()==R.id.layVideo)
                 {
 
@@ -1070,32 +1076,13 @@ boolean followStatus;
             dismiss_loading();
             flag=true;
             if (file != null) {
-                if(type.equals("show"))
-                {
 
-//                        Utility.openFile(context,file);
-//                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setDataAndType(uri, "application/pdf");
-//                    intent = Intent.createChooser(intent, "Open File");
-//
-//
-//
-//                    Intent chooser = Intent.createChooser(intent, "open file");
-//                    chooser.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // optional
-//
-//                    startActivity(chooser);
-
-                }
-                else {
                     String sharePath = file.getPath();
                     Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("audio/*");
-                    share.putExtra(Intent.EXTRA_TEXT, msg);
-                    share.putExtra(Intent.EXTRA_STREAM, uri);
-                    startActivity(Intent.createChooser(share, "Share Sound File"));
-                }
+                    Utility.displayDocument(context,uri);
+
+
+
             }
 
         }

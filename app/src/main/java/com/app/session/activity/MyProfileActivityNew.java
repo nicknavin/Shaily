@@ -1,5 +1,6 @@
 package com.app.session.activity;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,7 +98,7 @@ import static com.app.session.service.FileUploadService.FAIL;
 import static com.app.session.service.FileUploadService.SHOW_RESULT;
 import static com.app.session.service.FileUploadService.STATUS;
 
-public class MyProfileActivityNew extends BaseActivity implements View.OnClickListener,ServiceResultReceiver.Receiver {
+public class    MyProfileActivityNew extends BaseActivity implements View.OnClickListener,ServiceResultReceiver.Receiver {
 
 
     public CustomTextView txtUserName, txt_follwr_count, txt_follwng_count;
@@ -827,19 +829,9 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
             if (file != null) {
                 if(type.equals("show"))
                 {
-
-//                        Utility.openFile(context,file);
-//                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setDataAndType(uri, "application/pdf");
-//                    intent = Intent.createChooser(intent, "Open File");
-//
-//
-//
-//                    Intent chooser = Intent.createChooser(intent, "open file");
-//                    chooser.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // optional
-//
-//                    startActivity(chooser);
+                    String sharePath = file.getPath();
+                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+                  Utility.displayDocument(context,uri);
 
                 }
                 else {
@@ -856,6 +848,8 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
         }
 
     }
+
+
 
     private void initAudioPlayer(File file) {
         try {

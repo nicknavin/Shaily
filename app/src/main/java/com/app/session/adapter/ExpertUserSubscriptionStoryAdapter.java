@@ -199,7 +199,6 @@ String userName,userUrl;
 //                    txtStoryDiscription.setTrimLines(5);
                     txtStoryDiscription .setTrimCollapsedText(" more");
                     txtStoryDiscription .setTrimExpandedText(" less");
-
                     txtStoryDiscription.setText(userStory.getStoryText());
                 } catch (StringIndexOutOfBoundsException  e) {
                     e.printStackTrace();
@@ -243,18 +242,6 @@ String userName,userUrl;
                             .error(R.drawable.black_ripple_btn_bg_squre)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imgStory);
-//                    Picasso.with(context).load(url).placeholder(R.drawable.black_ripple_btn_bg_squre).error(R.drawable.black_ripple_btn_bg_squre).into(imgStory, new Callback() {
-//                        @Override
-//                        public void onSuccess() {
-//                            rey_loading.stop();
-//                            rey_loading.setVisibility(View.GONE);
-//                        }
-//
-//                        @Override
-//                        public void onError() {
-//                            imgStory.setImageResource(R.drawable.black_ripple_btn_bg_squre);
-//                        }
-//                    });
                 }
             }
 
@@ -491,14 +478,37 @@ String url = Utility.getYoutubeThumbnailUrlFromVideoUrl(userStory.getStoryUrl())
                         if(mPlayer.isPlaying())
                         {
                             mPlayer.stop();
-                         //   mPlayer.release();
+                            mPlayer.release();
                         }
                     }
+
                     StoryModel data =(StoryModel)view.getTag();
                     apiCallback.getObject(data,position,view);
 
                 }
             });
+
+
+            layDocument.setTag(userStory);
+            layDocument.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view)
+                {
+                    if(mPlayer!=null)
+                    {
+                        if(mPlayer.isPlaying())
+                        {
+                            mPlayer.stop();
+                            mPlayer.release();
+                        }
+                    }
+
+                    StoryModel data =(StoryModel)view.getTag();
+                    apiCallback.getObject(data,position,view);
+
+                }
+            });
+
             txtStoryTitle.setTag(userStory);
             txtStoryTitle.setOnClickListener(new View.OnClickListener() {
                 @Override

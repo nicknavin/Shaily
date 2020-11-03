@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import com.app.session.BuildConfig;
 import com.app.session.R;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
@@ -29,10 +31,18 @@ import com.app.session.utility.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 
 public class StoryPageDetailActivity extends BaseActivity {
     UserStory storyData;
@@ -351,11 +361,11 @@ public class StoryPageDetailActivity extends BaseActivity {
             }
             layDocument.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view)
+                {
                     String url = Urls.BASE_IMAGES_URL + storyData.getStoryUrl();
-                    Intent browserIntent = new Intent(context,DocumentActivity.class);
-                    browserIntent.putExtra("URL",url);
-                    startActivity(browserIntent);
+                    new DownloadFile("",storyData.getDisplay_doc_name(),"show").execute(url);
+
                 }
             });
 
@@ -407,5 +417,93 @@ public class StoryPageDetailActivity extends BaseActivity {
 
             }
         }
+    }
+
+
+
+
+    private class DownloadFile extends AsyncTask<String, Integer, File> {
+
+        String msg = "";
+        String fileName="";
+        String type="";
+        DownloadFile(String msg,String fileName,String type)
+        {
+            this.msg = msg;
+            this.fileName=fileName;
+            this.type=type;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoading();
+        }
+
+        @Override
+        protected File doInBackground(String... strings) {
+            int count;
+            try {
+                URL url = new URL(strings[0]);
+                URLConnection conexion = url.openConnection();
+                conexion.connect();
+                // this will be useful so that you can show a tipical 0-100% progress bar
+                int lenghtOfFile = conexion.getContentLength();
+
+                // downlod the file
+                File filesDir = context.getFilesDir();
+                File audioFile = new File(filesDir, fileName);
+                if(audioFile.exists())
+                {
+                    audioFile.delete();
+
+                }
+                audioFile.createNewFile();
+                InputStream input = new BufferedInputStream(url.openStream());
+//                OutputStream output = new FileOutputStream("/sdcard/somewhere/nameofthefile.mp3");
+                OutputStream output = new FileOutputStream(audioFile);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    publishProgress((int) (total * 100 / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+                return audioFile;
+            } catch (Exception e) {
+                String s = e.toString();
+                System.out.println(e.toString());
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            dismiss_loading();
+
+            if (file != null)
+            {
+            //    if(type.equals("show"))
+                {
+                    String sharePath = file.getPath();
+                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+                    Utility.displayDocument(context,uri);
+
+                }
+
+            }
+
+        }
+
     }
 }

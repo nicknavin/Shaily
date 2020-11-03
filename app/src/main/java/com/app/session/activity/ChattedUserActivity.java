@@ -240,7 +240,7 @@ public class ChattedUserActivity extends BaseActivity
                 @Override
                 public void run() {
                     Log.e(TAG, "Error connecting");
-                    showToast("Error connecting"+args[0]);
+                   // showToast("Error connecting"+args[0]);
                     System.out.println("DATA"+args[0]);
                     mSocket.connect();
                     //Toast.makeText(getActivity().getApplicationContext(),R.string.error_connect, Toast.LENGTH_LONG).show();
