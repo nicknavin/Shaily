@@ -1,8 +1,7 @@
 package com.app.session.model;
 
+import com.app.session.room.ChatMessageBody;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
 
 public class RootChatMessage
 {

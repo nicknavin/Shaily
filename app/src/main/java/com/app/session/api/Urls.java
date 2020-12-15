@@ -18,8 +18,8 @@ public interface Urls {
 
     public String BASE_VIDEO_URL = "http://consultlot.com/video/users/";
     public String BASE_IMAGES_URL = "http://sessionway.com/";
-    public String PRIVATEMESSAGE_URL = "http://sessionway.com/chat/";
-    public String USERPROFILE_URL = "http://sessionway.com/userProfile/";
+    public String PRIVATEMESSAGE_URL = "http://sessionway.com/api/chat/";
+    public String USERPROFILE_URL = "http://sessionway.com/api/userProfile/";
 
 
     /*Common URLS*/

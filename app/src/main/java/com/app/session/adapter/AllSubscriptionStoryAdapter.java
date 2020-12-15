@@ -240,7 +240,7 @@ String userName,userUrl;
             imgProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    apiCallback.getObject(userStory,-1,view);
+                    apiCallback.getObject(userStory,position,view);
                 }
             });
 

@@ -1,13 +1,7 @@
 package com.app.session.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +9,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.app.session.R;
-import com.app.session.activity.ChatActivity;
 import com.app.session.activity.ChattingActivity;
 import com.app.session.audioplayer.AudioStatus;
 import com.app.session.audioplayer.MediaPlayerUtils;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
-import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.interfaces.ChatCallback;
-import com.app.session.model.ChatMessage;
-import com.app.session.model.Conversation;
+import com.app.session.room.ChatMessage;
 import com.app.session.utility.Utility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -36,9 +26,7 @@ import com.rey.material.widget.ProgressView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -224,11 +212,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(((ItemMessageUserHolder) holder).imgChat);
 
-                    if (!chatMessage.isUpload()) {
-                        userHolder.rey_loading.setVisibility(View.VISIBLE);
-                    } else {
-                        userHolder.rey_loading.setVisibility(View.GONE);
-                    }
+//                    if (!chatMessage.isUpload())
+//                    {
+//                        userHolder.rey_loading.setVisibility(View.VISIBLE);
+//                    } else {
+//                        userHolder.rey_loading.setVisibility(View.GONE);
+//                    }
                 } else {
                     Glide.with(context)
                             .load(chatMessage.getFile())
@@ -280,20 +269,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 userHolder.layDocument.setVisibility(View.VISIBLE);
                 userHolder.txtDocName.setText(chatMessage.getDisplayFileName());
 
-                if(chatMessage.getDisplayFileName().contains(".doc"))
-                {
-                    userHolder.imgDoc.setImageResource(R.mipmap.docs_story);
-                }
-                else if(chatMessage.getDisplayFileName().contains(".pdf"))
-                {
-                    userHolder.imgDoc.setImageResource(R.mipmap.pdf_story);
-                } else if(chatMessage.getDisplayFileName().contains(".zip"))
-                {
-                    userHolder.imgDoc.setImageResource(R.mipmap.zip_story);
-                }
-                else if(chatMessage.getDisplayFileName().contains(".xls"))
-                {
-                    userHolder.imgDoc.setImageResource(R.mipmap.xls_story);
+                if (chatMessage.getDisplayFileName()!=null) {
+                    if(chatMessage.getDisplayFileName().contains(".doc"))
+                    {
+                        userHolder.imgDoc.setImageResource(R.mipmap.docs_story);
+                    }
+                    else if(chatMessage.getDisplayFileName().contains(".pdf"))
+                    {
+                        userHolder.imgDoc.setImageResource(R.mipmap.pdf_story);
+                    } else if(chatMessage.getDisplayFileName().contains(".zip"))
+                    {
+                        userHolder.imgDoc.setImageResource(R.mipmap.zip_story);
+                    }
+                    else if(chatMessage.getDisplayFileName().contains(".xls"))
+                    {
+                        userHolder.imgDoc.setImageResource(R.mipmap.xls_story);
+                    }
                 }
 
 

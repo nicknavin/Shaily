@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.app.session.R;
@@ -53,7 +55,8 @@ public class AllChatUserAdapter extends RecyclerView.Adapter<AllChatUserAdapter.
     public void onBindViewHolder(@NonNull AllChatUserAdapter.ChatUserHolder holder, int position) {
         ChatedBody chatedBody = chatedPersonsList.get(position);
         System.out.println("chat url " + chatedBody.getChatedPersonsBody().getReciverProfileUrl());
-        if (userId.equals(chatedBody.getChatedPersonsBody().getSenderId())) {
+        if (userId.equals(chatedBody.getChatedPersonsBody().getSenderId()))
+        {
             holder.txtUserName.setText(chatedBody.getChatedPersonsBody().getReciverName());
             Glide.with(context)
                     .load(chatedBody.getChatedPersonsBody().getReciverProfileUrl())
@@ -102,13 +105,43 @@ public class AllChatUserAdapter extends RecyclerView.Adapter<AllChatUserAdapter.
         } else {
             holder.layNotification.setVisibility(View.GONE);
         }
-        holder.txtChatMsg.setText(chatedBody.getChatedPersonsBody().getMessage());
+
         holder.layChatUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 apiItemCallback.result(position);
             }
         });
+
+
+        if(chatedBody.getChatedPersonsBody().getMessageType().equals("image"))
+        {
+            holder.layFile.setVisibility(View.VISIBLE);
+            holder.txtChatMsg.setVisibility(View.GONE);
+            holder.txtChatMsgType.setText("photo");
+        }
+        if(chatedBody.getChatedPersonsBody().getMessageType().equals("docs"))
+        {
+            holder.layFile.setVisibility(View.VISIBLE);
+            holder.txtChatMsg.setVisibility(View.GONE);
+            holder.imgType.setImageResource(R.mipmap.docs_story);
+            holder.txtChatMsgType.setText(chatedBody.getChatedPersonsBody().getDisplayFileName());
+        }
+        if(chatedBody.getChatedPersonsBody().getMessageType().equals("audio"))
+        {
+
+            holder.layFile.setVisibility(View.VISIBLE);
+            holder.txtChatMsg.setVisibility(View.GONE);
+            holder.imgType.setImageDrawable(context.getResources().getDrawable(R.drawable.mic));
+            holder.txtChatMsgType.setText(chatedBody.getChatedPersonsBody().getDisplayFileName());
+        }
+        else if(chatedBody.getChatedPersonsBody().getMessageType().equals("text"))
+        {
+            holder.layFile.setVisibility(View.GONE);
+            holder.txtChatMsg.setVisibility(View.VISIBLE);
+            holder.txtChatMsg.setText(chatedBody.getChatedPersonsBody().getMessage());
+        }
+
 
 
     }
@@ -174,13 +207,17 @@ public class AllChatUserAdapter extends RecyclerView.Adapter<AllChatUserAdapter.
     }
 
     class ChatUserHolder extends RecyclerView.ViewHolder {
-        public CustomTextView txtUserName, txtChatMsg, txtTyping, txtTimeStamp, txtMsgCount;
+        public CustomTextView txtUserName, txtChatMsg, txtChatMsgType, txtTyping, txtTimeStamp, txtMsgCount;
         CircleImageView imgProfile;
+        ImageView imgType;
         RelativeLayout layChatUser, layNotification;
+        LinearLayout layFile;
 
         public ChatUserHolder(View itemView) {
             super(itemView);
+            layFile = (LinearLayout) itemView.findViewById(R.id.layFile);
             txtTyping = (CustomTextView) itemView.findViewById(R.id.txtTyping);
+            txtChatMsgType = (CustomTextView) itemView.findViewById(R.id.txtChatMsgType);
             txtMsgCount = (CustomTextView) itemView.findViewById(R.id.txtMsgCount);
             txtTimeStamp = (CustomTextView) itemView.findViewById(R.id.txtTimeStamp);
             txtChatMsg = (CustomTextView) itemView.findViewById(R.id.txtChatMsg);
@@ -188,6 +225,7 @@ public class AllChatUserAdapter extends RecyclerView.Adapter<AllChatUserAdapter.
             imgProfile = (CircleImageView) itemView.findViewById(R.id.imgProfile);
             layChatUser = (RelativeLayout) itemView.findViewById(R.id.layChatUser);
             layNotification = (RelativeLayout) itemView.findViewById(R.id.layNotification);
+            imgType=(ImageView)itemView.findViewById(R.id.imgType);
         }
     }
 

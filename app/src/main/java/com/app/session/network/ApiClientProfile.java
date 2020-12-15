@@ -7,7 +7,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ApiClientProfile {
 
 
-    public static final String BASE_URL = "http://sessionway.com/userProfile/";
+    public static final String BASE_URL = "http://sessionway.com/api/userProfile/";
 
     private static Retrofit retrofit = null;
 

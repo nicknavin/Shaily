@@ -25,7 +25,7 @@
         android:layout_centerInParent="true"
         android:adjustViewBounds="true"
         android:src="@mipmap/demo"
-        android:contentDescription="@string/description_zoom_touch_close" />
+        />
 </RelativeLayout>
     <RelativeLayout
         android:layout_alignTop="@+id/laytop"

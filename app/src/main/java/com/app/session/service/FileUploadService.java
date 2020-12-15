@@ -12,12 +12,8 @@ import android.util.Log;
 import com.app.session.R;
 
 import com.app.session.activity.ConsultantStoryActivity;
-import com.app.session.api.Urls;
-import com.app.session.model.ChatMessage;
-import com.app.session.model.ChatMessageFile;
+import com.app.session.room.ChatMessage;
 import com.app.session.model.ReqSendStory;
-import com.app.session.network.ApiClient;
-import com.app.session.network.ApiInterface;
 import com.app.session.notification.NotificationHelper;
 import com.app.session.receiver.FileProgressReceiver;
 import com.app.session.receiver.RetryJobReceiver;
@@ -161,7 +157,8 @@ public class FileUploadService extends JobIntentService {
              chatMessageFile =intent.getParcelableExtra("CHAT_DATA");
 
             }
-            if ((Bitmap) intent.getParcelableExtra("VIDEO_THUMB") != null) {
+            if ((Bitmap) intent.getParcelableExtra("VIDEO_THUMB") != null)
+            {
 
                 videoThumbBitmap = (Bitmap) intent.getParcelableExtra("VIDEO_THUMB");
 
@@ -279,7 +276,8 @@ public class FileUploadService extends JobIntentService {
                 }
                 else if(requestType.equals("CHAT"))
                 {
-                    if(chatMessageFile.getMessageType().equals("image")) {
+                    if(chatMessageFile.getMessageType().equals("image"))
+                    {
                         responseBody = apiService.reqSendMsg(token, reqSenderId, reqsenderName, reqsenderProfileUrl, reqReciverId, reqReciverName, reqReciverProfileUrl, reqFileTye, reqFileName,reqFileDuartion,FileUploadService.this.createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
                     }
                     else if (chatMessageFile.getMessageType().equals("audio"))

@@ -7,7 +7,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ApiClientExplore {
 
 
-    public static final String BASE_URL = "http://sessionway.com/explore/";
+    public static final String BASE_URL = "http://sessionway.com/api/explore/";
 
     private static Retrofit retrofit = null;
 

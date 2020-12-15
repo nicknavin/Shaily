@@ -1,6 +1,5 @@
 package com.app.session.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -11,30 +10,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.app.session.R;
 import com.app.session.adapter.AllChatUserAdapter;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.ChatMessage;
 import com.app.session.model.ChatUserId;
 import com.app.session.model.ChatedBody;
-import com.app.session.model.ChatedPersonsBody;
 import com.app.session.model.ChatedPersonsResponse;
-import com.app.session.model.ClearChat;
 import com.app.session.model.MessageChat;
-import com.app.session.model.Root;
-import com.app.session.model.UserId;
 import com.app.session.network.ApiClient;
 import com.app.session.network.ApiInterface;
+import com.app.session.room.ChatMessage;
 import com.app.session.utility.Constant;
 import com.app.session.utility.Utility;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.engineio.client.transports.Polling;
-import com.github.nkzawa.socketio.client.Ack;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -56,6 +48,7 @@ public class ChattedUserActivity extends BaseActivity
     private Handler mTypingHandler = new Handler();
     private static final int TYPING_TIMER_LENGTH = 600;
     ArrayList<ChatedBody> chatedPersonsList;
+    //user 37 and psw 37
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +115,7 @@ public class ChattedUserActivity extends BaseActivity
                                    intent.putExtra("ID",id);
                                    intent.putExtra("NAME",name);
                                    intent.putExtra("URL",url);
+                                   intent.putExtra("NOTIFICATION_COUNT",chatedBody.getNotification());
                                    startActivity(intent);
 
                                }
@@ -159,6 +153,7 @@ public class ChattedUserActivity extends BaseActivity
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.on(Constant.NEW_MESSAGE, onNewMessage);
+        mSocket.on(Constant.FILES_EVENT, onFiles);
         mSocket.on(Constant.TYPING, onTyping);
         mSocket.connect();
     }
@@ -262,7 +257,7 @@ public class ChattedUserActivity extends BaseActivity
                     MessageChat messageChat = new MessageChat();
                     try {
 
-                        String senderID=data.getString("userId");
+                        String senderID=data.getString("senderId");
                         String message=data.getString("message");
                         String notification=data.getString("msg_notification_reciver");
 
@@ -297,7 +292,43 @@ public class ChattedUserActivity extends BaseActivity
             });
         }
     };
+    private Emitter.Listener onFiles = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
 
+                    try {
+                        JSONObject data = (JSONObject) args[0];
+                        System.out.println("msg : " + data.toString());
+//{"reciverProfileUrl":"","senderProfileUrl":"","senderId":"5f3cfba45a1d392b092e3fb8","reciverId":"5f437ef1c4b8ce176fc80a91","file":"userFiles\/chatFiles\/chatFiles-1604558545000-408-Ehx_ryvVkAIUrli.jpg","displayFileName":"Ehx_ryvVkAIUrli.jpg","durationTime":"0","messageType":"image","msg_notification_reciver":4,"createdAt":"2020-11-05T06:42:34.007Z"}
+
+                        String senderID=data.getString("senderId");
+                        String messageType=data.getString("messageType");
+                        String notification=data.getString("msg_notification_reciver");
+
+
+                        for(int i=0;i<chatedPersonsList.size();i++)
+                        {
+                            ChatedBody chatedBody=chatedPersonsList.get(i);
+                            if(chatedBody.getChatedPersonsBody().getSenderId().equals(senderID))
+                            {
+                                chatedPersonsList.get(i).getChatedPersonsBody().setMessageType(messageType);
+                                chatedPersonsList.get(i).setNotification(notification);
+                                Collections.swap(chatedPersonsList,0,i);
+                                allChatUserAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+        }
+    };
     private Emitter.Listener onTyping=new Emitter.Listener() {
 
         @Override
@@ -361,5 +392,6 @@ public class ChattedUserActivity extends BaseActivity
         mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
         mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.off(Constant.NEW_MESSAGE, onNewMessage);
+        mSocket.off(Constant.FILES_EVENT, onFiles);
     }
 }

@@ -43,6 +43,14 @@ public class ChatedPersonsBody
 	@SerializedName("message")
 	private String message;
 
+	@SerializedName("messageType")
+	private String messageType;
+
+	@SerializedName("displayFileName")
+	private String displayFileName;
+
+
+
 	public String getReciverProfileUrl() {
 		return reciverProfileUrl;
 	}
@@ -139,5 +147,20 @@ public class ChatedPersonsBody
 		this.senderProfileUrl = senderProfileUrl;
 	}
 
+	public String getMessageType() {
+		return messageType;
+	}
 
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
+
+
+	public String getDisplayFileName() {
+		return displayFileName;
+	}
+
+	public void setDisplayFileName(String displayFileName) {
+		this.displayFileName = displayFileName;
+	}
 }

@@ -21,7 +21,7 @@ public class RetrofitInstance {
 
             retrofit = new Retrofit
                     .Builder()
-                    .baseUrl("http://sessionway.com/users/")
+                    .baseUrl("http://sessionway.com/api/users/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
@@ -39,7 +39,7 @@ public class RetrofitInstance {
 
             retrofit = new Retrofit
                     .Builder()
-                    .baseUrl("http://sessionway.com/userProfile/")
+                    .baseUrl("http://sessionway.com/api/userProfile/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
@@ -66,7 +66,7 @@ public class RetrofitInstance {
 
             retrofit = new Retrofit
                     .Builder()
-                    .baseUrl("http://sessionway.com/chat/")
+                    .baseUrl("http://sessionway.com/api/chat/")
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

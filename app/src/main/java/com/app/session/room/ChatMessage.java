@@ -1,4 +1,4 @@
-package com.app.session.model;
+package com.app.session.room;
 
 
 import android.os.Parcel;
@@ -7,13 +7,15 @@ import android.os.Parcelable;
 import com.app.session.api.Urls;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity
+public class ChatMessage  implements Parcelable{
 
-public class ChatMessage implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    int msgId;
 
     @SerializedName("reciverId")
     private String reciverId;
@@ -63,7 +65,7 @@ public class ChatMessage implements Parcelable {
     @SerializedName("displayFileName")
     private String displayFileName;
 
-@SerializedName("durationTime")
+    @SerializedName("durationTime")
     private String durationTime;
 
 
@@ -119,6 +121,7 @@ public class ChatMessage implements Parcelable {
 
     public ChatMessage() {
     }
+
 
     @Override
     public int describeContents() {
@@ -199,7 +202,7 @@ public class ChatMessage implements Parcelable {
         return isRead;
     }
 
-    public void setIsRead(boolean read) {
+    public void setRead(boolean read) {
         isRead = read;
     }
 
@@ -245,7 +248,7 @@ public class ChatMessage implements Parcelable {
     }
 
     public String getFile() {
-        return Urls.BASE_IMAGES_URL + file;
+        return Urls.BASE_IMAGES_URL +file;
     }
 
     public void setFile(String file) {
@@ -258,10 +261,6 @@ public class ChatMessage implements Parcelable {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
     }
 
     public String getUri() {
@@ -280,7 +279,29 @@ public class ChatMessage implements Parcelable {
         this.upload = upload;
     }
 
-    public static Creator<ChatMessage> getCREATOR() {
-        return CREATOR;
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "msgId=" + msgId +
+                ", reciverId='" + reciverId + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", senderId='" + senderId + '\'' +
+                ", senderName='" + senderName + '\'' +
+                ", reciverName='" + reciverName + '\'' +
+                ", V=" + V +
+                ", isRead=" + isRead +
+                ", id='" + id + '\'' +
+                ", message='" + message + '\'' +
+                ", reciverProfileUrl='" + reciverProfileUrl + '\'' +
+                ", senderProfileUrl='" + senderProfileUrl + '\'' +
+                ", messageType='" + messageType + '\'' +
+                ", file='" + file + '\'' +
+                ", path='" + path + '\'' +
+                ", uri='" + uri + '\'' +
+                ", upload=" + upload +
+                ", displayFileName='" + displayFileName + '\'' +
+                ", durationTime='" + durationTime + '\'' +
+                '}';
     }
 }

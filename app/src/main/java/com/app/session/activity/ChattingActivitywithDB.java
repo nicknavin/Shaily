@@ -44,8 +44,6 @@ import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ChatCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.room.ChatMessage;
-import com.app.session.room.ChatMessageBody;
 import com.app.session.model.ClearChat;
 import com.app.session.model.Conversation;
 import com.app.session.model.LoadMessage;
@@ -55,6 +53,8 @@ import com.app.session.model.Root;
 import com.app.session.model.RootChatMessage;
 import com.app.session.network.ApiClient;
 import com.app.session.network.ApiInterface;
+import com.app.session.room.ChatMessage;
+import com.app.session.room.ChatMessageBody;
 import com.app.session.room.MyDatabase;
 import com.app.session.service.FileUploadService;
 import com.app.session.thumbyjava.ThumbyUtils;
@@ -63,7 +63,6 @@ import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.engineio.client.transports.Polling;
 import com.github.nkzawa.socketio.client.Ack;
@@ -96,8 +95,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,7 +106,7 @@ import static com.app.session.thumby.ThumbyActivity.EXTRA_THUMBNAIL_POSITION;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_URI;
 import static com.app.session.thumby.ThumbyActivity.VIDEO_PATH;
 
-public class ChattingActivity extends BaseActivity implements AudioRecordView.RecordingListener, View.OnClickListener, AttachmentOptionsListener, ServiceResultReceiver.Receiver, MediaPlayerUtils.Listener {
+public class ChattingActivitywithDB extends BaseActivity implements AudioRecordView.RecordingListener, View.OnClickListener, AttachmentOptionsListener, ServiceResultReceiver.Receiver, MediaPlayerUtils.Listener {
 
     private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
     public static final String RECEIVER = "receiver";
@@ -149,15 +146,14 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     public LinkedList<AudioStatus> audioStatusList = new LinkedList<>();
     private Parcelable state;
     private int countUnReadMsg = 0;
-    ImageView imgVideoCall;
 
-    MyDatabase myDatabase;
+    //MyDatabase myDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
-        setUpDB();
+//        setUpDB();
         connectWithSocket();
 
         initView();
@@ -165,54 +161,43 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         if (countUnReadMsg > 0)//unread msg conditon
         {
             readMessage();//this to nofity read msg for sender
-            getAllChatDB();
+
             allLoadChatting();
 
         }
-        else
-        {
+        allLoadChatting();
 
-            if (getAllChatDB().size() ==0)
-            {
-                allLoadChatting();
-            }
-
-        }
 
 
     }
 
-    private void setUpDB() {
-        myDatabase = Room.databaseBuilder(context, MyDatabase.class, "SessionChatDB").allowMainThreadQueries().build();
-    }
+//    private void setUpDB() {
+//      //  myDatabase = Room.databaseBuilder(context, MyDatabase.class, "SessionChatDB").allowMainThreadQueries().build();
+//    }
 
-    private void insertInDB(ChatMessage chat) {
-        audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
-        myDatabase.taskDAO().chatInsertion(chat);
-    }
+//    private void insertInDB(ChatMessage chat) {
+//        audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
+//  //      myDatabase.taskDAO().chatInsertion(chat);
+//    }
 
-    private void updatedChatDB(boolean upload, String id) {
-        myDatabase.taskDAO().updateChat(upload, id);
-//       if(flag)
-//       {
-//           showToast("update is done");
-//       }
-    }
+//    private void updatedChatDB(boolean upload, String id) {
+////        myDatabase.taskDAO().updateChat(upload, id);
+//    }
 
-    private List<ChatMessage> getAllChatDB() {
-        List<ChatMessage> list = myDatabase.taskDAO().getChatMessages();
-        if (list.size()>0) {
-            for (ChatMessage chatMessage : list)
-            {
-            chatMessageLinkedList.addLast(chatMessage);
-            audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
-            }
-            chatAdapter.notifyDataSetChanged();
-            scrollToBottom();
-        }
-
-        return list;
-    }
+//    private List<ChatMessage> getAllChatDB() {
+//        List<ChatMessage> list = myDatabase.taskDAO().getChatMessages();
+//        if (list.size()>0) {
+//            for (ChatMessage chatMessage : list)
+//            {
+//            chatMessageLinkedList.addLast(chatMessage);
+//            audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
+//            }
+//            chatAdapter.notifyDataSetChanged();
+//            scrollToBottom();
+//        }
+//
+//        return list;
+//    }
 
 
     private void initView() {
@@ -269,16 +254,13 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         setUpRecyclerView(containerView);
         //  setUpRecyclerListener();
 //        getAllChatDB();
-//        allLoadChatting();
-//        setSwipeLayout();
+        allLoadChatting();
+        setSwipeLayout();
 
     }
 
 
     private void setUpRecyclerView(View containerView) {
-
-        imgVideoCall=containerView.findViewById(R.id.imgVideoCall);
-        imgVideoCall.setOnClickListener(this);
         recyclerViewMessages = containerView.findViewById(R.id.recyclerViewMessages);
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerViewMessages.setLayoutManager(linearLayoutManager);
@@ -500,9 +482,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             case R.id.imgSetting:
                 showMenu(view);
                 break;
-            case R.id.imgVideoCall:
-                sendVideoCallNotification();
-                break;
         }
 
     }
@@ -556,7 +535,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mSocket.on(Constant.FILES_EVENT, onFiles);
         mSocket.on(Constant.IS_ON, isOnline);
         mSocket.on(Constant.TYPING, onTyping);
-        mSocket.on(Constant.CALL_NOTIFY,onCallNotify);
         mSocket.connect();
     }
 
@@ -662,7 +640,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                         }
                         flagMobile = false;
 
-                        insertInDB(chatMessage);
+//                        insertInDB(chatMessage);
 
 
                     } catch (JSONException e) {
@@ -704,7 +682,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             chatMessageLinkedList.addLast(chatMessage);
                             chatAdapter.notifyDataSetChanged();
                             scrollToBottom();
-                            insertInDB(chatMessage);
+//                            insertInDB(chatMessage);
                         }
 //                        if (userId.equals(chatMessage.getSenderId()))//user
 //                        {
@@ -779,46 +757,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             });
         }
     };
-    private Emitter.Listener onCallNotify = new Emitter.Listener()
-    {
-        @Override
-        public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (args.length > 0) {
 
-                        {
-                            JSONObject data = (JSONObject) args[0];
-                            mlog(data.toString());
-                            showToast(data.toString());
-                        }
-                    }
-                }
-            });
-        }
-    };
-
-    private void sendVideoCallNotification() {
-
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("roomName", receiverID);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        mSocket.emit(Constant.CALL_NOTIFICATION, jsonObject, new Ack() {
-            @Override
-            public void call(Object... args) {
-
-                if (args.length > 0)
-                {
-                    mlog("callNotification..");
-                }
-            }
-        });
-    }
 
     private void sendOnlineStatus() {
 
@@ -978,7 +917,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             for (ChatMessage chatMessage : list) {
                                 chatMessageLinkedList.addLast(chatMessage);
                                 audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
-                                insertInDB(chatMessage);
+//                                insertInDB(chatMessage);
                             }
                             chatAdapter.notifyDataSetChanged();
                             scrollToBottom();
@@ -1069,7 +1008,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                     dismiss_loading();
                     if (response.body() != null) {
                         if (response.body().getStatus() == 200) {
-                            myDatabase.taskDAO().delete();
+//                            myDatabase.taskDAO().delete();
                             chatMessageLinkedList.clear();
                             chatAdapter = new ChatAdapter(context, chatMessageLinkedList, userId, new ChatCallback() {
                                 @Override
@@ -1271,20 +1210,19 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
 
     private void openFile(Uri pickerInitialUri) {
-
+        String[] mimeTypesS =
+                {"application/zip", "application/pdf", "application/msword", "application/vnd.ms-powerpoint", "application/vnd.ms-excel", "text/plain"};
         String[] mimeTypes =
-                {"application/msword",  // .doc & .docx
-                        "application/vnd.ms-powerpoint",
-                        "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
-                        "application/vnd.ms-excel",
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+                {"application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+                        "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+                        "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+                        "text/plain",
                         "application/pdf",
                         "application/zip"};
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.setType(mimeTypes.length == 1 ? mimeTypes[0] : "*/*");
             if (mimeTypes.length > 0) {
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
@@ -1296,7 +1234,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             }
             intent.setType(mimeTypesStr.substring(0, mimeTypesStr.length() - 1));
         }
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(intent, "ChooseFile"), Constant.PICKFILE_RESULT_CODE);
     }
 
@@ -1547,7 +1484,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         chatMessageLinkedList.addLast(chatMessageFile);
         chatAdapter.notifyDataSetChanged();
         scrollToBottom();
-        insertInDB(chatMessageFile);//insert in db
+//        insertInDB(chatMessageFile);//insert in db
     }
 
 

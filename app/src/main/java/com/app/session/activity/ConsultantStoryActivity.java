@@ -363,11 +363,16 @@ public class ConsultantStoryActivity extends BaseActivity implements PopupMenu.O
                     {
                         showMenu(view);
                     }
-                    else {
-                        if(list.size()>0) {
+                    else  if(view.getId()==R.id.imgProfile){
+                        if(list.size()>0)
+                        {
+
                             UserStory storyData = list.get(position);
-                            Intent intent = new Intent(context, StoryPageDetailActivity.class);
-                            intent.putExtra("DATA", storyData);
+
+                            Intent intent=new Intent(context, ExpertProfilePageActivity.class);
+                            intent.putExtra("ID",storyData.getUserDetails().getId());
+                            intent.putExtra("NAME",storyData.getUserDetails().getLoginUserId());
+                            intent.putExtra("URL", Urls.BASE_IMAGES_URL +storyData.getUserDetails().getImageUrl());
                             startActivity(intent);
                         }
                     }

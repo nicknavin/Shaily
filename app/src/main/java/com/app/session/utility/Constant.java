@@ -14,6 +14,8 @@ public class Constant {
     public static final String IS_ONLINE = "isOnline";
     public static  String IS_TYPING = "isTyping";
     public static final String TYPING = "typing";
+    public static final String CALL_NOTIFICATION = "callNotifcation";//emit
+    public static final String CALL_NOTIFY = "callNotify";//event
 
 
 

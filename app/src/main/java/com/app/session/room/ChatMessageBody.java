@@ -1,8 +1,7 @@
-package com.app.session.model;
+package com.app.session.room;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import androidx.annotation.Nullable;

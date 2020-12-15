@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,7 +61,8 @@ import retrofit2.Response;
  */
 
 public class BaseActivity extends AppCompatActivity  {
-//implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+    private static final String TAG = "logs";
+    //implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     protected ProgressDialog mProgressDialog;
 
 //98059937
@@ -202,6 +204,11 @@ public class BaseActivity extends AppCompatActivity  {
 
     public void msg(String msg) {
 //           System.out.println(msg);
+    }
+
+public void mlog(String logs)
+{
+    Log.d(TAG,logs);
     }
 
 
