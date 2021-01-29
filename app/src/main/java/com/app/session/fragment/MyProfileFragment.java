@@ -35,8 +35,10 @@ import com.app.session.R;
 import com.app.session.activity.AddSubscriptionGroupActivity;
 import com.app.session.activity.AddSubscriptionStoryActivity;
 import com.app.session.activity.EditBriefActivity;
-import com.app.session.activity.MyProfileActivityNew;
+
 import com.app.session.activity.VideoPlayerActivity;
+import com.app.session.activity.ui.home.HomeFragment;
+import com.app.session.activity.ui.profile.ProfileFragment;
 import com.app.session.adapter.UserStoryAdapter;
 import com.app.session.api.Urls;
 import com.app.session.baseFragment.BaseFragment;
@@ -182,7 +184,7 @@ LinearLayoutManager linearLayoutManager;
         fragment.setArguments(args);
         return fragment;
     }
-
+    ProfileFragment parentFrag;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +201,7 @@ LinearLayoutManager linearLayoutManager;
 
         userName=user_name;
         groupiconUrl=profileUrl;
-
+         parentFrag = ((ProfileFragment)this.getParentFragment());
     }
 
     @Override
@@ -210,17 +212,24 @@ LinearLayoutManager linearLayoutManager;
 //        brief_cvList = (ArrayList<Brief_CV>) bundle.getSerializable("List");
 //        position=bundle.getInt("position");
 
-        ((MyProfileActivityNew)getActivity()).setFragmentRefreshListener(new MyProfileActivityNew.FragmentRefreshListener()
-        {
+        parentFrag.setFragmentRefreshListener(new ProfileFragment.FragmentRefreshListener() {
             @Override
-            public void onRefresh(boolean flag)
-            {
+            public void onRefresh(boolean flag) {
                 showToast("Interface calling");
                 setVisibleBio(flag);
             }
-
-
         });
+//        ((MyProfileActivityNew)getActivity()).setFragmentRefreshListener(new MyProfileActivityNew.FragmentRefreshListener()
+//        {
+//            @Override
+//            public void onRefresh(boolean flag)
+//            {
+//                showToast("Interface calling");
+//                setVisibleBio(flag);
+//            }
+//
+//
+//        });
 
         return inflater.inflate(R.layout.fragment_my_profile, container, false);
     }
@@ -470,7 +479,9 @@ LinearLayoutManager linearLayoutManager;
                 return true;
             case R.id.menu_select_cover:
 
-                    ((MyProfileActivityNew)getActivity()).flag=true;
+                 //   ((MyProfileActivityNew)getActivity()).flag=true;
+
+                parentFrag.flag=true;
                 flagRefresh = false;
                 dialog();
                 return true;
@@ -629,11 +640,20 @@ LinearLayoutManager linearLayoutManager;
                             User user=root.getUserBody().getUser();
                             userName = user.getUser_name();
 
-                            if((MyProfileActivityNew)getActivity()!=null) {
-                                if (((MyProfileActivityNew) getActivity()).txtSubsciber != null) {
-                                    ((MyProfileActivityNew) getActivity()).txtSubsciber.setText("" + root.getUserBody().getFollowers());
-                                    ((MyProfileActivityNew) getActivity()).txtUserName.setText(root.getUserBody().getUser().getUser_name());
-                                    ((MyProfileActivityNew) getActivity()).profileUrl = Urls.BASE_IMAGES_URL + root.getUserBody().getUser().getImageUrl();
+//                            if((MyProfileActivityNew)getActivity()!=null)
+//                            {
+//                                if (((MyProfileActivityNew) getActivity()).txtSubsciber != null) {
+//                                    ((MyProfileActivityNew) getActivity()).txtSubsciber.setText("" + root.getUserBody().getFollowers());
+//                                    ((MyProfileActivityNew) getActivity()).txtUserName.setText(root.getUserBody().getUser().getUser_name());
+//                                    ((MyProfileActivityNew) getActivity()).profileUrl = Urls.BASE_IMAGES_URL + root.getUserBody().getUser().getImageUrl();
+//                                }
+//                            }
+                            if(parentFrag!=null)
+                            {
+                                if (parentFrag.txtSubsciber != null) {
+                                    parentFrag.txtSubsciber.setText("" + root.getUserBody().getFollowers());
+                                    parentFrag.txtUserName.setText(root.getUserBody().getUser().getUser_name());
+                                    parentFrag.profileUrl = Urls.BASE_IMAGES_URL + root.getUserBody().getUser().getImageUrl();
                                 }
                             }
                             if(!user.getImageUrl().isEmpty()&&user.getImageUrl()!=null)
@@ -971,7 +991,8 @@ LinearLayoutManager linearLayoutManager;
 
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                    ((MyProfileActivityNew)getActivity()).flag=true;
+//                    ((MyProfileActivityNew)getActivity()).flag=true;
+                    parentFrag.flag=true;
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     if (resultCode == RESULT_OK) {
                         Uri resultUri = result.getUri();
@@ -1007,7 +1028,8 @@ LinearLayoutManager linearLayoutManager;
             }
         }
         if (requestCode == Constant.REQUEST_CODE_ALBUM_Gallery) {
-            ((MyProfileActivityNew)getActivity()).flag=true;
+//            ((MyProfileActivityNew)getActivity()).flag=true;
+            parentFrag.flag=true;
             if (data != null) {
 
                 Uri contentURI = data.getData();
@@ -1018,7 +1040,8 @@ LinearLayoutManager linearLayoutManager;
             }
         }
         if (requestCode == Constant.PICK_VIDEO_THUMB) {
-            ((MyProfileActivityNew)getActivity()).flag=true;
+//            ((MyProfileActivityNew)getActivity()).flag=true;
+            parentFrag.flag=true;
             if (data != null) {
 
                 long location = data.getLongExtra(EXTRA_THUMBNAIL_POSITION, 0);
@@ -1042,7 +1065,8 @@ LinearLayoutManager linearLayoutManager;
         }
         if (requestCode == Constant.REQUEST_BRIEF)
         {
-            ((MyProfileActivityNew)getActivity()).flag=true;
+//            ((MyProfileActivityNew)getActivity()).flag=true;
+            parentFrag.flag=true;
             if (data != null) {
 
                 String briefcvtxt = data.getStringExtra("DATA");

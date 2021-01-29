@@ -61,7 +61,7 @@ import retrofit2.Response;
  */
 
 public class BaseActivity extends AppCompatActivity  {
-    private static final String TAG = "logs";
+    private static final String TAG = "tag";
     //implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     protected ProgressDialog mProgressDialog;
 
@@ -130,8 +130,9 @@ public class BaseActivity extends AppCompatActivity  {
 
     }
 
-    public void log(String msg) {
-        System.out.println(msg);
+    public void log(String msg)
+    {
+        Log.d(TAG,msg);
     }
 
     public static android.app.Dialog dd;

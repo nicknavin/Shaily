@@ -214,7 +214,7 @@ public class ConsultantUserActivity extends BaseTabActivity implements View.OnCl
         Intent intent;
         if(tab==0) {
 
-intent=new Intent(getApplicationContext(), MyProfileActivityNew.class);
+            intent=new Intent(getApplicationContext(), MyProfileActivityNew.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             TabMenu1.setContent(intent);
         }

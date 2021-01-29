@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ui.home.HomeFragment" >
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_profile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+    <RelativeLayout
+        android:id="@+id/layProfile"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"    >
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    >
+                    <LinearLayout
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="20dp"
+                        android:orientation="horizontal">
+                        <com.app.session.customview.CircleImageView
+                            android:id="@+id/imgProfileProfile"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
+                            android:layout_gravity="center"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/profile_large"
+                            app:border_color="#F1F0EF"
+                            app:border_width="0.5dp"
+                            />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/value10">
+                            <com.app.session.customview.CustomTextView
+                                android:id="@+id/txtUserName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+
+                                android:background="@drawable/box_transparent"
+                                android:textCursorDrawable="@drawable/color_cursor"
+                                android:hint="Navin"
+                                android:maxLength="40"
+                                android:maxLines="1"
+                                android:minLines="1"
+                                android:textColor="#616464"
+                                android:textColorHint="#616464"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:edittextfont="Segoe_UI_Bold.ttf" />
+                            <com.app.session.customview.CustomTextView
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:hint="Photogropher"
+                                android:textColor="#616464"
+                                android:textSize="14sp"
+                                app:edittextfont="Segoe_UI.ttf"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginRight="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/value10">
+                        <com.app.session.customview.CustomTextView
+
+                            android:id="@+id/txtSubsciber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+
+                            android:background="@drawable/box_transparent"
+                            android:textCursorDrawable="@drawable/color_cursor"
+
+                            android:maxLength="10"
+                            android:maxLines="1"
+                            android:minLines="1"
+                            android:textColor="#616464"
+                            android:textColorHint="#616464"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            app:edittextfont="Segoe_UI_Bold.ttf" />
+                        <com.app.session.customview.CustomTextView
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Subscriber"
+                            android:textColor="#616464"
+                            android:textSize="14sp"
+                            app:edittextfont="Segoe_UI.ttf"
+                            />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmer_view_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:scrollbarFadeDuration="800"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:scrollbars="none"
+                    app:reverseLayout="true"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                    <!-- Adding 7 rows of placeholders -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:orientation="vertical">
+                        <include layout="@layout/data_placeholder_layout" />
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewtop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/white"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:scrollbars="none"
+                    android:orientation="horizontal"
+                    app:reverseLayout="true"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="30dp"
+                        android:layout_weight="2.5"
+                        android:gravity="center">
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="7.5"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="20dp"
+                            android:weightSum="4">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="2"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <com.app.session.customview.CustomTextView
+                                    android:id="@+id/txt_follwr_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    android:singleLine="true"
+                                    android:text="0"
+                                    android:textColor="#8C8C8C"
+                                    android:textSize="16sp"
+                                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                                <com.app.session.customview.CustomTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/txt_follwr_count"
+                                    android:singleLine="true"
+                                    android:text="@string/followers"
+                                    android:textColor="#8C8C8C"
+                                    android:textSize="16sp"
+                                    app:edittextfont="Roboto-Regular.ttf"  />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="2"
+                                android:gravity="center"
+
+                                android:orientation="vertical">
+
+                                <com.app.session.customview.CustomTextView
+                                    android:id="@+id/txt_follwng_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textColor="#8C8C8C"
+                                    android:textSize="16sp"
+                                    app:edittextfont="OpenSans-Regular.ttf" />
+
+                                <com.app.session.customview.CustomTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/txt_follwng_count"
+
+                                    android:gravity="center"
+                                    android:text="@string/following"
+                                    android:textColor="#8C8C8C"
+                                    android:textSize="16sp"
+                                    app:edittextfont="Roboto-Regular.ttf" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/btn_editprof"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/value10"
+                            android:layout_marginTop="@dimen/value5"
+                            android:background="@drawable/sqaure_box"
+                            android:padding="@dimen/value5"
+                            android:text="@string/edit_profile"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <com.app.session.customview.CustomTextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+
+                    android:visibility="gone"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+
+                    app:edittextfont="Roboto-Bold.ttf" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <LinearLayout
+                        android:id="@+id/layDrop"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="bottom"
+                        android:gravity="center"
+                        android:paddingBottom="12dp"
+                        android:background="@drawable/line_black"
+                        android:layout_marginLeft="10dp">
+
+                        <com.app.session.customview.CustomTextView
+                            android:id="@+id/txtStoryTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bio"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            app:edittextfont="Roboto-Bold.ttf" />
+                        <CheckBox
+                            android:id="@+id/imgDrop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center|right"
+                            android:button="@drawable/drop_toggle"
+                            android:checked="true"
+                            android:clickable="false"
+                            android:layout_marginLeft="5dp"
+                            />
+                    </LinearLayout>
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout_favourite"
+                        style="@style/Widget.Design.TabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="wrap_content"
+                        app:tabGravity="fill"
+                        app:tabIndicatorHeight="3dp"
+                        app:tabBackground="@drawable/selector_tab_indicator_new"
+                        app:tabMode="scrollable"
+
+                        app:tabSelectedTextColor="@color/black"
+                        app:tabIndicatorColor="@color/black"
+
+                        />
+                </LinearLayout>
+                <com.app.session.customview.WrapContentHeightViewPager
+                    android:id="@+id/viewpager_favourite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+
+                    />
+
+
+
+                <RelativeLayout
+                    android:id="@+id/layLoading"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/gray"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        android:id="@+id/imgStory"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@mipmap/profil_image"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:adjustViewBounds="true"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"/>
+
+                    <com.app.session.customview.CustomTextView
+                        android:id="@+id/txtPosting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Posting....."
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@+id/imgStory"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:edittextfont="Roboto-Bold.ttf" />
+
+                    <com.rey.material.widget.ProgressView
+                        android:id="@+id/rey_loading"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:max="50"
+                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        app:pv_autostart="true"
+                        app:pv_circular="true"
+                        app:pv_progressMode="indeterminate"
+                        app:pv_progressStyle="@style/loadingstyle" />
+
+
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+
+
+
+
+
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:backgroundTint="@color/white"
+            app:rippleColor="@color/btn_color"
+            android:clickable="true"
+            android:layout_margin="20dp"
+            android:layout_marginTop="200dp"
+            app:srcCompat="@mipmap/plus" />
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,7 +56,8 @@ public class FileProgressReceiver extends BroadcastReceiver {
                         0 /* Request code */, resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
                 notification = mNotificationHelper.getNotification(mContext.getString(R.string.message_upload_success), mContext.getString(R.string.file_upload_successful), resultPendingIntent);
-                mNotificationHelper.notify(NOTIFICATION_ID, notification);
+               // mNotificationHelper.notify(NOTIFICATION_ID, notification);
+                mNotificationHelper.cancelNotification(NOTIFICATION_ID);
                 if (intent.getParcelableExtra("RECEVIER") != null)
                 {
                     ResultReceiver resultReceiver = intent.getParcelableExtra("RECEVIER");

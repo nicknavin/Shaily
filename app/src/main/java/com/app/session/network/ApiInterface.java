@@ -3,16 +3,12 @@ package com.app.session.network;
 
 import com.app.session.model.AddBriefCv;
 import com.app.session.model.AddCategoryRoot;
-import com.app.session.model.AllConsultUser;
-import com.app.session.model.AllUserRoot;
-import com.app.session.model.CategoryBody;
+import com.app.session.model.AgoraRoot;
 import com.app.session.model.CategoryRoot;
 import com.app.session.model.ChatUserId;
 import com.app.session.model.ChatedPersonsResponse;
 import com.app.session.model.ClearChat;
-import com.app.session.model.ConsultUser;
 import com.app.session.model.ConsultUserRoot;
-import com.app.session.model.ConsultantData;
 import com.app.session.model.CurrencyRefResponse;
 import com.app.session.model.CurrencyRoot;
 import com.app.session.model.DeleteLangReq;
@@ -44,11 +40,11 @@ import com.app.session.model.SendStoryResponseRoot;
 import com.app.session.model.StoryId;
 import com.app.session.model.StoryRoot;
 import com.app.session.model.SubscribedAllStroiesRoot;
-import com.app.session.model.SubscriptionGroupDetailRoot;
 import com.app.session.model.SubscriptionGroupRoot;
 import com.app.session.model.SubscriptionStoriesRoot;
 import com.app.session.model.UpdateBriefReq;
 import com.app.session.model.UserId;
+import com.app.session.model.UserInformation;
 import com.app.session.model.UserProfileRoot;
 import com.app.session.model.UserRoot;
 import com.google.gson.JsonObject;
@@ -479,6 +475,10 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("clearChat")
     public Call<Root> reqClearChat(@Header("Authorization") String token, @Body ClearChat clearChat);
+
+   @Headers("Content-Type: application/json")
+    @POST("agoraTocken")
+    public Call<AgoraRoot> reqAgoraToken(@Header("Authorization") String token, @Body UserInformation userInformation);
 
     @Headers("Content-Type: application/json")
     @POST("messageRead")

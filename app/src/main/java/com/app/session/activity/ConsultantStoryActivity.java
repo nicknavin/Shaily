@@ -42,6 +42,8 @@ import com.app.session.model.UserStory;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
+import com.app.session.service.MyForgroundService;
+import com.app.session.service.SocketIOService;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;
@@ -59,6 +61,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -95,17 +98,23 @@ public class ConsultantStoryActivity extends BaseActivity implements PopupMenu.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conusultant_story);
-        db = new DatabaseHelper(this);
+        db = new DatabaseHelper(context);
         userName=user_name;
         userUrl=profileUrl;
+        startService();
         initView();
         img_profilepic.setClickable(true);
-
         setupStoryRecylerview();
         setUpRecyclerListener();
         setSwipeLayout();
     }
 
+    public void startService() {
+        Intent serviceIntent = new Intent(this, MyForgroundService.class);
+        serviceIntent.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_TYPE_JOIN);
+        serviceIntent.putExtra("userId",userId);
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -151,7 +160,11 @@ public class ConsultantStoryActivity extends BaseActivity implements PopupMenu.O
 
         if(profileUrl!=null&&!profileUrl.isEmpty())
         {
-            Picasso.with(context).load(profileUrl).placeholder(R.mipmap.profile_large).into(img_profilepic);
+            log(profileUrl);
+            Picasso.with(context).load(profileUrl).placeholder(R.mipmap.profile_large).error(R.mipmap.profile_large).into(img_profilepic);
+        }
+        else {
+            img_profilepic.setImageResource(R.mipmap.profile_large);
         }
 
 
@@ -163,6 +176,7 @@ public class ConsultantStoryActivity extends BaseActivity implements PopupMenu.O
         recyclerViewbottom=(RecyclerView)findViewById(R.id.recyclerViewstory);
         linearLayoutManager=new LinearLayoutManager(context);
         recyclerViewbottom.setLayoutManager( linearLayoutManager);
+        recyclerViewbottom.setHasFixedSize(true);
         subscriptionStoryAdapter=new AllSubscriptionStoryAdapter(context,allStories, new ObjectCallback()
         {
             @Override

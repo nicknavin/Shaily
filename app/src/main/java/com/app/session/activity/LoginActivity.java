@@ -274,7 +274,7 @@ dismiss_loading();
                             }
                             connectWithSocket();
                             Intent intent;
-                            intent = new Intent(context, ConsultantStoryActivity.class);
+                            intent = new Intent(context, HomeUserChatProfileActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

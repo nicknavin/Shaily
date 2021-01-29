@@ -20,8 +20,6 @@ import android.widget.PopupMenu;
 import com.app.session.BuildConfig;
 import com.app.session.R;
 import com.app.session.adapter.ExpertUserSubscriptionStoryAdapter;
-import com.app.session.adapter.UserStoryAdapter;
-import com.app.session.adapter.UserSubscriptionStoryAdapter;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;

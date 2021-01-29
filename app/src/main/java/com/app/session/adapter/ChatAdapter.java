@@ -2,6 +2,7 @@ package com.app.session.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int VIEW_TYPE_USER_MESSAGE = 0;
     public static final int VIEW_TYPE_FRIEND_MESSAGE = 1;
+    private static final String TAG = "tag";
 
     Context context;
     String senderID = "";
@@ -75,7 +77,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
            ItemMessageFriendHolder friendHolder= (ItemMessageFriendHolder) holder;
 
             Glide.with(context)
-                    .load(chatMessage.getReciverProfileUrl())
+                    .load(chatMessage.getSenderProfileUrl())
                     .placeholder(R.mipmap.profile_icon)
                     .error(R.mipmap.profile_icon)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -92,6 +94,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             if (chatMessage.getMessageType().equals("image"))
             {
+                Log.d(TAG,"Url "+chatMessage.getFile());
                 friendHolder.cardViewDoc.setVisibility(View.GONE);
                 friendHolder.cardViewAudio.setVisibility(View.GONE);
                 friendHolder.layImage.setVisibility(View.VISIBLE);
@@ -180,7 +183,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
 
-
         else if (holder instanceof ItemMessageUserHolder)
         {
 
@@ -194,9 +196,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             userHolder.rey_loading.setVisibility(View.GONE);
             System.out.println("file path " + chatMessage.getFile());
 
+            if(chatMessage.isRead())
+            {
+                userHolder.imgRead.setImageResource(R.drawable.ic_action_message_read);
+            }
+            else
+            {
+                userHolder.imgRead.setImageResource(R.drawable.ic_action_message_delivered);
+            }
 
             if (chatMessage.getMessageType().equals("image"))
             {
+
                 userHolder.layDocument.setVisibility(View.GONE);
                 userHolder.txtContent.setVisibility(View.GONE);
                 userHolder.layImage.setVisibility(View.VISIBLE);
@@ -341,7 +352,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
    public class ItemMessageUserHolder extends RecyclerView.ViewHolder {
         public CustomTextView txtContent, textMSgTime,txt_audio_time,txtDocName,txtAudioFileName;
-        public ImageView imgChat,imgDoc;
+        public ImageView imgChat,imgDoc,imgRead;
         RelativeLayout layout1,layImage;
         ProgressView rey_loading;
         CardView cardViewAudio;
@@ -361,6 +372,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textMSgTime = (CustomTextView) itemView.findViewById(R.id.textMSgTime);
             txt_audio_time  = (CustomTextView) itemView.findViewById(R.id.txt_audio_time);
             imgChat = (ImageView) itemView.findViewById(R.id.imgChat);
+            imgRead = (ImageView) itemView.findViewById(R.id.imgRead);
             layImage = (RelativeLayout) itemView.findViewById(R.id.layImage);
             rey_loading=(ProgressView)itemView.findViewById(R.id.rey_loading);
             cardViewAudio=(CardView)itemView.findViewById(R.id.cardViewAudio);

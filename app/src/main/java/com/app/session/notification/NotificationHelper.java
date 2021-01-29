@@ -18,16 +18,15 @@ import androidx.core.content.ContextCompat;
  */
 public class NotificationHelper extends ContextWrapper {
     private NotificationManager manager;
-    public static final String WAVE_CHANNEL = "default";
-
+    public static final String CHANNEL_ID = "default";
+    public static final String CHANNEL_NAME = "Sending Media";
 
     public NotificationHelper(Context mContext) {
         super(mContext);
         NotificationChannel mChannel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            mChannel = new NotificationChannel(WAVE_CHANNEL,
-                    getString(R.string.noti_channel_default), NotificationManager.IMPORTANCE_DEFAULT);
-
+            mChannel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             mChannel.setLightColor(Color.GREEN);
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             getManager().createNotificationChannel(mChannel);
@@ -36,7 +35,7 @@ public class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getNotification(String title, String body, int progress) {
         NotificationCompat.Builder mBuilder;
-        mBuilder = new NotificationCompat.Builder(getApplicationContext(), WAVE_CHANNEL);
+        mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
         mBuilder.setSmallIcon(getSmallIcon());
         mBuilder.setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
         mBuilder.setContentTitle(title)
@@ -58,19 +57,24 @@ public class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getNotification(String title, String body, PendingIntent resultPendingIntent) {
         NotificationCompat.Builder mBuilder;
-        mBuilder = new NotificationCompat.Builder(getApplicationContext(), WAVE_CHANNEL);
+        mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
         mBuilder.setSmallIcon(getSmallIcon());
         mBuilder.setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
         mBuilder.setContentTitle(title)
                 .setContentText(body)
                 .setContentIntent(resultPendingIntent)
+                .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                .setPriority(NotificationCompat.PRIORITY_MIN);
+
         mBuilder.setVibrate(new long[]{0L});
         mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         return mBuilder;
     }
+
+
+
 
     /**
      * Send a notification.
@@ -88,7 +92,7 @@ public class NotificationHelper extends ContextWrapper {
      * @return The small icon resource id
      */
     private int getSmallIcon() {
-        return android.R.drawable.stat_notify_sync;
+        return R.drawable.app_new_icon;
     }
 
     /**
@@ -105,7 +109,8 @@ public class NotificationHelper extends ContextWrapper {
         return manager;
     }
 
-    public void cancelNotification(int notificationId) {
+    public void cancelNotification(int notificationId)
+    {
         getManager().cancel(notificationId);
     }
 }

@@ -175,7 +175,7 @@ public class ChattedUserActivity extends BaseActivity
                             }
                         System.out.println("json "+data);
                         mSocket.emit("join", data);
-                        showToast("connect");
+
 
 //                        Toast.makeText(getActivity().getApplicationContext(),
 //                                R.string.connect, Toast.LENGTH_LONG).show();
@@ -217,7 +217,7 @@ public class ChattedUserActivity extends BaseActivity
                     Log.i(TAG, "diconnected");
                     System.out.println("DATA"+args[0]);
                     isConnected = false;
-                    showToast("diconnected");
+
                     mSocket.connect();
 
 //                    Toast.makeText(getActivity().getApplicationContext(),

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "984675061360",
+    "project_id": "sessioway-fcm",
+    "storage_bucket": "sessioway-fcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984675061360:android:92dc9b659478db4ee6eeb5",
+        "android_client_info": {
+          "package_name": "com.app.session"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984675061360-3nrei49ahfv3o4q0209h3bs6kuk8439h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.session",
+            "certificate_hash": "bca15aa13ca93e993f3864138dea22c7d0b7e1b6"
+          }
+        },
+        {
+          "client_id": "984675061360-uvfi9sfs4nai8ok1gej6buje0idhn5nf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7-QAkUVgCWFknl3F4qn85O6lIeJqWBSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984675061360-uvfi9sfs4nai8ok1gej6buje0idhn5nf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -53,7 +53,7 @@
         android:layout_marginLeft="5dp"
 android:visibility="gone"
         android:background="@drawable/background_left"
-        android:maxWidth="260dp"
+        android:maxWidth="220dp"
         android:textColor="#767676"
         app:edittextfont="HelveticaNeueMed.ttf"
         android:textStyle="normal"
@@ -80,7 +80,7 @@ android:visibility="gone"
        >
 
         <LinearLayout
-            android:layout_width="260dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:background="@drawable/background_left"
             android:layout_gravity="left|center_vertical">
@@ -193,7 +193,7 @@ android:visibility="gone"
         >
     <LinearLayout
         android:id="@+id/layDocument"
-        android:layout_width="260dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="10dp"
@@ -232,7 +232,7 @@ android:visibility="gone"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:text="15:50"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:gravity="center"
         android:padding="5dp"
         android:textColor="#767676"

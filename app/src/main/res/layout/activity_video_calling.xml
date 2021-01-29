@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <RelativeLayout
+        android:id="@+id/subscriberview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorAccent">
+
+        <ToggleButton
+            android:id="@+id/toggleAudioSubscriber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Toggle Audio"
+            android:textOff="@string/audio"
+            android:textOn="@string/audio"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/subscriberview"
+
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgDisconnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/disconnect_call" />
+
+            <RelativeLayout
+                android:id="@+id/publisherview"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"></RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <!--<ImageView-->
+                <!--android:id="@+id/imgSwapCamera"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:padding="10dp"-->
+                <!--android:src="@mipmap/front_camera" />-->
+            <ToggleButton
+                android:id="@+id/toggleCamera"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/toggle_selector_camera"
+                android:checked="true"
+                android:textColor="@color/transparent"
+                />
+
+            <ToggleButton
+                android:id="@+id/toggleAudio"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/toggle_selector_audio"
+                android:checked="true"
+                android:textColor="@color/transparent"
+
+
+                />
+            <!--<ImageView-->
+            <!--android:id="@+id/imgAudio"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:padding="10dp"-->
+            <!---->
+            <!--android:src="@mipmap/microphone" />-->
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

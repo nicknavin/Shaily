@@ -8,11 +8,23 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ShowImageActivity"></activity>
+        <activity
+            android:name=".activity.HomeUserChatProfileActivity"
+            android:label="@string/title_activity_home_user_chat_profile"></activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <activity android:name=".activity.ShowImageActivity" />
         <activity android:name=".activity.ExpertFollowingsActivity" />
         <activity android:name=".activity.ExpertFollowersActivity" />
         <activity android:name=".activity.ChattedUserActivity" />
@@ -29,10 +41,6 @@
         <activity android:name=".activity.StoryDetailActivity" />
         <activity android:name=".activity.RemarkActivity" />
         <activity
-            android:name=".activity.Main3Activity"
-            android:label="@string/title_activity_main3"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.ExpertProfilePageActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
         <activity
@@ -43,10 +51,6 @@
         <activity android:name=".activity.HomeSessionActivity" />
         <activity android:name=".activity.RegistrationThirdStageActivity" />
         <activity android:name=".activity.SelectProfileCategoryActivity" />
-        <activity
-            android:name=".activity.Main2Activity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.AddSubscriptionStoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -60,6 +64,9 @@
         <activity
             android:name=".activity.YoutubeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
+        <activity
+            android:name=".activity.MapsActivity"
+            android:label="@string/title_activity_maps" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -68,9 +75,6 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <activity
-            android:name=".activity.MapsActivity"
-            android:label="@string/title_activity_maps" />
         <activity android:name=".activity.SnapchatActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".MainActivityW" />
@@ -130,14 +134,14 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.VerificationCodeActivity"
-            android:screenOrientation="fullSensor" /> <!-- <activity -->
-        <!-- android:name=".activity.MainActivity" -->
-        <!-- android:screenOrientation="fullSensor" -->
-        <!-- android:windowSoftInputMode="stateHidden" /> -->
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activity.RegistrationFirstActivity"
             android:screenOrientation="fullSensor"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" /> <!-- <activity -->
+        <!-- android:name=".activity.MainActivity" -->
+        <!-- android:screenOrientation="fullSensor" -->
+        <!-- android:windowSoftInputMode="stateHidden" /> -->
         <activity
             android:name=".activity.RegistrationSecondActivity"
             android:screenOrientation="fullSensor" />
@@ -197,31 +201,34 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".activity.CouresesActivity"
-            android:screenOrientation="fullSensor" /> <!-- Applozic Application Key -->
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activity.ReportProblemActivity"
-            android:screenOrientation="fullSensor" /> <!-- Launcher white Icon -->
+            android:screenOrientation="fullSensor" /> <!-- Applozic Application Key -->
         <activity
             android:name=".activity.ProfileDetailEditActivity"
-            android:screenOrientation="fullSensor" /> <!-- Attachment Folder Name -->
+            android:screenOrientation="fullSensor" /> <!-- Launcher white Icon -->
         <activity
             android:name=".activity.AddBankDetail"
+            android:screenOrientation="fullSensor" /> <!-- Attachment Folder Name -->
+        <activity
+            android:name=".activity.AddBriefCVActivity"
             android:screenOrientation="fullSensor" /> <!-- Replace with your geo api key from google developer console -->
         <!--
         For testing purpose use AIzaSyAYB1vPc4cpn_FJv68eS_ZGe1UasBNwxLI
         To disable the location sharing via map add this line ApplozicSetting.getInstance(context).disableLocationSharingViaMap(); in onSuccess of Applozic UserLoginTask
         -->
         <activity
-            android:name=".activity.AddBriefCVActivity"
+            android:name=".activity.FilterConsultantActivity"
             android:screenOrientation="fullSensor" /> <!-- NOTE : Do NOT change this value -->
         <activity
-            android:name=".activity.FilterConsultantActivity"
+            android:name=".activity.SelectRegistertLanguageActivity"
             android:screenOrientation="fullSensor" /> <!-- NOTE: Do NOT change this, it should remain same i.e 'com.package.name' -->
         <activity
-            android:name=".activity.SelectRegistertLanguageActivity"
+            android:name=".activity.FinancialActivity"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".activity.FinancialActivity"
+            android:name=".activity.SearchUserActivity"
             android:screenOrientation="fullSensor" />
         <!--
          Set color used with incoming notification messages. This is used when no color is set for the incoming
@@ -235,9 +242,6 @@
         <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
         <!-- android:resource="@xml/applozic_provider_paths" /> -->
         <!-- </provider> -->
-        <activity
-            android:name=".activity.SearchUserActivity"
-            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activity.ResetPasswordActivity"
             android:screenOrientation="fullSensor" />
@@ -256,6 +260,22 @@
             android:screenOrientation="fullSensor" />
         <activity
             android:name=".thumby.ThumbyActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".openlive.activities.LiveActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".openlive.activities.RoleActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CallIncomingActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".activity.VideoChatViewActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".activity.VoiceChatViewActivity"
             android:screenOrientation="fullSensor" />
 
         <meta-data
@@ -298,18 +318,23 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.MyForgroundService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
     <permission
         android:name="com.app.session.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_SMS" /> -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
-    <!-- <uses-permission android:name="android.permission.READ_SMS" /> -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
@@ -323,7 +348,9 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
 </manifest>

@@ -1,13 +1,19 @@
 package com.app.session.activity;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -44,6 +50,10 @@ import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ChatCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
+import com.app.session.model.AgoraBody;
+import com.app.session.model.AgoraRoot;
+import com.app.session.model.AudioVideoData;
+import com.app.session.model.UserInformation;
 import com.app.session.room.ChatMessage;
 import com.app.session.room.ChatMessageBody;
 import com.app.session.model.ClearChat;
@@ -57,6 +67,8 @@ import com.app.session.network.ApiClient;
 import com.app.session.network.ApiInterface;
 import com.app.session.room.MyDatabase;
 import com.app.session.service.FileUploadService;
+import com.app.session.service.MyForgroundService;
+import com.app.session.service.SocketIOService;
 import com.app.session.thumbyjava.ThumbyUtils;
 import com.app.session.utility.Constant;
 import com.app.session.utility.PermissionsUtils;
@@ -90,7 +102,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -123,7 +137,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     Conversation conversation;
 
     LinkedList<ChatMessage> chatMessageLinkedList = new LinkedList<>();
-    private static final String TAG = "ChatActivity";
+    private static final String TAG = "myTag";
     String receiverID = "", receiverName = "", receiverUrl = "", senderProfileUrl = "";
     private long time;
     private Socket mSocket;
@@ -149,39 +163,51 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     public LinkedList<AudioStatus> audioStatusList = new LinkedList<>();
     private Parcelable state;
     private int countUnReadMsg = 0;
-    ImageView imgVideoCall;
+    ImageView imgVideoCall,imgAudioCall;
 
     MyDatabase myDatabase;
-
+    boolean userIsOnline;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
+        if(getIntent().getIntExtra("notificationId",0)!=0)
+        {
+            int notificationId=getIntent().getIntExtra("notificationId",0);
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(notificationId);
+        }
+
         setUpDB();
-        connectWithSocket();
-
         initView();
-
-        if (countUnReadMsg > 0)//unread msg conditon
-        {
-            readMessage();//this to nofity read msg for sender
-            getAllChatDB();
-            allLoadChatting();
-
-        }
-        else
-        {
-
-            if (getAllChatDB().size() ==0)
-            {
-                allLoadChatting();
-            }
-
-        }
+        connectWithSocket();
+        readMessage();
+        allLoadChatting();
+//        if (countUnReadMsg > 0)//unread msg conditon
+//        {
+//         //   readMessage();//this to nofity read msg for sender
+//            //getAllChatDB();
+//            allLoadChatting();
+//
+//        }
+//        else
+//        {
+//
+//            if (getAllChatDB().size() ==0)
+//            {
+//                allLoadChatting();
+//            }
+//
+//        }
 
 
     }
-
+    public void startService() {
+        Intent serviceIntent = new Intent(this, MyForgroundService.class);
+        serviceIntent.putExtra("Sessionway", "Notification");
+        serviceIntent.putExtra("userId",userId);
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
     private void setUpDB() {
         myDatabase = Room.databaseBuilder(context, MyDatabase.class, "SessionChatDB").allowMainThreadQueries().build();
     }
@@ -215,7 +241,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
-    private void initView() {
+    private void initView()
+    {
         if (getIntent().getStringExtra("ID") != null) {
             receiverID = getIntent().getStringExtra("ID");
             System.out.println("receiverID : " + receiverID);
@@ -231,7 +258,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         if (getIntent().getStringExtra("NOTIFICATION_COUNT") != null) {
 
             String count = getIntent().getStringExtra("NOTIFICATION_COUNT");
-            if (!count.isEmpty()) {
+            if (!count.isEmpty())
+            {
                 countUnReadMsg = Integer.parseInt(count);
             }
         }
@@ -270,7 +298,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         //  setUpRecyclerListener();
 //        getAllChatDB();
 //        allLoadChatting();
-//        setSwipeLayout();
+        setSwipeLayout();
 
     }
 
@@ -279,6 +307,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         imgVideoCall=containerView.findViewById(R.id.imgVideoCall);
         imgVideoCall.setOnClickListener(this);
+        imgAudioCall=containerView.findViewById(R.id.imgAudioCall);
+        imgAudioCall.setOnClickListener(this);
         recyclerViewMessages = containerView.findViewById(R.id.recyclerViewMessages);
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerViewMessages.setLayoutManager(linearLayoutManager);
@@ -337,7 +367,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             @Override
             public void onClick(View v) {
                 audioRecordView.hideAttachmentOptionView();
-                showToast("Emoji Icon Clicked");
+//                showToast("Emoji Icon Clicked");
             }
         });
 
@@ -345,7 +375,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             @Override
             public void onClick(View v) {
                 audioRecordView.hideAttachmentOptionView();
-                showToast("Camera Icon Clicked");
+//                showToast("Camera Icon Clicked");
                 setCameraPermission();
             }
         });
@@ -370,9 +400,10 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int count) {
-                if (count > 0) {
-                    if (!mTyping) {
-                        mTyping = true;
+                if (count > 0)
+                {
+
+                    {
                         messageTyping();
                     }
 
@@ -400,13 +431,13 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     @Override
     public void onRecordingLocked() {
-        showToast("locked");
+//        showToast("locked");
         debug("locked");
     }
 
     @Override
     public void onRecordingCompleted() {
-        showToast("completed");
+//        showToast("completed");
         debug("completed");
 
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
@@ -492,7 +523,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
         switch (view.getId()) {
             case R.id.layBack:
                 finish();
@@ -501,7 +533,14 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 showMenu(view);
                 break;
             case R.id.imgVideoCall:
-                sendVideoCallNotification();
+
+                getCallingToken("video");
+
+                break;
+                case R.id.imgAudioCall:
+
+                getCallingToken("audio");
+
                 break;
         }
 
@@ -556,7 +595,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mSocket.on(Constant.FILES_EVENT, onFiles);
         mSocket.on(Constant.IS_ON, isOnline);
         mSocket.on(Constant.TYPING, onTyping);
-        mSocket.on(Constant.CALL_NOTIFY,onCallNotify);
+        mSocket.on(Constant.IS_CONTENTREAD, isContentRead);
+
+//        mSocket.on(Constant.CALL_NOTIFY,onCallNotify);
         mSocket.connect();
     }
 
@@ -573,7 +614,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             try {
                                 JSONObject data = new JSONObject();
                                 data.put("userId", userId);
-                                mSocket.emit("join", data);
+                                mSocket.emit(Constant.EVENT_JOIN, data);
                                 connectedBoth();
                                 sendOnlineStatus();
                             } catch (JSONException e) {
@@ -596,7 +637,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                     Log.i(TAG, "diconnected");
                     System.out.println("DATA" + args[0]);
                     isConnected = false;
-                    showToast("diconnected");
+                   // showToast("diconnected");
                     mSocket.connect();
 
 //                    Toast.makeText(getActivity().getApplicationContext(),
@@ -630,7 +671,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 public void run() {
                     /*{"message":"gg","userId":"5f413256c4b8ce176fc80a8f","senderName":"Fadel Bohamad ","reciverId":"5f3cfba45a1d392b092e3fb8","reciverName":"navin nimade jii"}*/
                     JSONObject data = (JSONObject) args[0];
-                    System.out.println("msg : " + data.toString());
+                    System.out.println();
+                    mlog("msg : " + data.toString());
                     MessageChat messageChat = new MessageChat();
                     try {
 
@@ -641,12 +683,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                         }
                         chatMessage.setCreatedAt(data.getString("createdAt"));
                         chatMessage.setMessage(data.getString("message"));
-                        chatMessage.setRead(true);
+                        chatMessage.setRead(data.getBoolean("isRead"));
                         chatMessage.setReciverName(receiverName);
                         chatMessage.setSenderName(user_name);
                         chatMessage.setMessageType(data.getString("messageType"));
-
-
+                        chatMessage.setSenderProfileUrl(data.getString("senderProfileUrl"));
+                        chatMessage.setReciverProfileUrl(data.getString("reciverProfileUrl"));
                         if (receiverID.equals(chatMessage.getSenderId()))//freind
                         {
                             chatMessageLinkedList.addLast(chatMessage);
@@ -661,9 +703,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             scrollToBottom();
                         }
                         flagMobile = false;
-
                         insertInDB(chatMessage);
-
 
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
@@ -768,10 +808,26 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 @Override
                 public void run() {
                     if (args.length > 0) {
-                        if (txtTyping != null) {
+                        if (txtTyping != null)
+                        {
+                                //{"reciverId":"5f437ef1c4b8ce176fc80a91","isOn":false}
+
                             JSONObject data = (JSONObject) args[0];
-                            txtTyping.setVisibility(View.VISIBLE);
-                            txtTyping.setText("online");
+                            try {
+                                userIsOnline= data.getBoolean("isOn");
+                                mlog("userIsOnline "+userIsOnline);
+                                txtTyping.setVisibility(View.VISIBLE);
+                                if(userIsOnline) {
+                                    txtTyping.setText("online");
+                                }
+                                else
+                                {
+                                    txtTyping.setText("offline");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
 
                         }
                     }
@@ -779,31 +835,65 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             });
         }
     };
-    private Emitter.Listener onCallNotify = new Emitter.Listener()
-    {
+
+    private Emitter.Listener isContentRead = new Emitter.Listener() {
         @Override
-        public void call(Object... args) {
+        public void call(Object... args)
+        {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (args.length > 0) {
-
+                    if (args.length > 0)
                         {
-                            JSONObject data = (JSONObject) args[0];
-                            mlog(data.toString());
-                            showToast(data.toString());
-                        }
+                            mlog(" isContentRead ");
+                       // chatAdapter.notifyDataSetChanged();
                     }
                 }
             });
         }
     };
+
+
+//    private Emitter.Listener onCallNotify = new Emitter.Listener()
+//    {
+//        @Override
+//        public void call(Object... args) {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (args.length > 0) {
+//
+//                        {
+//                            //{"isCalling":true,"roomName":"5f3cfba45a1d392b092e3fb8","callerName":"Fadel Bohamad ","ProfileUrl":"","callType":"video"}
+//                            try {
+//                                JSONObject data = (JSONObject) args[0];
+//                                mlog(data.toString());
+//                                showToast(data.toString());
+//                                String type= data.getString("callType");
+//                                Intent intent=new Intent(context, CallIncomingActivity.class);
+//                                intent.putExtra("TYPE",type);
+//                                intent.putExtra("DATA",data.toString());
+//                                startActivity(intent);
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//    };
 
     private void sendVideoCallNotification() {
 
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("roomName", receiverID);
+            jsonObject.put("callerName",user_name);
+            jsonObject.put("ProfileUrl",senderProfileUrl);
+            jsonObject.put("callType","video");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -815,16 +905,44 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 if (args.length > 0)
                 {
                     mlog("callNotification..");
+
                 }
             }
         });
-    }
+        Intent intent = new Intent(context,VideoChatViewActivity.class);
+        startActivity(intent); }
+
+
+    private void sendLeaveRoom() {
+        mlog("sendLeaveRoom start ..");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject jsonRoom = new JSONObject();
+            jsonRoom.put("roomOne", roomOne);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSocket.emit(Constant.LEAVE_ROOM, jsonObject, new Ack() {
+            @Override
+            public void call(Object... args)
+            {
+                mlog("sendLeaveRoom.. args  ");
+                if (args.length > 0)
+                {
+                    JSONObject data = (JSONObject) args[0];
+                    mlog("sendLeaveRoom.."+data.toString());
+
+                }
+            }
+        });
+      }
 
     private void sendOnlineStatus() {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("reciverId", receiverID);
+            jsonObject.put("reciverId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -834,7 +952,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             public void call(Object... args) {
 
                 if (args.length > 0) {
-
+                    log("sendOnlineStatus ");
                 }
             }
         });
@@ -844,7 +962,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         try {
             JSONObject jsonRoom = new JSONObject();
             jsonRoom.put("roomOne", roomOne);
-            mSocket.emit("connected_both", jsonRoom);
+            mSocket.emit(Constant.CONNECTED_BOTH, jsonRoom);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -863,18 +981,21 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             e.printStackTrace();
         }
 
-        mSocket.emit("isTyping", jsonObject, new Ack() {
+        mSocket.emit(Constant.IS_TYPING, jsonObject, new Ack() {
             @Override
             public void call(Object... args) {
 
                 if (args.length > 0) {
                     System.out.println("typing......" + args[0]);
+                    mTyping=false;
                 }
             }
         });
     }
 
-    private void SendMessage(String message) {
+    private void SendMessage(String message)
+    {
+        mTyping=true;
         flagMobile = true;
         if (!mSocket.connected()) return;
         JSONObject jsonObject = new JSONObject();
@@ -903,12 +1024,15 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 //        chatMessageLinkedList.addLast(chatMessage);
 //        chatAdapter.notifyDataSetChanged();
 //        scrollToBottom();
-        mSocket.emit("privateMessage", jsonObject, new Ack() {
+        log(" send msg : "+jsonObject.toString());
+        mSocket.emit("privateMessage", jsonObject, new Ack()
+        {
             @Override
             public void call(Object... args) {
 
                 if (args.length > 0) {
-
+                    JSONObject data = (JSONObject) args[0];
+                    Log.d(TAG,"privateMessage : "+data.toString());
                 }
             }
         });
@@ -929,30 +1053,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
-    private void scrollToBottom() {
-        linearLayoutManager.scrollToPosition(chatMessageLinkedList.size() - 1);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        try {
-            JSONObject jsonRoom = new JSONObject();
-            jsonRoom.put("roomOne", roomOne);
-            mSocket.emit("leaveRoom", jsonRoom);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        mSocket.disconnect();
-        mSocket.off(Socket.EVENT_CONNECT, onConnect);
-        mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
-        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
-        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-        mSocket.off(Constant.NEW_MESSAGE, onNewMessage);
-        MediaPlayerUtils.releaseMediaPlayer();
-    }
 
     public void allLoadChatting() {
         if (Utility.isConnectingToInternet(context)) {
@@ -960,7 +1060,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             loadMessage.setSenderId(userId);
             loadMessage.setReciverId(receiverID);
             loadMessage.setLoad(load);
-
             ApiInterface apiInterface = ApiClient.getClient(Urls.PRIVATEMESSAGE_URL).create(ApiInterface.class);
             Call<RootChatMessage> call = apiInterface.reqLoadPreviousMsg(accessToken, loadMessage);
 
@@ -1108,6 +1207,77 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             showInternetConnectionToast();
         }
     }
+
+
+    public void getCallingToken(String callingType)
+    {
+        if (Utility.isConnectingToInternet(context))
+        {
+            UserInformation userInformation=new UserInformation();
+            userInformation.setUserId(userId);
+            showLoading();
+            ApiInterface apiInterface = ApiClient.getClient(Urls.USER_URL).create(ApiInterface.class);
+            Call<AgoraRoot> call = apiInterface.reqAgoraToken(accessToken, userInformation);
+            call.enqueue(new Callback<AgoraRoot>()
+            {
+                @Override
+                public void onResponse(Call<AgoraRoot> call, Response<AgoraRoot> response)
+                {
+                    dismiss_loading();
+                    Log.d(TAG,"before");
+                    if(response.body()!=null)
+                    {
+                        if(response.body().getStatus()==200)
+                        {
+                            AgoraBody body=response.body().getAgoraBody();
+                            Log.d(TAG,"before00 "+body.getAgorachannelName()+" "+body.getToken());
+                            AudioVideoData audioVideoData=new AudioVideoData();
+                            audioVideoData.setUserId(userId);
+                            audioVideoData.setAgorachannelName(body.getAgorachannelName());
+                            audioVideoData.setAgoraTockenID(body.getToken());
+                            audioVideoData.setCallerName(user_name);
+                            audioVideoData.setProfileUrl(profileUrl);
+                            audioVideoData.setReciever_profile_url(receiverUrl);
+                            audioVideoData.setReciverId(receiverID);
+                            audioVideoData.setCallType(callingType);
+                            audioVideoData.setReciverName(receiverName);
+                            sendAudioCalling(audioVideoData);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AgoraRoot> call, Throwable t) {
+                    Log.d(TAG,"before00 exp ");
+                    dismiss_loading();
+                }
+            });
+
+        } else {
+            showInternetConnectionToast();
+        }
+    }
+
+
+    private void scrollToBottom() {
+        linearLayoutManager.scrollToPosition(chatMessageLinkedList.size() - 1);
+    }
+
+            private void sendMsg(String message)
+            {
+
+                Intent service = new Intent(this, MyForgroundService.class);
+                service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_VIDEO_CALLING);
+                service.putExtra("USER_ID",userId);
+                service.putExtra("MESSAGE", message);
+                service.putExtra("SENDER_NAME",login_user_id);
+                service.putExtra("RECEIVER_ID",receiverID);
+                service.putExtra("RECIVER_NAME",receiverName);
+                service.putExtra("RECIVER_PROFILE_URL",receiverUrl);
+                service.putExtra("SENDER_PROFILE_URL",profileUrl);
+
+                startService(service);
+            }
 
     public void readMessage() {
         if (Utility.isConnectingToInternet(context)) {
@@ -1277,10 +1447,12 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                         "application/vnd.ms-powerpoint",
                         "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
                         "application/vnd.ms-excel",
+                        "application/vnd.oasis.opendocument.text",
+                        "text/plain",
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
                         "application/pdf",
                         "application/zip"};
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
@@ -1374,6 +1546,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
                         String uri = mDocumentUri.toString();
                         selectedDocumentPath = Utility.getRealPathFromUri(context, mDocumentUri);
+
                         docName = getFileName(mDocumentUri);
                         sendFile("docs", selectedDocumentPath, docName, "0", uri);
 
@@ -1907,7 +2080,105 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     }
 
-    private Animator currentAnimator;
+
+    private BroadcastReceiver broadcastReceiver=new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+           // showToast("onReceive");
+            mlog("onReceive");
+            if(intent.getStringExtra("TYPE").equals("calling"))
+            {
+                mlog("onReceive 000");
+                if(intent.getStringExtra("REQUEST").equals("caller"))
+                {
+                    try {
+                        mlog("onReceive 1111");
+                        String request = intent.getStringExtra("DATA");
+                        JSONObject jsonObject=new JSONObject(request);
+                        Intent callingintent1=null;
+                        mlog("onReceive 222 ");
+                        if(jsonObject.getString("callType").equals("audio"))
+                        {
+                            mlog("onReceive 33333");
+                            callingintent1 = new Intent(context, VoiceChatViewActivity.class);
+                        }
+                        else {
+                            mlog("onReceive 444 ");
+                            callingintent1 = new Intent(context, VideoChatViewActivity.class);
+                        }
+
+                        callingintent1.putExtra("DATA", request);
+                        startActivity(callingintent1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if(intent.getStringExtra("REQUEST").equals("reciever"))
+                {
+
+                        String request = intent.getStringExtra("DATA");
+                        Intent callingintent1=new Intent(context, CallIncomingActivity.class);
+                        callingintent1.putExtra("DATA",request);
+                        startActivity(callingintent1);
+
+                }
+
+
+
+
+            }
+
+
+        }
+    };
+
+
+    private void sendAudioCalling(AudioVideoData audioVideoData)
+    {
+        Log.d(TAG,"sendAudioCalling ");
+        Intent service = new Intent(this, MyForgroundService.class);
+        service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_VIDEO_CALLING);
+        service.putExtra("DATA",audioVideoData);
+        service.putExtra("RECEIVER_NAME",receiverName);
+        startService(service);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (broadcastReceiver != null) {
+         //   showToast("register broadcast");
+            IntentFilter intentFilter = new IntentFilter(MyForgroundService.KEY_BROADCAST_MESSAGE);
+
+            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (broadcastReceiver != null) {
+           // showToast("unregister broadcast");
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
+        }
+    }
+
+    MediaPlayer player;
+    private void dailer()
+    {
+        player = MediaPlayer.create(this, R.raw.tring);
+        player.setLooping(true); // Set looping
+        player.setVolume(100,100);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sendLeaveRoom();
+        MediaPlayerUtils.releaseMediaPlayer();
+    }
 
 
 }

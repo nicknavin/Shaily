@@ -55,13 +55,9 @@
         android:id="@+id/layImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="@dimen/value5"
         android:minHeight="200dp"
         android:background="@drawable/black_ripple_btn_bg_squre">
-
-
-
         <com.rey.material.widget.ProgressView
             android:id="@+id/rey_loading"
             android:layout_width="30dp"
@@ -91,7 +87,6 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-
         android:background="@drawable/sqaure_box"
         android:orientation="horizontal">
         <ImageView
@@ -99,7 +94,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-
             android:src="@mipmap/pdf_story"/>
         <com.app.session.customview.CustomTextView
             android:layout_width="wrap_content"
@@ -121,7 +115,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="3dp"
         android:elevation="3dp"
-        android:visibility="gone"
+
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -212,7 +206,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:clickable="true"
-        android:text="sfsdfdsfsdfsdfsdfsfsdf"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="16sp"
         android:layout_marginTop="10dp"
@@ -229,7 +223,7 @@ android:clickable="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         app:trimLines="5"
-        android:text="dsfsdafsdfsadfsdaf"
+        android:text=""
         android:layout_marginTop="5dp"
         app:edittextfont="Roboto-Regular.ttf" />
 

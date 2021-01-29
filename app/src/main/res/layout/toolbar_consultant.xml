@@ -58,7 +58,8 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/img_profilepic"
             android:layout_marginRight="25dp"
-            android:src="@mipmap/ic_search"/>
+            android:src="@mipmap/ic_search"
+            android:layout_alignParentRight="true"/>
         <com.app.session.customview.CustomTextView
             android:id="@+id/txtProfileName"
             android:layout_width="30dp"
@@ -72,17 +73,19 @@
             android:layout_marginRight="@dimen/value10"
             android:textColor="@color/white"
             android:layout_alignParentRight="true"/>
-<com.app.session.customview.CircleImageView
-    android:layout_width="29dp"
-    android:layout_height="29dp"
-    android:src="@mipmap/profile_image"
-    app:border_width="0.5dp"
-    app:border_color="@color/txt_app"
-    android:id="@+id/img_profilepic"
-    android:layout_alignParentRight="true"
-    android:layout_centerVertical="true"
-    android:layout_marginRight="10dp"
-    />
+
+        <com.app.session.customview.CircleImageView
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:src="@mipmap/profile_image"
+            app:border_width="0.5dp"
+            app:border_color="@color/txt_app"
+            android:id="@+id/img_profilepic"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            />
 
 
 

@@ -218,7 +218,7 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
             }
 
             txtStoryDiscription.setVisibility(View.VISIBLE);
-            if (userStory.getStoryText() != null && !userStory.getStoryText().isEmpty()) {
+            if (userStory.getStoryText() != null&&!userStory.getStoryText().equals("null") && !userStory.getStoryText().isEmpty()) {
                 try {
                     Typeface face = Typeface.createFromAsset(context.getAssets(),
                             "Segoe_UI.ttf");
@@ -226,8 +226,8 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
 //                    txtStoryDiscription.setTrimLines(5);
                     txtStoryDiscription.setTrimCollapsedText(" more");
                     txtStoryDiscription.setTrimExpandedText(" less");
-
                     txtStoryDiscription.setText(userStory.getStoryText());
+
                 } catch (StringIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }

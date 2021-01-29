@@ -5,6 +5,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClientNew {
+
+
+
     //http://sessionway.com/api/url
     public static final String BASE_URL = "http://sessionway.com/api/users/";
     public static final String BASE_PROFILE_URL = "http://sessionway.com/api/userProfile/";

@@ -1878,12 +1878,38 @@ public static String getRealPathFromUri(Context context,final Uri uri) {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
+                String fileName = getFilePath(context, uri);
+                if (fileName != null) {
+                    return Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName;
+                }
 
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-                return getDataColumn(context, contentUri, null, null);
+                if (id != null && id.startsWith("raw:")) {
+                    return id.substring(4);
+                }
+
+                String[] contentUriPrefixesToTry = new String[]{
+                        "content://downloads/public_downloads",
+                        "content://downloads/my_downloads",
+                        "content://downloads/all_downloads"
+                };
+
+                for (String contentUriPrefix : contentUriPrefixesToTry) {
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+                    try {
+                        String path = getDataColumn(context, contentUri, null, null);
+                        if (path != null) {
+                            return path;
+                        }
+                    } catch (Exception e) {}
+                }
+
+//                final String id = DocumentsContract.getDocumentId(uri);
+//                final Uri contentUri = ContentUris.withAppendedId(
+//                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+//
+//                return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -1924,7 +1950,26 @@ public static String getRealPathFromUri(Context context,final Uri uri) {
 
         return null;
     }
+    public static String getFilePath(Context context, Uri uri) {
 
+        Cursor cursor = null;
+        final String[] projection = {
+                MediaStore.MediaColumns.DISPLAY_NAME
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, null, null,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
     private static String getDataColumn(Context context, Uri uri, String selection,
                                  String[] selectionArgs) {
 

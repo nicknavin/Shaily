@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -13,6 +18,7 @@ import com.app.session.R;
 import com.app.session.base.BaseActivity;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
+import com.google.android.exoplayer2.Player;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +41,16 @@ public class SplashActivity extends BaseActivity {
 startApp();
     }
 
+    private void dailer()
+    { MediaPlayer player;
+        Uri ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        Ringtone notification = RingtoneManager.getRingtone(context, ringtone);
+
+        player = MediaPlayer.create(context, ringtone);
+        player.setLooping(true); // Set looping
+        player.setVolume(0.05f,0.05f);
+        player.start();
+    }
 
 
 
@@ -50,7 +66,8 @@ startApp();
                         if (DataPrefrence.getPref(context, Constant.IS_CONSULTANT, "").equals("1"))
                         {
 
-                            intent = new Intent(context, ConsultantStoryActivity.class);
+                            intent = new Intent(context, HomeUserChatProfileActivity.class);
+//                            intent = new Intent(context, ConsultantStoryActivity.class);
 
                         }
                         startActivity(intent);
@@ -94,7 +111,7 @@ startApp();
                         startActivity(intent);
 
                     } else {
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        startActivity(new Intent(context, LoginActivity.class));
                     }
                     finish();
 

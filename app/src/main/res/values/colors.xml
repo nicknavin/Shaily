@@ -182,5 +182,15 @@
     <color name="chat_bg_user">#3498DB</color>
 
 
-
+    <color name="gray_dark">#666666</color>
+    <color name="gray_deep_dark">#333333</color>
+    <color name="gray_lightest">#DEDEDE</color>
+    <color name="gray_light">#CCCCCC</color>
+    <color name="blue_light">#0ECFFF</color>
+    <color name="blue_alpha">#9CD9FF</color>
+    <color name="blue_medium">#44A2FC</color>
+    <color name="black_half_transparent">#66000000</color>
+    <color name="black_full_transparent">#22000000</color>
+    <color name="localBackground">#827b92</color>
+    <color name="remoteBackground">#484258</color>
 </resources>

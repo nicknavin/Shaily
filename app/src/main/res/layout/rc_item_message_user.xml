@@ -20,18 +20,31 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:layout_height="wrap_content" >
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/lay"
+            android:orientation="horizontal">
+
         <com.app.session.customview.CustomTextView
             android:id="@+id/textMSgTime"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="15:50"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:padding="5dp"
             android:textColor="#767676"
             app:edittextfont="HelveticaNeueMed.ttf"
-            android:layout_toLeftOf="@+id/lay"
-            />
 
+            />
+        <ImageView
+            android:id="@+id/imgRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_message_sent"
+
+            />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/lay"
             android:layout_width="wrap_content"
@@ -66,7 +79,7 @@ android:visibility="gone"
                 android:textStyle="normal"/>
             <RelativeLayout
                 android:id="@+id/layImage"
-                android:layout_width="260dp"
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:visibility="gone"
@@ -107,7 +120,7 @@ android:visibility="gone"
                 >
 
                 <LinearLayout
-                    android:layout_width="260dp"
+                    android:layout_width="240dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
                     >
@@ -134,14 +147,7 @@ android:visibility="gone"
                             android:paddingBottom="5dp"
                             android:tint="#FFFFFF"/>
 
-                        <SeekBar
-                            android:id="@+id/progress_bar"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="5dp"
-                            android:visibility="gone"
-                            />
+
 
                     </FrameLayout>
 
@@ -221,7 +227,7 @@ android:visibility="gone"
 
             <LinearLayout
                 android:id="@+id/layDocument"
-                android:layout_width="260dp"
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
@@ -253,7 +259,10 @@ android:visibility="gone"
 
             </LinearLayout>
 
+
+
         </LinearLayout>
+
 
 
 

@@ -394,7 +394,7 @@
     <string name="upload_video">Upload Video</string>
 
 
-    <string name="noti_channel_default">Default Channel</string>
+    <string name="noti_channel_default">Sending Media</string>
 
     <string name="btn_retry_not">Retry</string>
     <string name="btn_cancel_not">Cancel</string>
@@ -511,6 +511,39 @@
     <string name="slide_to_cancel">Slide to cancel</string>
     <string name="clear_chat">Clear chat</string>
     <string name="block">Block</string>
+    <string name="start_broadcast_title">Start Live Streaming</string>
+    <string name="topic_edit_hint">Enter a channel name</string>
+    <string name="powered_by_agora" translatable="false">Powered by agora.io</string>
+    <string name="need_necessary_permissions">Necessary permissions acquired</string>
+    <string name="setting_title">Settings</string>
+    <string name="setting_resolution_title">Resolution</string>
+    <string name="setting_stats_title">Show video statistics</string>
+
+
+    <!-- Main Activity -->
+    <string name="setting_mirror_local_title">Local video preview mirror mode</string>
+    <string name="setting_mirror_remote_title">Remote video render mirror mode</string>
+    <string name="setting_mirror_encode_title">Local video encode mirror mode</string>
+    <string name="fake_user_name" translatable="false">Shakespeare</string>
+
+    <!-- Setting Activity -->
+    <string name="select_role_title">Please choose your role</string>
+    <string name="select_role_broadcaster">Broadcaster</string>
+    <string name="select_role_audience">Audience</string>
+    <string name="select_role_broadcaster_hint">Join as broadcaster</string>
+    <string name="select_role_audience_hint">Join as audience</string>
+    <string name="legal_channel_name_characters" translatable="false">&#xA0;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;()+,-:;&lt;=.>?@[]^_`{|}~</string>
+
+    <string name="title_activity_home_profile">MainActivity</string>
+
+    <!-- Live Activity -->
+    <string name="title_home">Home</string>
+
+    <!-- Role Choose Activity -->
+    <string name="title_expert">Expert</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_activity_home_user_chat_profile">MainActivity</string>
     <string-array name="hour">
         <item>1</item>
         <item>2</item>
@@ -529,6 +562,8 @@
         <item>AM</item>
         <item>PM</item>
     </string-array>
+
+    <!-- Legal digits for channel names -->
     <string-array name="language_select">
         <item>Select Language</item>
 
@@ -548,4 +583,14 @@
         <item>M</item>
         <item>F</item>
     </string-array>
+    <string-array name="string_array_resolutions">
+        <item>320x240</item>
+        <item>480x360</item>
+        <item>640x360</item>
+        <item>640x480</item>
+        <item>960x540</item>
+        <item>1280x720</item>
+    </string-array>
+
+
 </resources>

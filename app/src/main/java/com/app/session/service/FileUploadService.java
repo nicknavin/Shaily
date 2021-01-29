@@ -148,8 +148,6 @@ public class FileUploadService extends JobIntentService {
                 if (intent.getParcelableExtra("DATA") != null) {
                     sendStory = intent.getParcelableExtra("DATA");
                 }
-
-
             }
 
             if(requestType.equals("CHAT"))

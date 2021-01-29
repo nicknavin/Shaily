@@ -98,7 +98,7 @@ import static com.app.session.service.FileUploadService.FAIL;
 import static com.app.session.service.FileUploadService.SHOW_RESULT;
 import static com.app.session.service.FileUploadService.STATUS;
 
-public class    MyProfileActivityNew extends BaseActivity implements View.OnClickListener,ServiceResultReceiver.Receiver {
+public class MyProfileActivityNew extends BaseActivity implements View.OnClickListener,ServiceResultReceiver.Receiver {
 
 
     public CustomTextView txtUserName, txt_follwr_count, txt_follwng_count;
@@ -221,7 +221,7 @@ public class    MyProfileActivityNew extends BaseActivity implements View.OnClic
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
-
+        recyclerView.setHasFixedSize(true);
         userStoryAdapter = new UserStoryAdapter(context, storyModelsList, user_name, profileUrl, new ObjectCallback() {
             @Override
             public void getObject(Object object, int position, View view)
@@ -229,9 +229,8 @@ public class    MyProfileActivityNew extends BaseActivity implements View.OnClic
                 storyShare=null;
                storyShare = (StoryModel) object;
 
-                if (view.getId() == R.id.imgRemove) {
-
-
+                if (view.getId() == R.id.imgRemove)
+                {
                     showMenu(view, storyShare, position);
                 }
 

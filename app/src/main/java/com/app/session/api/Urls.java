@@ -20,6 +20,7 @@ public interface Urls {
     public String BASE_IMAGES_URL = "http://sessionway.com/";
     public String PRIVATEMESSAGE_URL = "http://sessionway.com/api/chat/";
     public String USERPROFILE_URL = "http://sessionway.com/api/userProfile/";
+    public String USER_URL = "http://sessionway.com/api/users/";
 
 
     /*Common URLS*/
