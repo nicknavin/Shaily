@@ -70,7 +70,7 @@ public class BaseActivity extends AppCompatActivity  {
     public Activity activity;
     public String profileImg = "";
     public String profileName = "", profileEmail = "", profileContact = "";
-    public String accessToken = "", userId = "",login_user_id="", deviceId = "2468", is_consultant = "", is_company = "", user_name = "";
+    public String accessToken = "", userId = "",login_user_id="", is_consultant = "", is_company = "", user_name = "";
 
 
     public boolean checkLocationFlag;

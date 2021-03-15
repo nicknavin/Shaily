@@ -12,6 +12,7 @@ import com.app.session.R;
 
 import com.app.session.activity.ConsultantStoryActivity;
 import com.app.session.activity.ConsultantUserActivity;
+import com.app.session.activity.HomeUserChatProfileActivity;
 import com.app.session.activity.MyProfileActivityNew;
 import com.app.session.notification.NotificationHelper;
 
@@ -26,7 +27,7 @@ public class FileProgressReceiver extends BroadcastReceiver {
     public static final String ACTION_UPLOADED = "com.wave.ACTION_UPLOADED";
 
     NotificationHelper mNotificationHelper;
-    public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID = 143;
     NotificationCompat.Builder notification;
     public static final int STATUS = 123456;
 
@@ -39,25 +40,32 @@ public class FileProgressReceiver extends BroadcastReceiver {
         // Receive progress
         int progress = intent.getIntExtra("progress", 0);
 
-        switch (Objects.requireNonNull(intent.getAction())) {
+        switch (Objects.requireNonNull(intent.getAction()))
+        {
             case ACTION_PROGRESS_NOTIFICATION:
                 notification = mNotificationHelper.getNotification(mContext.getString(R.string.uploading), mContext.getString(R.string.in_progress), progress);
                 mNotificationHelper.notify(NOTIFICATION_ID, notification);
                 break;
             case ACTION_CLEAR_NOTIFICATION:
-                mNotificationHelper.cancelNotification(notificationId);
+                mNotificationHelper.cancelNotification(NOTIFICATION_ID);
                 break;
             case ACTION_UPLOADED:
 
-
-
-                Intent resultIntent = new Intent(mContext, ConsultantUserActivity.class);
+                System.out.println("tag"+"file is uploaded");
+//                mNotificationHelper.cancelNotification(NOTIFICATION_ID);
+                Intent resultIntent = new Intent(mContext, HomeUserChatProfileActivity.class);
+//                PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext,
+//                        0 /* Request code */, new Intent(),
+//                        PendingIntent.FLAG_UPDATE_CURRENT);
                 PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext,
                         0 /* Request code */, resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-                notification = mNotificationHelper.getNotification(mContext.getString(R.string.message_upload_success), mContext.getString(R.string.file_upload_successful), resultPendingIntent);
-               // mNotificationHelper.notify(NOTIFICATION_ID, notification);
-                mNotificationHelper.cancelNotification(NOTIFICATION_ID);
+//                notification = mNotificationHelper.getNotification(mContext.getString(R.string.message_upload_success), mContext.getString(R.string.file_upload_successful), resultPendingIntent);
+//
+//                mNotificationHelper.notify(NOTIFICATION_ID, notification);
+
+                mNotificationHelper.createNotification(mContext.getString(R.string.message_upload_success), mContext.getString(R.string.file_upload_successful), resultPendingIntent);
+
                 if (intent.getParcelableExtra("RECEVIER") != null)
                 {
                     ResultReceiver resultReceiver = intent.getParcelableExtra("RECEVIER");

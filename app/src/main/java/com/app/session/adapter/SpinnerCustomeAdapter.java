@@ -44,7 +44,7 @@ public class SpinnerCustomeAdapter extends ArrayAdapter<String>{
     }
 
     private View createItemView(int position, View convertView, ViewGroup parent){
-        final View view = mInflater.inflate(mResource, parent, false);
+        final View view = LayoutInflater.from(mContext).inflate(mResource, parent, false);
 
         CustomTextView offTypeTv = (CustomTextView) view.findViewById(R.id.txtLanguageName);
 

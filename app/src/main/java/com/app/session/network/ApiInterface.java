@@ -70,9 +70,12 @@ public interface ApiInterface {
     @POST("user_login")
     public Call<ResponseBody> callLoginRequest(@Field("user_id") String user_id, @Field("password") String password, @Field("device_id") String device_id);
 
-    @FormUrlEncoded
-    @POST("user_logout")
-    public Call<ResponseBody> callLogoutRequest(@Field("user_id") String user_id, @Field("token_id") String token_id);
+
+
+    @Headers("Content-Type: application/json")
+    @POST("logout")
+    public Call<ResponseBody> callLogoutRequest(@Header("Authorization") String token, @Body UserId userId);
+
 
     @FormUrlEncoded
     @POST("user_exist")
@@ -340,6 +343,7 @@ public interface ApiInterface {
                                                      @Part("story_title") RequestBody story_title,
                                                      @Part("story_text") RequestBody story_text,
                                                      @Part("video_url") RequestBody video_url,
+                                                     @Part("story_language_id") RequestBody story_language_id,
                                                      @Part MultipartBody.Part storyImage
     );
 
@@ -351,6 +355,7 @@ public interface ApiInterface {
                                                          @Part("story_title") RequestBody story_title,
                                                          @Part("story_text") RequestBody story_text,
                                                          @Part("video_url") RequestBody video_url,
+                                                         @Part("story_language_id") RequestBody story_language_id,
                                                          @Part MultipartBody.Part storyImage
     );
 
@@ -363,6 +368,7 @@ public interface ApiInterface {
                                                       @Part("story_title") RequestBody story_title,
                                                       @Part("story_text") RequestBody story_text,
                                                       @Part("video_url") RequestBody video_url,
+                                                      @Part("story_language_id") RequestBody story_language_id,
                                                       @Part MultipartBody.Part storyImage
     );
 
@@ -375,6 +381,7 @@ public interface ApiInterface {
                                                           @Part("story_title") RequestBody story_title,
                                                           @Part("story_text") RequestBody story_text,
                                                           @Part("video_url") RequestBody video_url,
+                                                          @Part("story_language_id") RequestBody story_language_id,
                                                           @Part MultipartBody.Part storyImage
     );
 

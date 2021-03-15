@@ -226,7 +226,8 @@ public class AddBriefCVActivity extends BaseActivity implements View.OnClickList
                 String url = Urls.BASE_IMAGES_URL + brief_cv.getVideo_thumbnail();
                 Picasso.with(context).load(url).placeholder(R.mipmap.profile_large).into(imgVideoCover);
             }
-            if (brief_cv.getVideo_url() != null && !brief_cv.getVideo_url().isEmpty()) {
+            if (brief_cv.getVideo_url() != null && !brief_cv.getVideo_url().isEmpty())
+            {
 
                 videoUrl = Urls.BASE_VIDEO_URL + brief_cv.getVideo_url();
                 layVideothumb.setVisibility(View.VISIBLE);
@@ -544,6 +545,8 @@ showLoading();
                 break;
 
             case R.id.imgVideoCover:
+
+                //navin nimade comment
                 if (!videoUrl.isEmpty() && videoUrl != null) {
                     intent = new Intent(context, VideoPlayerActivity.class);
                     intent.putExtra("URL", videoUrl);

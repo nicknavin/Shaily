@@ -387,6 +387,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 audioRecordView.getMessageView().setText("");
                 //messageAdapter.add(new Message(msg));
                 //                msg="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore";
+
                 SendMessage(msg);
             }
         });
@@ -614,9 +615,11 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             try {
                                 JSONObject data = new JSONObject();
                                 data.put("userId", userId);
+                                data.put("deviceType", "mobile");
                                 mSocket.emit(Constant.EVENT_JOIN, data);
                                 connectedBoth();
-                                sendOnlineStatus();
+
+                               sendOnlineStatus();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -815,6 +818,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             JSONObject data = (JSONObject) args[0];
                             try {
                                 userIsOnline= data.getBoolean("isOn");
+                                mlog("user status"+data.toString());
                                 mlog("userIsOnline "+userIsOnline);
                                 txtTyping.setVisibility(View.VISIBLE);
                                 if(userIsOnline) {
@@ -854,36 +858,6 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     };
 
 
-//    private Emitter.Listener onCallNotify = new Emitter.Listener()
-//    {
-//        @Override
-//        public void call(Object... args) {
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (args.length > 0) {
-//
-//                        {
-//                            //{"isCalling":true,"roomName":"5f3cfba45a1d392b092e3fb8","callerName":"Fadel Bohamad ","ProfileUrl":"","callType":"video"}
-//                            try {
-//                                JSONObject data = (JSONObject) args[0];
-//                                mlog(data.toString());
-//                                showToast(data.toString());
-//                                String type= data.getString("callType");
-//                                Intent intent=new Intent(context, CallIncomingActivity.class);
-//                                intent.putExtra("TYPE",type);
-//                                intent.putExtra("DATA",data.toString());
-//                                startActivity(intent);
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//    };
 
     private void sendVideoCallNotification() {
 
@@ -942,7 +916,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("reciverId", userId);
+            jsonObject.put("reciverId", receiverID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -2160,6 +2134,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     @Override
     protected void onPause() {
         super.onPause();
+
         if (broadcastReceiver != null) {
            // showToast("unregister broadcast");
             LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
@@ -2177,6 +2152,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     public void onDestroy() {
         super.onDestroy();
         sendLeaveRoom();
+//        sendOfflineStatus(userId);
+//        sendOnlineStatus(userId);
         MediaPlayerUtils.releaseMediaPlayer();
     }
 

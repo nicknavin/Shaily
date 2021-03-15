@@ -665,50 +665,50 @@ dismiss_loading();
         }
     }
 
-    private void getUserLogout() {
-
-        if (isConnectingToInternet(context)) {
-            showLoading();
-            ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call = apiInterface.callLogoutRequest(userId, accessToken);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    dismiss_loading();
-                    ResponseBody responseBody = response.body();
-                    try {
-                        String data = responseBody.string();
-                        try {
-
-                            JSONObject js = new JSONObject(data);
-
-                            //if(js.getBoolean("Status"))
-                            {
-                                clearDataBase();
-                                Intent intent = new Intent(context, LoginActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    dismiss_loading();
-                }
-            });
-        } else {
-            showInternetConnectionToast();
-        }
-    }
+//    private void getUserLogout() {
+//
+//        if (isConnectingToInternet(context)) {
+//            showLoading();
+//            ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
+//            Call<ResponseBody> call = apiInterface.callLogoutRequest(userId, accessToken);
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                    dismiss_loading();
+//                    ResponseBody responseBody = response.body();
+//                    try {
+//                        String data = responseBody.string();
+//                        try {
+//
+//                            JSONObject js = new JSONObject(data);
+//
+//                            //if(js.getBoolean("Status"))
+//                            {
+//                                clearDataBase();
+//                                Intent intent = new Intent(context, LoginActivity.class);
+//                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                startActivity(intent);
+//                                finish();
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    dismiss_loading();
+//                }
+//            });
+//        } else {
+//            showInternetConnectionToast();
+//        }
+//    }
 
     private void getUserDeleteAccount() {
         if (isInternetConnected()) {

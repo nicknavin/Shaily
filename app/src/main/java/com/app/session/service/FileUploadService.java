@@ -49,7 +49,7 @@ public class FileUploadService extends JobIntentService {
     RestApiService apiService;
 
     Disposable mDisposable;
-    public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID = 143;
     public static final int NOTIFICATION_RETRY_ID = 2;
     ResponseBody responseBody;
     /**
@@ -303,7 +303,7 @@ public class FileUploadService extends JobIntentService {
                     @Override
                     public void accept(Double progress) throws Exception {
                         // call onProgress()
-                        FileUploadService.this.onProgress(progress);
+                        onProgress(progress);
 
                     }
                 }, new Consumer<Throwable>() {
@@ -311,13 +311,13 @@ public class FileUploadService extends JobIntentService {
                     public void accept(Throwable throwable) throws Exception {
                         // call onErrors() if error occurred during file upload
 
-                        FileUploadService.this.onErrors(throwable);
+                        onErrors(throwable);
                     }
                 }, new Action() {
                     @Override
                     public void run() throws Exception {
                         // call onSuccess() while file upload successful
-                        FileUploadService.this.onSuccess();
+                        onSuccess();
                     }
                 });
     }
@@ -448,13 +448,7 @@ public class FileUploadService extends JobIntentService {
         String data="";
 
         try {
-
-//            Bundle bundle = new Bundle();
             data = responseBody.string();
-//            bundle.putString("STATUS", "Done");
-//            bundle.putString("DATA", data);
-//            mResultReceiver.send(STATUS, bundle);
-//
             System.out.println("req upload result  " + data);
         } catch (IOException e) {
             e.printStackTrace();

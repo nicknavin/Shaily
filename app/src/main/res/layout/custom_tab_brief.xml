@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@android:id/text1"
     android:layout_width="wrap_content"
-    android:textSize="16sp"
+    android:textSize="14sp"
     android:clickable="false"
     android:layout_gravity="center"
     android:gravity="center"
     android:text="dsfdsaf"
     android:textColor="@drawable/text_color_selector_brief"
     android:layout_height="wrap_content"
-    app:edittextfont="Roboto-Bold.ttf"/>
+    app:edittextfont="HelveticaNeueMed.ttf"/>

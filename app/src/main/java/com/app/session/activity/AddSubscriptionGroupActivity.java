@@ -656,11 +656,13 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         Category category = null;
                                         category = new Category();
+
                                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                                         category.setCategoryID(jsonObject.getString("_id"));
                                         category.setCategoryName(jsonObject.getString("category_name"));
                                         category.setLanguageCd(jsonObject.getString("language_cd"));
                                         categoryArrayList.add(category);
+                                        category_cd=categoryArrayList.get(0).getCategoryID();
                                     }
 
                                     Category category1 = new Category();
@@ -773,14 +775,15 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
 
 
 
-    public void sendSubscriptionStory(File file)
+    public void
+    sendSubscriptionStory(File file)
     {
         if (isInternetConnected()) {
 
             showLoading();
             RequestBody usercd=RequestBody.create( MediaType.parse("text/plain"),userId);
             RequestBody languageId=RequestBody.create( MediaType.parse("text/plain"),language_id);
-            RequestBody categoryId=RequestBody.create( MediaType.parse("text/plain"),category_id);
+            RequestBody categoryId=RequestBody.create( MediaType.parse("text/plain"),category_cd);
             RequestBody currencyId=RequestBody.create( MediaType.parse("text/plain"),currency_id);
             RequestBody subscription_price=RequestBody.create( MediaType.parse("text/plain"),subscriptionPrice);
             RequestBody group_name=RequestBody.create( MediaType.parse("text/plain"),groupName);

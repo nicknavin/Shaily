@@ -26,6 +26,9 @@ public class Constant {
     public static final String FILES_EVENT = "files";
     public static final String IS_ON = "isOn";//reciever
     public static final String IS_ONLINE = "isOnline";//emit
+    public static final String JOINMOBILEUSERS = "joinMobileUsers";//emit
+    public static final String BACKGROUNDSTATE = "backgroundstate";//emit
+
     public static  String IS_TYPING = "isTyping";
     public static final String TYPING = "typing";
 

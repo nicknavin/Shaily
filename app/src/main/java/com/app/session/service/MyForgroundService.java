@@ -320,6 +320,7 @@ public class MyForgroundService extends Service implements SocketEventListener.L
         try {
             JSONObject data = new JSONObject();
             data.put("userId", userId);
+            data.put("deviceType", "mobile");
             mSocket.emit(Constant.EVENT_JOIN, data);
         } catch (JSONException e) {
             e.printStackTrace();

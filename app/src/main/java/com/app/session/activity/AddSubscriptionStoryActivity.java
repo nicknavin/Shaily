@@ -1068,6 +1068,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             RequestBody storyTitle = RequestBody.create(MediaType.parse("text/plain"), story_title);
             RequestBody videoUrl = RequestBody.create(MediaType.parse("text/plain"), video_url);
             RequestBody subscriptionId = RequestBody.create(MediaType.parse("text/plain"), subscription_id);
+            RequestBody languageId = RequestBody.create(MediaType.parse("text/plain"), language_cd);
             System.out.println("subscription_id 2: " + subscription_id);
             RequestBody requestfile = null;
             MultipartBody.Part audioFile = null;
@@ -1082,10 +1083,10 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             Call<SendStoryResponseRoot> call;
             if (subscription_id.isEmpty()) {
                 System.out.println("subscription_id 3:" + subscription_id);
-                call = apiService.callUserSendStory1(accessToken, userCd, storyType, storyTitle, storyText, videoUrl, audioFile);
+                call = apiService.callUserSendStory1(accessToken, userCd, storyType, storyTitle, storyText, videoUrl, languageId,audioFile);
             } else {
                 System.out.println("subscription_id 4:" + subscription_id);
-                call = apiService.callSendStory1(accessToken, userCd, subscriptionId, storyType, storyTitle, storyText, videoUrl, audioFile);
+                call = apiService.callSendStory1(accessToken, userCd, subscriptionId, storyType, storyTitle, storyText, videoUrl, languageId,audioFile);
             }
             call.enqueue(new Callback<SendStoryResponseRoot>() {
                 @Override
@@ -1265,6 +1266,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             RequestBody storyTitle = RequestBody.create(MediaType.parse("text/plain"), story_title);
             RequestBody videoUrl = RequestBody.create(MediaType.parse("text/plain"), video_url);
             RequestBody subscriptionId = RequestBody.create(MediaType.parse("text/plain"), subscription_id);
+            RequestBody languageId = RequestBody.create(MediaType.parse("text/plain"), language_cd);
             RequestBody requestfile = null;
             MultipartBody.Part productimg = null;
 
@@ -1277,11 +1279,11 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             Call<SendStoryResponseRoot> call = null;
             if (subscription_id.isEmpty()) {
 
-                call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl, productimg);
+                call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl,languageId ,productimg);
 
             } else {
 
-                call = apiInterface.reqSendsStory(accessToken, userCd, subscriptionId, storyType, storyTitle, storyText, videoUrl, productimg);
+                call = apiInterface.reqSendsStory(accessToken, userCd, subscriptionId, storyType, storyTitle, storyText, videoUrl,languageId, productimg);
             }
             call.enqueue(new Callback<SendStoryResponseRoot>() {
                 @Override
@@ -1334,12 +1336,13 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             RequestBody storyType = RequestBody.create(MediaType.parse("text/plain"), story_type);
             RequestBody storyTitle = RequestBody.create(MediaType.parse("text/plain"), story_title);
             RequestBody videoUrl = RequestBody.create(MediaType.parse("text/plain"), video_url);
+            RequestBody languageId = RequestBody.create(MediaType.parse("text/plain"), language_cd);
 
             RequestBody requestfile = null;
             MultipartBody.Part productimg = null;
 
             Call<SendStoryResponseRoot> call = null;
-            call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl, productimg);
+            call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl,languageId, productimg);
 
             call.enqueue(new Callback<SendStoryResponseRoot>() {
                 @Override

@@ -79,6 +79,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -176,6 +177,7 @@ boolean followStatus;
 
     private void initView()
     {
+        layBio=(ConstraintLayout) findViewById(R.id.layBio);
         imgChat=(ImageView)findViewById(R.id.imgChat);
         imgChat.setVisibility(View.VISIBLE);
         laySubsView = (LinearLayout) findViewById(R.id.laySubsView);
@@ -281,7 +283,7 @@ boolean followStatus;
         {
             BriefCV briefCV=briefCVArrayList.get(i);
             userBriefCVFragment=UserBriefCVFragment.newInstance(briefCV);
-            adapter.addFragment(userBriefCVFragment, briefCVArrayList.get(i).getmLanguageId().getName());
+            adapter.addFragment(userBriefCVFragment, briefCVArrayList.get(i).getmLanguageId().getNativeName());
 
         }
 
@@ -690,6 +692,7 @@ boolean followStatus;
                 if(imgDrop.isChecked())
                 {
                     imgDrop.setChecked(false);
+                    visibleBioSection(0);
                     UserBriefCVFragment fragment = (UserBriefCVFragment) viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
                     //  fragmentRefreshListener.onRefresh(true);
                     fragment.setVisibleBio(false);
@@ -707,7 +710,7 @@ boolean followStatus;
                             .instantiateItem(viewPager, viewPager.getCurrentItem());
                     //  fragmentRefreshListener.onRefresh(true);
                     fragment.setVisibleBio(true);
-
+                    visibleBioSection(1);
                 }
                 break;
         }
@@ -779,7 +782,21 @@ boolean followStatus;
 //            showInternetConnectionToast();
 //        }
     }
-
+    ConstraintLayout layBio;
+    private void visibleBioSection(int visibleFlag)
+    {
+        if(visibleFlag==0) {
+            tabLayout.setVisibility(View.INVISIBLE);
+            imgDrop.setChecked(false);
+            viewPager.setVisibility(View.GONE);
+        }
+        else
+        {
+            tabLayout.setVisibility(View.VISIBLE);
+            imgDrop.setChecked(true);
+            viewPager.setVisibility(View.VISIBLE);
+        }
+    }
 
     public void getUserStoryNew() {
         if (Utility.isConnectingToInternet(context))
@@ -809,6 +826,7 @@ boolean followStatus;
                             System.out.println("temp page "+pageno);
                             if(userStories.size()>0)
                             {
+                                visibleBioSection(0);
                                 if(pageno <=total_pages)
                                 {
                                     loading=true;
@@ -821,6 +839,10 @@ boolean followStatus;
                                 }
                                 userStories.clear();
                                 userSubscriptionStoryAdapter.notifyDataSetChanged();
+                            }
+                            else
+                            {
+                                visibleBioSection(1);
                             }
 
 

@@ -67,9 +67,12 @@ public class HomeUserChatProfileActivity extends BaseActivity {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     {
-                        menuItem.setIconTintMode(PorterDuff.Mode.DST);
+                        menuItem.setIconTintMode(PorterDuff.Mode.DST_IN);
+
                     }
+
                     menuItem.setIcon(mBitmapDrawable);
+
 
                 } else {
                     menuItem.setIcon(R.drawable.ic_baseline_account_circle_24);

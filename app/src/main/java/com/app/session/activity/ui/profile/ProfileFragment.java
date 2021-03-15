@@ -1,11 +1,13 @@
 package com.app.session.activity.ui.profile;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -81,6 +83,7 @@ import com.app.session.model.SubscriptionGroupRoot;
 import com.app.session.model.UserDetails;
 import com.app.session.model.UserId;
 import com.app.session.model.UserStory;
+import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;
@@ -91,6 +94,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.engineio.client.transports.Polling;
+import com.github.nkzawa.socketio.client.Ack;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rey.material.widget.ProgressView;
@@ -106,6 +114,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -157,6 +166,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     Context context;
     View root;
     ImageView imgSetting;
+    ConstraintLayout layBio;
     public static ProfileFragment newInstance()
     {
         return new ProfileFragment();
@@ -166,12 +176,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=getContext();
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root= inflater.inflate(R.layout.profile_fragment, container, false);
+        root= inflater.inflate(R.layout.profile_fragment_demo, container, false);
         initView();
         return root;
     }
@@ -186,6 +197,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     public void initView() {
 
+        layBio=(ConstraintLayout) root.findViewById(R.id.layBio);
         layLoading=(RelativeLayout)root.findViewById(R.id.layLoading);
         imageStory=(ImageView)root.findViewById(R.id.imgStory);
         imgSetting=root.findViewById(R.id.imgSetting);
@@ -419,7 +431,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    public void setCustomTextView() {
+    public void setCustomTextView()
+    {
+
+
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             //noinspection ConstantConditions
             CustomTextView tv = (CustomTextView) LayoutInflater.from(context).inflate(R.layout.custom_tab_brief, null);
@@ -431,25 +446,47 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+
+    private void visibleBioSection(int visibleFlag)
+    {
+        if(visibleFlag==0) {
+            tabLayout.setVisibility(View.INVISIBLE);
+            imgDrop.setChecked(false);
+            viewPager.setVisibility(View.GONE);
+        }
+        else
+        {
+            tabLayout.setVisibility(View.VISIBLE);
+            imgDrop.setChecked(true);
+            viewPager.setVisibility(View.VISIBLE);
+        }
+    }
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layDrop:
 
-                if (imgDrop.isChecked()) {
-                    imgDrop.setChecked(false);
-                    MyProfileFragment fragment = (MyProfileFragment) viewPager
-                            .getAdapter()
-                            .instantiateItem(viewPager, viewPager.getCurrentItem());
+                if (imgDrop.isChecked())
+                {
 
-                    viewPager.setVisibility(View.GONE);
+//                    imgDrop.setChecked(false);
+//                    MyProfileFragment fragment = (MyProfileFragment) viewPager
+//                            .getAdapter()
+//                            .instantiateItem(viewPager, viewPager.getCurrentItem());
+//
+//                    viewPager.setVisibility(View.GONE);
+                    visibleBioSection(0);
 
                 } else {
-                    imgDrop.setChecked(true);
-                    MyProfileFragment fragment = (MyProfileFragment) viewPager
-                            .getAdapter()
-                            .instantiateItem(viewPager, viewPager.getCurrentItem());
-                    viewPager.setVisibility(View.VISIBLE);
+                    visibleBioSection(1);
+//
+//                    imgDrop.setChecked(true);
+//                    MyProfileFragment fragment = (MyProfileFragment) viewPager
+//                            .getAdapter()
+//                            .instantiateItem(viewPager, viewPager.getCurrentItem());
+//                    viewPager.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.fab:
@@ -476,7 +513,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         for (int i = 0; i < brief_cvList.size(); i++) {
             myProfileFragment = MyProfileFragment.newInstance(i, storyDataArrayList);
-            adapter.addFragment(myProfileFragment, brief_cvList.get(i).getLanguage_id().getName());
+            adapter.addFragment(myProfileFragment, brief_cvList.get(i).getLanguage_id().getNativeName());
         }
 
         viewPager.setAdapter(adapter);
@@ -637,7 +674,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 //                    dismiss_loading();
                     if (response.body() != null) {
-                        if (response.body().getStatus() == 200) {
+                        if (response.body().getStatus() == 200)
+                        {
                             StoryBody storyBody = response.body().getStoryBody();
 
                             total_pages = storyBody.getTotal_Page();
@@ -647,8 +685,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                             System.out.println("temp page " + pageno);
 
 
-                            if (temp.size() > 0) {
-                                if (pageno <= total_pages) {
+                            if (temp.size() > 0)
+                            {
+                                visibleBioSection(0);
+                                if (pageno <= total_pages)
+                                {
                                     loading = true;
                                     pageno++;
                                 }
@@ -670,6 +711,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //                                });
 //                                recyclerView.setAdapter(userStoryAdapter);
 
+                            }
+
+                            else
+                            {
+                                visibleBioSection(1);
                             }
                         }
                     }
@@ -1059,6 +1105,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 rey_loading.stop();
                 layLoading.setVisibility(View.GONE);
                 showToast("File is uploaded ");
+              
+                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancelAll();
 
                 if (resultData != null) {
                     String data = resultData.getString("DATA");
@@ -1110,6 +1159,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
 
             case FAIL:
+
                 rey_loading.stop();
                 layLoading.setVisibility(View.GONE);
                 showToast("uploading is fail, please try again");
@@ -1272,12 +1322,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 public void onClick(View v) {
 
                     if(type==1) {
-//                        getUserLogout();
-                        baseActivity.clearDataBase();
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        getActivity().finish();
+                        getUserLogout();
+
                     }
                     else
                     {
@@ -1362,6 +1408,55 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             e.printStackTrace();
         }
         return null;
+    }
+    private void getUserLogout() {
+
+        if (Utility.isConnectingToInternet(context))
+        {
+
+            showLoading();
+            ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
+            UserId userID=new UserId();
+            userID.setUser_id(userId);
+            Call<ResponseBody> call = apiInterface.callLogoutRequest(accessToken,userID);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    dismiss_loading();
+
+                    ResponseBody responseBody = response.body();
+                    try {
+                        String data = responseBody.string();
+                        try {
+
+                            JSONObject js = new JSONObject(data);
+
+                            //if(js.getBoolean("Status"))
+                            {
+                                baseActivity.clearDataBase();
+                                Intent intent = new Intent(context, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    dismiss_loading();
+                }
+            });
+        } else {
+            showInternetConnectionToast();
+        }
     }
 
 }

@@ -22,7 +22,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"    >
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
@@ -313,7 +313,7 @@
                         android:layout_gravity="bottom"
                         android:gravity="center"
                         android:paddingBottom="12dp"
-                        android:background="@drawable/line_black"
+                        android:background="@drawable/line_black_light"
                         android:layout_marginLeft="10dp">
 
                         <com.app.session.customview.CustomTextView
@@ -342,12 +342,12 @@
                         android:layout_marginRight="10dp"
                         android:layout_height="wrap_content"
                         app:tabGravity="fill"
-                        app:tabIndicatorHeight="3dp"
+                        app:tabIndicatorHeight="0.5dp"
                         app:tabBackground="@drawable/selector_tab_indicator_new"
                         app:tabMode="scrollable"
 
-                        app:tabSelectedTextColor="@color/black"
-                        app:tabIndicatorColor="@color/black"
+                        app:tabSelectedTextColor="#DBDBDB"
+                        app:tabIndicatorColor="#DBDBDB"
 
                         />
                 </LinearLayout>
@@ -407,8 +407,6 @@
                         app:pv_progressMode="indeterminate"
                         app:pv_progressStyle="@style/loadingstyle" />
 
-
-
                 </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -425,7 +423,7 @@
 
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

@@ -61,7 +61,8 @@ startApp();
 
                 try {
                     Thread.sleep(1000);
-                    if (DataPrefrence.getPref(context, Constant.LOGIN_FLAG, false)) {
+                    if (DataPrefrence.getPref(context, Constant.LOGIN_FLAG, false))
+                    {
                         Intent intent=null;
                         if (DataPrefrence.getPref(context, Constant.IS_CONSULTANT, "").equals("1"))
                         {
