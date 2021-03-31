@@ -22,19 +22,17 @@ import com.app.session.api.Urls;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.StoryModel;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.UserStory;
 import com.app.session.utility.Utility;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -194,7 +192,7 @@ String userName,userUrl;
         public void bindHolderToVoice(Context context,String userName,String userUrl,UserStory userStory,int position,ObjectCallback apiCallback,long duration)
         {
 
-            txtViewCount.setText(""+userStory.getViews());
+            txtViewCount.setText(""+userStory.getStoryRead().getCount());
 
 //           String days = Utility.getCalculatedDate(userStory.getCreatedAt());
 
@@ -399,7 +397,7 @@ String userName,userUrl;
 
             if (userStory.getStoryType().equals("video_url"))
             {
-                layDocument.setVisibility(View.VISIBLE);
+                layDocument.setVisibility(View.GONE);
                 lay_audio.setVisibility(View.GONE);
                 imgStory.setVisibility(View.GONE);
                 layImage.setVisibility(View.GONE);

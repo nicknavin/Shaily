@@ -94,35 +94,6 @@ startApp();
         super.onPause();
     }
 
-    private void startAppold() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    Thread.sleep(1000);
-                    if (DataPrefrence.getPref(context, Constant.LOGIN_FLAG, false)) {
-                        Intent intent=null;
-                        if (DataPrefrence.getPref(context, Constant.IS_COMPANY, "").equals("1")) {
-                           // intent = new Intent(context, CompanyHomeActivity.class);
-                        } else {
-                            intent = new Intent(context, ConsultantStoryActivity.class);
-
-                        }
-                        startActivity(intent);
-
-                    } else {
-                        startActivity(new Intent(context, LoginActivity.class));
-                    }
-                    finish();
-
-
-                } catch (Exception e) {
-                }
-
-            }
-        }).start();
-    }
 
     private void getkay()
     {

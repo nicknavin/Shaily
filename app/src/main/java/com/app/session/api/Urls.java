@@ -16,7 +16,7 @@ public interface Urls {
 
 //    http://www.consultlot.com/consultantService.svc/get_currency_ref
 
-    public String BASE_VIDEO_URL = "http://consultlot.com/video/users/";
+    public String BASE_VIDEO_URL = "http://sessionway.com/";
     public String BASE_IMAGES_URL = "http://sessionway.com/";
     public String PRIVATEMESSAGE_URL = "http://sessionway.com/api/chat/";
     public String USERPROFILE_URL = "http://sessionway.com/api/userProfile/";

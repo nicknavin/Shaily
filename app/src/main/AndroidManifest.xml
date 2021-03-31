@@ -47,7 +47,7 @@
         <activity
             android:name=".activity.FollowingExpertProfilePageActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
-        <activity android:name=".activity.ConsultantStoryActivity" />
+
         <activity android:name=".activity.HomeConsultantActivity" />
         <activity android:name=".activity.HomeSessionActivity" />
         <activity android:name=".activity.RegistrationThirdStageActivity" />

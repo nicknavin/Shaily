@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.session.R;
-import com.app.session.model.Country;
+import com.app.session.data.model.Country;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;

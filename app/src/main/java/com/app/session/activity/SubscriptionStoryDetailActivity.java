@@ -42,7 +42,7 @@ import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
+import com.app.session.data.model.Brief_CV;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;

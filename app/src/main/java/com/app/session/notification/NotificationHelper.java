@@ -24,7 +24,7 @@ public class NotificationHelper extends ContextWrapper {
     private NotificationManager manager;
     public static final String CHANNEL_ID = "default";
     public static final String CHANNEL_NAME = "Sending Media";
-    public static final int NOTIFICATION_ID = 145;
+    public static final int NOTIFICATION_ID = 143;
     public NotificationHelper(Context mContext) {
         super(mContext);
         NotificationChannel mChannel = null;
@@ -44,7 +44,6 @@ public class NotificationHelper extends ContextWrapper {
         mBuilder.setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
         mBuilder.setContentTitle(title)
                 .setContentText(body)
-                .setOngoing(true)
                 //.setContentIntent(resultPendingIntent)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);

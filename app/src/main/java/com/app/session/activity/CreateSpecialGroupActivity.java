@@ -31,7 +31,7 @@ import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.StoryGroup;
+import com.app.session.data.model.StoryGroup;
 import com.app.session.utility.Constant;
 import com.app.session.utility.ConvetBitmap;
 import com.app.session.utility.PermissionsUtils;

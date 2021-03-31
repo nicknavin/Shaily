@@ -3,16 +3,12 @@ package com.app.session.utility;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -48,9 +44,9 @@ import com.app.session.BuildConfig;
 import com.app.session.R;
 import com.app.session.activity.SplashActivity;
 import com.app.session.api.Urls;
-import com.app.session.model.StoryModel;
-import com.app.session.model.UserLangauges;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.UserLangauges;
+import com.app.session.data.model.UserStory;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,7 +60,6 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -74,14 +69,11 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -426,9 +418,11 @@ public class Utility {
 //        return result;
 //    }
 
-    public static void log(String str) {
+    public static void log(String str)
+    {
         // System.out.println(str);
         // Log.i("LOG",str);
+        Log.d("tag",str);
     }
 
     static Locale myLocale;

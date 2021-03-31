@@ -22,7 +22,7 @@ import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.TitleCallback;
-import com.app.session.model.TitleRef;
+import com.app.session.data.model.TitleRef;
 import com.app.session.network.BaseAsych;
 import com.app.session.utility.Constant;
 

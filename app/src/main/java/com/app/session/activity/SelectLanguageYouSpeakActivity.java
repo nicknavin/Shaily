@@ -12,22 +12,15 @@ import android.widget.RelativeLayout;
 import com.app.session.R;
 import com.app.session.adapter.SelectedLanguageAdapter;
 import com.app.session.adapter.SpeakLanguageSelectionAdapter;
-import com.app.session.api.AqueryCall;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomTextView;
-import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.ApiCallback;
-import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.Language;
-import com.app.session.model.LanguagesRoot;
+import com.app.session.data.model.Language;
+import com.app.session.data.model.LanguagesRoot;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,88 +225,6 @@ public class SelectLanguageYouSpeakActivity extends BaseActivity implements View
 
     }
 
-
-    private void callGetLangauge(Map<String, Object> param, String url) {
-
-        try {
-            showLoading();
-            AqueryCall request = new AqueryCall(this);
-            request.commonAPI(url, param, new RequestCallback() {
-                @Override
-                public void onSuccess(JSONObject js, String success) {
-
-                    dismiss_loading();
-
-                    try {
-
-//                        Language language0 = new Language();
-//                        language0.setNative_name("Select Language");
-//                        languageArrayList.add(language0);
-
-
-                        JSONArray jsonArray = js.getJSONArray("languages");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Language language = new Language();
-                            language.setEnglish_name(jsonObject.getString("english_name"));
-                            language.setLanguage_cd(jsonObject.getString("language_cd"));
-                            language.setNative_name(jsonObject.getString("native_name").replace(",", " "));
-                            language.setChecked(false);
-                            languageArrayList.add(language);
-                        }
-                        SpeakLanguageSelectionAdapter speakLanguageSelectAdapter = new SpeakLanguageSelectionAdapter(context, languageArrayList, new ApiCallback() {
-                            @Override
-                            public void result(String x)
-                            {
-                                int position = Integer.parseInt(x);
-                                Language language = languageArrayList.get(position);
-                                langHashMap.put(language.getLanguage_cd(), language);
-                                initSet();
-                                recyclerView.setVisibility(View.GONE);
-                                laySelectedLang.setVisibility(View.VISIBLE);
-                                layBackNext.setVisibility(View.VISIBLE);
-                                txtCancel.setVisibility(View.GONE);
-
-                            }
-                        });
-                        recyclerView.setAdapter(speakLanguageSelectAdapter);
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailed(JSONObject js, String failed, int status) {
-                    dismiss_loading();
-                    MyDialog.iPhone(failed, context);
-                }
-
-                @Override
-                public void onNull(JSONObject js, String nullp) {
-                    dismiss_loading();
-                }
-
-                @Override
-                public void onException(JSONObject js, String exception) {
-                    dismiss_loading();
-                }
-            });
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            MyDialog.iPhone(getString(R.string.something_wrong), context);
-        }
-    }
-
-    private Map<String, Object> getParam() {
-        Map<String, Object> params = new HashMap<>();
-
-        return params;
-    }
 
 
 

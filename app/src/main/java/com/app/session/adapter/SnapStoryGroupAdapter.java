@@ -9,7 +9,7 @@ import com.androidquery.AQuery;
 import com.app.session.R;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.FollowerMyStory;
+import com.app.session.data.model.FollowerMyStory;
 import com.app.session.utility.DynamicHeightImageView;
 
 import java.util.ArrayList;

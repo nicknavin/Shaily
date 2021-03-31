@@ -11,13 +11,12 @@ import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.Root;
-import com.app.session.model.UpdateBriefReq;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.UpdateBriefReq;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -12,7 +12,7 @@ import com.app.session.api.Urls;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiCallback;
-import com.app.session.model.Brief_CV;
+import com.app.session.data.model.Brief_CV;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;

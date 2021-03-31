@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.app.session.R;
 import com.app.session.customview.CircleImageView;
-import com.app.session.model.ConsultantData;
+import com.app.session.data.model.ConsultantData;
 
 import java.util.ArrayList;
 

@@ -32,16 +32,15 @@ import com.app.session.customview.CustomTextView;
 import com.app.session.database.DatabaseHelper;
 import com.app.session.interfaces.ObjectCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.BriefCV;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.BriefCV;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.UserStory;
 import com.app.session.utility.Utility;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 

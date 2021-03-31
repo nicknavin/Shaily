@@ -9,17 +9,16 @@ import android.view.ViewGroup;
 
 import com.app.session.R;
 import com.app.session.activity.ExpertProfilePageActivity;
-import com.app.session.adapter.AllUserAdapter;
 import com.app.session.adapter.DemoAdapter;
 import com.app.session.api.Urls;
 import com.app.session.baseFragment.BaseFragment;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.ConsultUser;
-import com.app.session.model.ConsultUserRoot;
-import com.app.session.model.ConsultantData;
-import com.app.session.model.ReqAllUser;
-import com.app.session.model.SearchUser;
-import com.app.session.model.UserLangauges;
+import com.app.session.data.model.ConsultUser;
+import com.app.session.data.model.ConsultUserRoot;
+import com.app.session.data.model.ConsultantData;
+import com.app.session.data.model.ReqAllUser;
+import com.app.session.data.model.SearchUser;
+import com.app.session.data.model.UserLangauges;
 import com.app.session.network.ApiClientExplore;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
@@ -30,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

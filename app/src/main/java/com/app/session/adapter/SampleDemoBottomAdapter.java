@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiCallback;
-import com.app.session.model.Brief_CV;
+import com.app.session.data.model.Brief_CV;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 
 import java.util.ArrayList;

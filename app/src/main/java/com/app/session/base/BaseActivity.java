@@ -348,6 +348,8 @@ public void mlog(String logs)
     public void clearDataBase() {
 
         DataPrefrence.setPref(context, Constant.USER_ID, "");
+        DataPrefrence.setPref(context, Constant.PROFILE_IMAGE, "");
+        DataPrefrence.setPref(context, Constant.ENCODED_IMAGE, "");
         DataPrefrence.setPref(context, Constant.EMAILID, "");
         DataPrefrence.setPref(context, Constant.USER_NAME, "");
         DataPrefrence.setPref(context, Constant.MOBILE_NO, "");

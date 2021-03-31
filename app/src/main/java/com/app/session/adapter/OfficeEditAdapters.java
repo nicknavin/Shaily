@@ -12,7 +12,7 @@ import com.app.session.R;
 
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiCallback;
-import com.app.session.model.AddressLocation;
+import com.app.session.data.model.AddressLocation;
 
 import java.util.ArrayList;
 

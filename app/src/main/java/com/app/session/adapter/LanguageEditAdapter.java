@@ -9,13 +9,12 @@ import android.widget.ImageView;
 
 import com.app.session.R;
 import com.app.session.api.AqueryCall;
-import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiCallback;
 import com.app.session.interfaces.ObjectCallback;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.Brief_CV;
+import com.app.session.data.model.Brief_CV;
 
 import org.json.JSONObject;
 

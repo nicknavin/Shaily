@@ -57,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/value5"
         android:minHeight="200dp"
+        android:visibility="gone"
         android:background="@drawable/black_ripple_btn_bg_squre">
         <com.rey.material.widget.ProgressView
             android:id="@+id/rey_loading"
@@ -115,7 +116,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="3dp"
         android:elevation="3dp"
-
+android:visibility="gone"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -207,6 +208,7 @@
         android:layout_marginRight="20dp"
         android:clickable="true"
         android:text=""
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:layout_marginTop="10dp"

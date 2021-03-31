@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import com.app.session.R;
 import com.app.session.activity.SelectLangaugeActivity;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.Language;
+import com.app.session.data.model.Language;
 
 import java.util.ArrayList;
 

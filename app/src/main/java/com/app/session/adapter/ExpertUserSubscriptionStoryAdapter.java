@@ -1,7 +1,6 @@
 package com.app.session.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -17,13 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.app.session.R;
-import com.app.session.activity.YoutubeActivity;
 import com.app.session.api.Urls;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.StoryModel;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.UserStory;
 import com.app.session.utility.Utility;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.bumptech.glide.Glide;

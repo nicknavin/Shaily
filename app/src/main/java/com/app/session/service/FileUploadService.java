@@ -6,17 +6,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-
 import android.util.Log;
 
 import com.app.session.R;
-
-import com.app.session.activity.ConsultantStoryActivity;
-import com.app.session.room.ChatMessage;
-import com.app.session.model.ReqSendStory;
+import com.app.session.activity.HomeUserChatProfileActivity;
+import com.app.session.data.model.AddSubscription;
+import com.app.session.data.model.ReqSendStory;
 import com.app.session.notification.NotificationHelper;
 import com.app.session.receiver.FileProgressReceiver;
 import com.app.session.receiver.RetryJobReceiver;
+import com.app.session.room.ChatMessage;
 import com.app.session.utils.MIMEType;
 
 import java.io.File;
@@ -72,9 +71,10 @@ public class FileUploadService extends JobIntentService {
     public static final int FAIL = 1234;
     static final int DOWNLOAD_JOB_ID = 1000;
     ReqSendStory sendStory;
+    AddSubscription addSubscription;
     ChatMessage chatMessageFile;
     /*...................Story parameter.........................*/
-    RequestBody reqStoryText, reqStoryTitle, reqStoryType, reqSubscriptionId, reqVideoUrl, reqDocFileName;
+    RequestBody usercd,language_Id,groupDescription,uploading,groupName,subscriptionPrice,currencyId,categoryId,reqStoryText, reqStoryTitle, reqStoryType,reqStoryProvider, reqSubscriptionId, reqVideoUrl, reqDocFileName;
 
     RequestBody reqSenderId,reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye,reqFileName,reqFileDuartion;
 
@@ -155,6 +155,12 @@ public class FileUploadService extends JobIntentService {
              chatMessageFile =intent.getParcelableExtra("CHAT_DATA");
 
             }
+            if(requestType.equals("AddSubscription"))
+            {
+                if (intent.getParcelableExtra("DATA") != null) {
+                    addSubscription = intent.getParcelableExtra("DATA");
+                }
+            }
             if ((Bitmap) intent.getParcelableExtra("VIDEO_THUMB") != null)
             {
 
@@ -162,8 +168,8 @@ public class FileUploadService extends JobIntentService {
 
             }
         }
-        RequestBody usercd = RequestBody.create(MediaType.parse("text/plain"), userId);
-        RequestBody language_Id = RequestBody.create(MediaType.parse("text/plain"), languageId);
+         usercd = RequestBody.create(MediaType.parse("text/plain"), userId);
+        language_Id = RequestBody.create(MediaType.parse("text/plain"), languageId);
 
         if (requestType.equals("story"))
         {
@@ -172,10 +178,12 @@ public class FileUploadService extends JobIntentService {
             reqStoryText = RequestBody.create(MediaType.parse("text/plain"), sendStory.getStoryText());
             reqStoryTitle = RequestBody.create(MediaType.parse("text/plain"), sendStory.getStoryTitle());
             reqStoryType = RequestBody.create(MediaType.parse("text/plain"), sendStory.getStoryType());
+            reqStoryProvider = RequestBody.create(MediaType.parse("text/plain"), sendStory.getStoryProvider());
+            language_Id = RequestBody.create(MediaType.parse("text/plain"), sendStory.getStory_language_id());
             reqVideoUrl = RequestBody.create(MediaType.parse("text/plain"), sendStory.getVideoUrl());
             reqSubscriptionId = RequestBody.create(MediaType.parse("text/plain"), sendStory.getSubscription_id());
             reqDocFileName = RequestBody.create(MediaType.parse("text/plain"), sendStory.getDocFileName());
-
+            Log.d("TAG",sendStory.toString());
             if (imageFile != null) {
                 requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
                 if (sendStory.getStoryType().equals("image"))
@@ -208,13 +216,29 @@ public class FileUploadService extends JobIntentService {
             reqFileName= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getDisplayFileName());
             reqFileDuartion= RequestBody.create(MediaType.parse("text/plain"), chatMessageFile.getDurationTime());
 
+
+        }
+        else if (requestType.equals("AddSubscription"))
+        {
+            usercd=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getUserId());
+            language_Id=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getLanguageId());
+            categoryId=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getCategoryId());
+             currencyId=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getCurrencyId());
+             subscriptionPrice=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getSubscriptionPrice());
+             groupName=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getGroupName());
+            groupDescription=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getDescription());
+            uploading=RequestBody.create( MediaType.parse("text/plain"),"image/video");
+            imageFile = persistImage(videoThumbBitmap, "story_image");
+            requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+            productimg = MultipartBody.Part.createFormData("files", "image.jpg", requestfile);
+
         }
 
 
-        if (mFilePath == null) {
-            Log.e(TAG, "onHandleWork: Invalid file URI");
-            return;
-        }
+//        if (mFilePath == null) {
+//            Log.e(TAG, "onHandleWork: Invalid file URI");
+//            return;
+//        }
         if (requestType.equals("story")) {
 
             apiService = RetrofitInstance.getApiStoryService();
@@ -223,55 +247,84 @@ public class FileUploadService extends JobIntentService {
         {
             apiService= RetrofitInstance.getApiChat();
         }
+        else if(requestType.equals("AddSubscription"))
+        {
+            apiService = RetrofitInstance.getApiStoryService();
+        }
         else {
             apiService = RetrofitInstance.getApiService();
         }
 
 
-        Flowable<Double> fileObservable = Flowable.create(new FlowableOnSubscribe<Double>() {
+        Flowable<Double> fileObservable = Flowable.create(new FlowableOnSubscribe<Double>()
+        {
+
             @Override
             public void subscribe(FlowableEmitter<Double> emitter) throws Exception {
-                if (requestType.equals("story")) {
+
+
+                if(requestType.equals("AddSubscription"))
+                {
+                    imageFile = persistImage(videoThumbBitmap, "story_image");
+//                    requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+//                    productimg = MultipartBody.Part.createFormData("files", "image.jpg", requestfile);
+                    if(mFilePath.equals(""))
+                    {
+                        responseBody = apiService.reqAddSubscription(token, usercd, language_Id, categoryId, currencyId, subscriptionPrice, groupDescription, groupName, uploading,
+                                createMultipartBodyImage("files", "image.jpg", "image/jpeg", imageFile, emitter),
+                               null).blockingGet();
+
+                    }
+                    else {
+                        responseBody = apiService.reqAddSubscription(token, usercd, language_Id, categoryId, currencyId, subscriptionPrice, groupDescription, groupName, uploading,
+                                productimg,
+                                createStoryMultipartBody("files", mFilePath, emitter)).blockingGet();
+                    }
+
+                }
+               else if (requestType.equals("story")) {
 
                     if (sendStory.getStoryType().equals("video")) {
                         if (sendStory.getSubscription_id().isEmpty()) {
 
-                            responseBody = apiService.reqUserSendsStory(token, usercd, reqStoryType, reqStoryTitle, reqStoryText, FileUploadService.this.createStoryMultipartBody("file", mFilePath, emitter), productimg).blockingGet();
+                            responseBody = apiService.reqUserSendsStory(token, usercd, reqStoryType, reqStoryTitle, reqStoryText,reqStoryProvider,language_Id,
+                             createStoryMultipartBody("file", mFilePath, emitter), productimg).blockingGet();
 
                         } else {
 
-                            responseBody = apiService.reqSendsStory(token, usercd, reqSubscriptionId, reqStoryType, reqStoryTitle, reqStoryText, FileUploadService.this.createStoryMultipartBody("file", mFilePath, emitter), productimg).blockingGet();
+                            responseBody = apiService.reqSendsStory(token, usercd, reqSubscriptionId, reqStoryType, reqStoryTitle, reqStoryText, reqStoryProvider,language_Id,createStoryMultipartBody("file", mFilePath, emitter), productimg).blockingGet();
                         }
                     } else if (sendStory.getStoryType().equals("image")) {
                         if (sendStory.getSubscription_id().isEmpty()) {
 
-                            responseBody = apiService.reqUserSendsStoryImage(token, usercd, reqStoryType, reqStoryTitle, reqStoryText, reqVideoUrl, FileUploadService.this.createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
+                            responseBody = apiService.reqUserSendsStoryImage(token, usercd, reqStoryType,reqStoryProvider, language_Id,reqStoryTitle, reqStoryText, reqVideoUrl, createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
 
                         } else {
-
-                            responseBody = apiService.reqUserSendsStoryImage1(token, usercd, reqSubscriptionId, reqStoryType, reqStoryTitle, reqStoryText, reqVideoUrl, FileUploadService.this.createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
+                            responseBody = apiService.reqUserSendsStoryImage1(token, usercd, reqSubscriptionId,reqStoryType,reqStoryProvider, language_Id,reqStoryTitle, reqStoryText, reqVideoUrl, createMultipartBodyImage("file", "image.jpg", "image/jpeg", imageFile, emitter)).blockingGet();
                         }
                     } else if (sendStory.getStoryType().equals("anydoc")) {
                         File file = new File(sendStory.getDocFilePath());
                         if (sendStory.getSubscription_id().isEmpty()) {
 
-                            responseBody = apiService.callUserSendStoryDocFile(token, usercd, reqStoryType, reqStoryTitle, reqStoryText, reqDocFileName, FileUploadService.this.createMultipartBodyImage("file", file.getName(), "multipart/form-data",file, emitter)).blockingGet();
+                            responseBody = apiService.callUserSendStoryDocFile(token, usercd, reqStoryType, reqStoryTitle, reqStoryText, reqDocFileName,reqStoryProvider,language_Id, createMultipartBodyImage("file", file.getName(), "multipart/form-data",file, emitter)).blockingGet();
 
                         } else {
-                            responseBody = apiService.callSendStoryDocFile(token, usercd, reqSubscriptionId, reqStoryType, reqStoryTitle, reqStoryText, reqDocFileName, FileUploadService.this.createMultipartBodyImage("file", file.getName(), "multipart/form-data", file, emitter)).blockingGet();
+                            responseBody = apiService.callSendStoryDocFile(token, usercd, reqSubscriptionId, reqStoryType, reqStoryTitle, reqStoryText, reqDocFileName ,reqStoryProvider,language_Id,createMultipartBodyImage("file", file.getName(), "multipart/form-data", file, emitter)).blockingGet();
                         }
                     }
                     else if (sendStory.getStoryType().equals("audio"))
                     {
                         File file = new File(sendStory.getDocFilePath());
                         if (sendStory.getSubscription_id().isEmpty()) {
-                            responseBody = apiService.callUserSendAudioStory1(token,usercd,reqStoryType,reqStoryTitle,reqStoryText,reqVideoUrl,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
+                            responseBody = apiService.callUserSendAudioStory1(token,usercd,reqStoryType,reqStoryTitle,reqStoryText,reqVideoUrl ,reqStoryProvider,language_Id,
+                                    FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
                         } else {
-                            responseBody = apiService.callSendAudioStory1(token,usercd,reqSubscriptionId,reqStoryType,reqStoryTitle,reqStoryText,reqVideoUrl,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
+                            responseBody = apiService.callSendAudioStory1(token,usercd,reqSubscriptionId,reqStoryType,reqStoryTitle,reqStoryText,reqVideoUrl,reqStoryProvider,language_Id,FileUploadService.this.createMultipartBodyImage("file", file.getName(), "audio/*", file, emitter)).blockingGet();
                         }
                     }
 
                 }
+
                 else if(requestType.equals("CHAT"))
                 {
                     if(chatMessageFile.getMessageType().equals("image"))
@@ -290,10 +343,11 @@ public class FileUploadService extends JobIntentService {
                     }
                 }
                 else {
-                    responseBody = apiService.onFileUpload(token, usercd, language_Id, FileUploadService.this.createMultipartBody(mFilePath, emitter)).blockingGet();
+                    responseBody = apiService.onFileUpload(token, usercd, language_Id, createMultipartBody(mFilePath, emitter)).blockingGet();
                 }
                 emitter.onComplete();
             }
+
         }, BackpressureStrategy.LATEST);
 
 
@@ -352,23 +406,23 @@ public class FileUploadService extends JobIntentService {
          * Error occurred in file uploading
          */
 
-        try {
+
             System.out.println("throwable.toString(): "+throwable.toString());
+        Log.d("TAG","throwable.toString(): "+throwable.toString());
             Bundle bundle = new Bundle();
 
-            if (responseBody != null) {
+          //  if (responseBody != null)
+            {
 
-                String dfds = responseBody.toString();
-                String data = responseBody.string();
-                System.out.println("video upload result  " + data);
+//                String dfds = responseBody.toString();
+//                String data = responseBody.string();
+//                System.out.println("video upload result  " + data);
                 bundle.putString("STATUS", "Done");
-                bundle.putString("DATA", data);
+              //  bundle.putString("DATA", data);
                 mResultReceiver.send(FAIL, bundle);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
 
         Intent successIntent = new Intent("com.wave.ACTION_CLEAR_NOTIFICATION");
@@ -377,7 +431,7 @@ public class FileUploadService extends JobIntentService {
 
 
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this,
-                0 /* Request code */, new Intent(this, ConsultantStoryActivity.class),
+                0 /* Request code */, new Intent(this, HomeUserChatProfileActivity.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         /**

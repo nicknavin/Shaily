@@ -3,6 +3,8 @@ package com.app.session.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,7 +29,6 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 
 import com.app.session.R;
-import com.app.session.adapter.SearchCategoryAdapter;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customspinner.NiceSpinner;
@@ -35,22 +36,22 @@ import com.app.session.customspinner.OnSpinnerItemSelectedListener;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
-import com.app.session.interfaces.DefaultCallback;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.Category;
-import com.app.session.model.CurrencyRef;
-import com.app.session.model.CurrencyRefResponse;
-import com.app.session.model.Language;
-import com.app.session.model.ReqCategory;
-import com.app.session.model.RequestUpdateCategory;
-import com.app.session.model.Root;
-import com.app.session.model.SubscriptionGroup;
-import com.app.session.model.UserLangauges;
+import com.app.session.data.model.AddSubscription;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.Category;
+import com.app.session.data.model.CurrencyRef;
+import com.app.session.data.model.CurrencyRefResponse;
+import com.app.session.data.model.Language;
+import com.app.session.data.model.ReqCategory;
+import com.app.session.data.model.ReqSendStory;
+import com.app.session.data.model.RequestUpdateCategory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.SubscriptionGroup;
+import com.app.session.data.model.UserLangauges;
 import com.app.session.network.ApiClient;
 import com.app.session.network.ApiClientNew;
-import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;
 import com.app.session.service.FileUploadService;
@@ -80,11 +81,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,7 +89,6 @@ import retrofit2.Response;
 import static com.app.session.service.FileUploadService.FAIL;
 import static com.app.session.service.FileUploadService.SHOW_RESULT;
 import static com.app.session.service.FileUploadService.STATUS;
-import static com.app.session.utility.Utility.getTime;
 
 public class AddSubscriptionGroupActivity extends BaseActivity implements View.OnClickListener, ServiceResultReceiver.Receiver {
     SubscriptionGroup group=null;
@@ -121,6 +116,7 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
     ImageView imgVideoCover;
     ArrayList<UserLangauges> userLangaugesArrayList;
     File imageFile;
+    CustomTextView txtSave;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +148,8 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
         txtUploading = (CustomTextView) findViewById(R.id.txtUploading);
         imgGroupCover = (CircleImageView) findViewById(R.id.imgGroupCover);
         layProgress = (LinearLayout) findViewById(R.id.layProgress);
-        ((CustomTextView) findViewById(R.id.txtSave)).setOnClickListener(this);
+        txtSave=(CustomTextView) findViewById(R.id.txtSave);
+        txtSave.setOnClickListener(this);
         ((LinearLayout) findViewById(R.id.laySelectVideo)).setOnClickListener(this);
         ((LinearLayout) findViewById(R.id.laySelectImgCover)).setOnClickListener(this);
         ((ImageView) findViewById(R.id.imgCross)).setOnClickListener(this);
@@ -195,7 +192,7 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
                 break;
             case R.id.txtSave:
                 if (validation()) {
-                    sendSubscriptionStory(null);
+                    sendSubscriptionStory();
                 }
 
 
@@ -205,13 +202,9 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
                 startActivityForResult(intent, Constant.REQUEST_CURRENCY);
                 break;
             case R.id.laySelectVideo:
-                if(!subscription_group_cd.isEmpty())
-                {
+
                     callVideoFrameThumb();
-                }
-                else {
-                    showToast("First you have to fill all detail.");
-                }
+
                 break;
             case R.id.laySelectImgCover:
                 dialog();
@@ -360,15 +353,22 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
 
 
 
-    private void callService(String path) {
+
+    private void callService( AddSubscription addSubscription) {
         mServiceResultReceiver = new ServiceResultReceiver(new Handler());
         mServiceResultReceiver.setReceiver(this);
         Intent mIntent = new Intent(this, FileUploadService.class);
-        mIntent.putExtra("mFilePath", path);
-        mIntent.putExtra("FileName", mFileName);
+        mIntent.putExtra("mFilePath", selectedVideoPath);
+        mIntent.putExtra("FileName", "");
+        mIntent.putExtra("VIDEO_THUMB", videoThumbBitmap);//this for image
+        mIntent.putExtra("TYPE", "AddSubscription");
+        mIntent.putExtra("USER_ID", userId);
+        mIntent.putExtra("TOKEN", accessToken);
+        mIntent.putExtra("DATA", addSubscription);
+        mIntent.putExtra("LANGUAGE_ID", language_cd);
         mIntent.putExtra(RECEIVER, mServiceResultReceiver);
         mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(this, mIntent);
+        FileUploadService.enqueueWork(context, mIntent);
 
     }
 
@@ -446,15 +446,18 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
     public void onReceiveResult(int resultCode, Bundle resultData) {
         switch (resultCode) {
             case SHOW_RESULT:
-                if (resultData != null) {
+                if (resultData != null)
+                {
                     initProgress(resultData.getInt("progress"));
-
                 }
                 break;
 
             case STATUS:
                 layProgress.setVisibility(View.GONE);
-                callUploadVideoUpdate();
+                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(143);
+                finish();
+                //callUploadVideoUpdate();
                 break;
 
             case FAIL:
@@ -770,82 +773,36 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
             edt_cv.setError(context.getResources().getString(R.string.error));
             return false;
         }
+        if(videoThumbBitmap==null)
+        {
+            showToast("Please select cover image");
+            return false;
+        }
         return true;
     }
 
 
 
-    public void
-    sendSubscriptionStory(File file)
+    public void sendSubscriptionStory()
     {
-        if (isInternetConnected()) {
 
-            showLoading();
-            RequestBody usercd=RequestBody.create( MediaType.parse("text/plain"),userId);
-            RequestBody languageId=RequestBody.create( MediaType.parse("text/plain"),language_id);
-            RequestBody categoryId=RequestBody.create( MediaType.parse("text/plain"),category_cd);
-            RequestBody currencyId=RequestBody.create( MediaType.parse("text/plain"),currency_id);
-            RequestBody subscription_price=RequestBody.create( MediaType.parse("text/plain"),subscriptionPrice);
-            RequestBody group_name=RequestBody.create( MediaType.parse("text/plain"),groupName);
-            RequestBody group_description=RequestBody.create( MediaType.parse("text/plain"),description);
-            RequestBody requestfile=null;
-            MultipartBody.Part productimg= null;
+        AddSubscription addSubscription=new AddSubscription();
+        addSubscription.setUserId(userId);
+        addSubscription.setCategoryId(category_cd);
+        addSubscription.setLanguageId(language_id);
+        addSubscription.setCurrencyId(currency_id);
+        addSubscription.setSubscriptionPrice(subscriptionPrice);
+        addSubscription.setGroupName(groupName);
+        addSubscription.setDescription(description);
 
-            if (imageFile !=null) {
-                requestfile=RequestBody.create(MediaType.parse("image/jpeg"),imageFile);
-                productimg = MultipartBody.Part.createFormData("image",imageFile.getName(),requestfile);
-            }
+        callService(addSubscription);
+        txtSave.setClickable(false);
 
-            ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
-            //,description,coverImg,videoUrl
-            Call<ResponseBody> call = apiInterface.reqAddSubscription(accessToken,usercd,languageId,categoryId,currencyId,subscription_price,group_description,group_name,productimg);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
-                {
-                    dismiss_loading();
-                    if(response.body()!=null)
-                    {
-                        try {
-                            ResponseBody body=response.body();
-                            String data =body.string();
-                            JSONObject object=new JSONObject(data);
-                            if(object.getInt("status")==200)
-                            {
-                                finish();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else
-                    {
-
-                        errorBody(response,false);
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    dismiss_loading();
-                }
-            });
-
-
-
-
-
-
-        } else {
-            showInternetConnectionToast();
-        }
     }
 
 
-
+    Bitmap videoThumbBitmap=null;
+    String selectedVideoPath="";
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -887,6 +844,7 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
                             ByteArray = null;
 
                             Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+                            videoThumbBitmap = bm;
                             imageFile=null;
                             imageFile=Utility.getFileByBitmap(context,bm,"subscription");
 
@@ -895,7 +853,8 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
                             ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
                             bm.compress(Bitmap.CompressFormat.PNG, 100, datasecond);
                             ByteArray = datasecond.toByteArray();
-                            String coverImg = base64String(ByteArray);
+
+
                             imgGroupCover.setImageBitmap(bmGroupCover);
 
 
@@ -921,7 +880,7 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
 
                 Uri contentURI = data.getData();
                 String selectedVideoPath = getPath(contentURI);
-                callService(selectedVideoPath);
+                //callService(selectedVideoPath);
                 Log.d("path", selectedVideoPath);
 
             }
@@ -938,12 +897,8 @@ public class AddSubscriptionGroupActivity extends BaseActivity implements View.O
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, datasecond);
                 byte[] ByteArray = datasecond.toByteArray();
                 videoCoverImg = base64String(ByteArray);
-                String selectedVideoPath = data.getStringExtra(ThumbyActivity.VIDEO_PATH);
-
-
-                mFileName = subscription_group_cd + "_group_video_url"+".mp4";
-                videoCoverImgName= subscription_group_cd +"_groupname_thumbnail.png";
-                   callService(selectedVideoPath);
+                 selectedVideoPath = data.getStringExtra(ThumbyActivity.VIDEO_PATH);
+                imgVideoCover.setImageBitmap(bmVideoCover);
             }
 
         }

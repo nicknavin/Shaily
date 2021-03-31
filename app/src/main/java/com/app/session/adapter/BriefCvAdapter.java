@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.Brief_CV;
+import com.app.session.data.model.Brief_CV;
 
 import java.util.ArrayList;
 

@@ -12,26 +12,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.app.session.R;
 import com.app.session.activity.ChattingActivity;
 import com.app.session.activity.VideoChatViewActivity;
 import com.app.session.activity.VoiceChatViewActivity;
 import com.app.session.api.Urls;
-import com.app.session.model.AudioVideoData;
+import com.app.session.data.model.AudioVideoData;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 import com.bumptech.glide.Glide;
@@ -52,7 +47,6 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 

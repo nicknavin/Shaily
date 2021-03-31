@@ -19,14 +19,12 @@ import com.app.session.api.Urls;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.StoryData;
-import com.app.session.model.UserStory;
-import com.app.session.utility.Utility;
+import com.app.session.data.model.StoryData;
+import com.app.session.data.model.UserStory;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 

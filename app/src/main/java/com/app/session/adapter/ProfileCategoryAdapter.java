@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.Category;
+import com.app.session.data.model.Category;
 
 import java.util.ArrayList;
 

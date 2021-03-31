@@ -6,14 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.widget.Toast;
 
 import com.app.session.R;
-
-import com.app.session.activity.ConsultantStoryActivity;
-import com.app.session.activity.ConsultantUserActivity;
 import com.app.session.activity.HomeUserChatProfileActivity;
-import com.app.session.activity.MyProfileActivityNew;
 import com.app.session.notification.NotificationHelper;
 
 import java.util.Objects;

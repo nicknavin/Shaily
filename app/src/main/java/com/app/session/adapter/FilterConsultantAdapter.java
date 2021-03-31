@@ -19,8 +19,8 @@ import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.FilterConsultant;
-import com.app.session.model.SearchConsultant;
+import com.app.session.data.model.FilterConsultant;
+import com.app.session.data.model.SearchConsultant;
 
 
 import org.json.JSONObject;

@@ -10,7 +10,7 @@ import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.SubscriptionGroup;
+import com.app.session.data.model.SubscriptionGroup;
 import com.app.session.network.BaseAsych;
 import com.google.gson.JsonObject;
 

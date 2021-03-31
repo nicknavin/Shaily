@@ -3,9 +3,9 @@ package com.app.session.utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.app.session.model.Brief_CV;
-import com.app.session.model.Language;
-import com.app.session.model.UserLangauges;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.Language;
+import com.app.session.data.model.UserLangauges;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

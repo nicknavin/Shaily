@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.session.R;
-import com.app.session.model.Message;
+import com.app.session.data.model.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

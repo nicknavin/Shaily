@@ -14,8 +14,8 @@ import com.app.session.activity.FilterConsultantActivity;
 import com.app.session.customview.AnimatedExpandableListView;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.Profession;
-import com.app.session.model.Specialist;
+import com.app.session.data.model.Profession;
+import com.app.session.data.model.Specialist;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,12 @@
 package com.app.session.activity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,27 +14,34 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.app.session.R;
+import com.app.session.activity.ui.baseviewmodels.ViewModelFactory;
+import com.app.session.activity.ui.profile.ProfileViewModel;
+import com.app.session.activity.viewmodel.StoryDetailViewModel;
 import com.app.session.adapter.SubscriptionStoriesAdapter;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.SubscriptionStoriesRootBody;
 import com.app.session.database.DatabaseHelper;
 import com.app.session.interfaces.ObjectCallback;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.ReqDeleteStory;
-import com.app.session.model.ReqSubscriptionStories;
-import com.app.session.model.Root;
-import com.app.session.model.SendStoryBody;
-import com.app.session.model.SubscriptionGroup;
-import com.app.session.model.SubscriptionStories;
-import com.app.session.model.SubscriptionStoriesRoot;
-import com.app.session.model.UserDetails;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.ReqDeleteStory;
+import com.app.session.data.model.ReqSubscriptionStories;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.SendStoryBody;
+import com.app.session.data.model.SubscriptionGroup;
+import com.app.session.data.model.SubscriptionStories;
+import com.app.session.data.model.SubscriptionStoriesRoot;
+import com.app.session.data.model.UserDetails;
+import com.app.session.data.model.UserStory;
+import com.app.session.interfaces.ServiceResultReceiver;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;
@@ -41,6 +52,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -52,6 +64,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -59,12 +73,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StoryDetailActivity extends BaseActivity implements View.OnClickListener {
+import static com.app.session.service.FileUploadService.FAIL;
+import static com.app.session.service.FileUploadService.SHOW_RESULT;
+import static com.app.session.service.FileUploadService.STATUS;
+
+public class StoryDetailActivity extends BaseActivity implements View.OnClickListener , ServiceResultReceiver.Receiver {
+    private StoryDetailViewModel viewModel;
     Bundle bundle;
+    public static final String RECEIVER = "receiver";
+    private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
+    private ServiceResultReceiver mServiceResultReceiver;
     ArrayList<Brief_CV>brief_cvList;
     CustomTextView txtGroupName,txtPrice,txtGroupName2,txtLanguageName,txtCategoryName,txtCategoryName1,txtCurrency,txtGroupName3;
     ReadMoreTextView txtDiscription;
-
     SubscriptionStoriesAdapter subscriptionStoriesAdapter;
     ImageView imgGroupCover,imgVideoCover,imgProfileCover;
     CustomTextView txtUploading;
@@ -81,7 +102,7 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
     private DatabaseHelper db;
     SwipeRefreshLayout swipeRefreshLayout;
     String subscription_id;
-    int load=0;
+
     FloatingActionButton fab;
 
     String userType="";
@@ -89,12 +110,19 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
     private boolean loaddingDone = true;
     private boolean loading = true;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    int total_pages=0;
+    boolean isFlag=false;
     boolean refreshFlag=false;
+
+    ImageView imageStory;
+    RelativeLayout layLoading;
+    ProgressView rey_loading;
+    private int storyPosition=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_detail);
+        setupViewModel();
+        setupObserver();
         db = new DatabaseHelper(this);
         Intent intent = getIntent();
         bundle = intent.getBundleExtra("BUNDLE");
@@ -105,6 +133,7 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
         {
             subscription_group_cd=getIntent().getStringExtra("ID");
             subscription_id=getIntent().getStringExtra("ID");
+            log("subscription_id: "+subscription_id);
              ((CustomTextView)findViewById(R.id.header)).setText(getIntent().getStringExtra("USER_NAME"));
 
         }
@@ -133,13 +162,15 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
         setupStoryRecylerview();
         setUpRecyclerListener();
         setSwipeLayout();
-//        callGetSubscriptionGroup();
-//        getSubscriptionGroup();
-
     }
+
+
 
     private void initView()
     {
+        layLoading=(RelativeLayout)findViewById(R.id.layLoading);
+        imageStory=(ImageView)findViewById(R.id.imgStory);
+        rey_loading=(ProgressView)findViewById(R.id.rey_loading);
         fab=(FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(this);
         swipeRefreshLayout = ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout));
@@ -214,10 +245,6 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-
-
-
-
     private void setupStoryRecylerview()
     {
         recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
@@ -228,6 +255,8 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
             public void getObject(Object object, int position,View view)
             {
                 SubscriptionStories story=(SubscriptionStories)object;
+                story.setStory_provider("2");
+                storyPosition=position;
                 if(position==-1)
                 {
                     startActivity(new Intent(context, SubscriptionGroupProfileActivity.class));
@@ -249,6 +278,7 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
                     {
 
                         UserStory userStory=new UserStory();
+                        userStory.setStory_provider("2");
                         userStory.setId(story.get_id());
                         userStory.setCreatedAt(story.getCreatedAt());
                         userStory.setStoryText(story.getStoryText());
@@ -287,10 +317,10 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onRefresh() {
 
-                load=1;
+                viewModel.page=1;
                 swipeRefreshLayout.setRefreshing(true);
                 storyDataArrayList=new LinkedList<>();
-                getStory();
+                callApi();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -302,8 +332,9 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
         mShimmerViewContainer.startShimmerAnimation();
         if(!refreshFlag)
         {
-            load = 1;
-            getStory();
+            //storyDataArrayList=new LinkedList<>();
+            viewModel.page = 1;
+            callApi();
         }
     }
 
@@ -323,6 +354,7 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
 
 
             case R.id.fab:
+                refreshFlag=true;
                 addNewStory();
                 break;
 
@@ -330,7 +362,313 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    private void setupViewModel() {
+        viewModel=new ViewModelProvider(this, new ViewModelFactory(getApplication(), userId, accessToken)).get(StoryDetailViewModel.class);
+    }
 
+    private void callApi()
+    {
+        viewModel.getSubscriptionsStoriesApi(subscription_id);
+    }
+
+    private void setupObserver() {
+        viewModel.getSubscriptionStoriesMutableLiveData().observe(this, new Observer<SubscriptionStoriesRoot>() {
+            @Override
+            public void onChanged(SubscriptionStoriesRoot subscriptionStoriesRoot)
+            {
+              setupStoryData(subscriptionStoriesRoot.getSubscriptionStoriesRootBody());
+            }
+        });
+
+
+        viewModel.getRootMutableLiveData().observe(this, new Observer<Root>() {
+            @Override
+            public void onChanged(Root root) {
+                subscriptionStoriesAdapter.updateData(storyPosition);
+            }
+        });
+    }
+
+    private void setupStoryData(SubscriptionStoriesRootBody body)
+    {
+        swipeRefreshLayout.setRefreshing(false);
+        mShimmerViewContainer.stopShimmerAnimation();
+        mShimmerViewContainer.setVisibility(View.GONE);
+        viewModel.totalPage=body.getTotal_Page();
+        LinkedList<SubscriptionStories> list=new LinkedList<>();
+        list =body.getSubscriptionStories();
+
+        if(list.size()>0)
+        {
+            if(viewModel.page <=viewModel.totalPage)
+            {
+                loading=true;
+                viewModel.page++;
+            }
+
+            for(SubscriptionStories subscriptionStories:list)
+            {
+                storyDataArrayList.addLast(subscriptionStories);
+            }
+
+            subscriptionStoriesAdapter.notifyDataSetChanged();
+
+
+        }
+    }
+
+
+    public void showMenu(View v, final SubscriptionStories storyData, final int position,int userType ) {
+        PopupMenu popup = new PopupMenu(context, v);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.menu_delete:
+
+                        storyPosition=position;
+                        storyData.setStory_provider("2");
+                        viewModel.deleteStory(storyData);
+
+
+                        return true;
+
+                    case R.id.menu_edit:
+//                        Intent intent = new Intent(context, UpdateSubscriptionStoryActivity.class);
+//                        intent.putExtra("DATA", storyData);
+//                        Bundle arg = new Bundle();
+//                        arg.putSerializable("List", (Serializable) brief_cvList);
+//                        intent.putExtra("BUNDLE", arg);
+//                        intent.putExtra("ID", storyData.getId());
+//                        startActivity(intent);
+                        return true;
+
+
+                    default:
+                        return false;
+                }
+            }
+        });// to implement on click event on items of menu
+        MenuInflater inflater = popup.getMenuInflater();
+
+        if(userType==1)
+        {
+            inflater.inflate(R.menu.menu_subscription_story, popup.getMenu());
+        }
+        else
+        {
+            inflater.inflate(R.menu.menu_view_story, popup.getMenu());
+        }
+
+
+
+        popup.show();
+    }
+
+    private void callDeleteStory(SubscriptionStories subscriptionStories, int position)
+    {
+        if (isInternetConnected()) {
+            showLoading();
+
+            ReqDeleteStory deleteStory=new ReqDeleteStory();
+            deleteStory.setStoryId(subscriptionStories.get_id());
+            deleteStory.setStory_provider(subscriptionStories.getStory_provider());
+            ApiInterface apiInterface=ApiClientProfile.getClient().create(ApiInterface.class);
+            Call<Root> call= apiInterface.reqDeleteStory(accessToken,deleteStory);
+            call.enqueue(new Callback<Root>() {
+                @Override
+                public void onResponse(Call<Root> call, Response<Root> response)
+                {
+                    dismiss_loading();
+                    if(response.body()!=null)
+                    {
+                        if(response.body().getStatus()==200)
+                        {
+                            subscriptionStoriesAdapter.updateData(position);
+
+                        }
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Root> call, Throwable t) {
+
+                }
+            });
+
+
+
+        } else {
+            showInternetConnectionToast();
+        }
+    }
+
+
+    private void addNewStory() {
+        //storyDataArrayList=new LinkedList<>();
+        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
+        mServiceResultReceiver.setReceiver(this);
+        Intent intent = new Intent(context, AddSubscriptionStoryActivity.class);
+        Bundle arg = new Bundle();
+        arg.putSerializable("List", (Serializable) brief_cvList);
+        intent.putExtra("BUNDLE", arg);
+        intent.putExtra("ID", subscription_id);
+//        intent.putExtra("POSITION",mParam1);
+        intent.putExtra(RECEIVER, mServiceResultReceiver);
+        intent.setAction(ACTION_DOWNLOAD);
+        startActivityForResult(intent, Constant.REQUEST_NEW_STORY);
+
+
+    }
+    public void setUpRecyclerListener() {
+        loading = true;
+        loaddingDone = true;
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                visibleItemCount = linearLayoutManager.getChildCount();
+                totalItemCount = linearLayoutManager.getItemCount();
+                pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
+
+
+                if (loading && loaddingDone)
+                {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                    {
+
+                        loading = false;
+                        Utility.Log("inside the recly litner");
+                        callApi();
+
+
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+
+        switch (resultCode) {
+            case SHOW_RESULT:
+                if (resultData != null) {
+                    if(!isFlag) {
+
+                        if(resultData.getString("TYPE").equals("anydoc"))
+                        {
+                            if(resultData.getString("FILENAME").contains(".doc"))
+                            {
+                                imageStory.setImageResource(R.mipmap.docs_story);
+                            }
+                            else if(resultData.getString("FILENAME").contains(".pdf"))
+                            {
+                                imageStory.setImageResource(R.mipmap.pdf_story);
+                            }
+                            else if(resultData.getString("FILENAME").contains(".zip"))
+                            {
+                                imageStory.setImageResource(R.mipmap.zip_story);
+                            }
+                            else if(resultData.getString("FILENAME").contains(".xls"))
+                            {
+                                imageStory.setImageResource(R.mipmap.xls_story);
+                            }
+
+                        }
+                        else if(resultData.getString("TYPE").equals("image")||resultData.getString("TYPE").equals("video"))
+                        {
+                            Bitmap bm = resultData.getParcelable("IMAGE");
+                            imageStory.setImageBitmap(bm);
+                            imageStory.setImageBitmap(bm);
+                        }
+                        else if(resultData.getString("TYPE").equals("audio"))
+                        {
+                            imageStory.setImageResource(R.mipmap.attach_audio);
+                        }
+
+
+                        isFlag=true;
+                    }
+                    layLoading.setVisibility(View.VISIBLE);
+                    rey_loading.start();
+                }
+                break;
+
+            case STATUS:
+                rey_loading.stop();
+                layLoading.setVisibility(View.GONE);
+                showToast("File is uploaded ");
+
+                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancelAll();
+
+                if (resultData != null) {
+                    String data = resultData.getString("DATA");
+                    System.out.println("data " + data);
+                    try {
+                        JSONObject object = new JSONObject(data);
+                        JSONObject body = object.getJSONObject("body");
+                        SendStoryBody sendStoryBody = new SendStoryBody();
+                        sendStoryBody.setStory_text(body.getString("story_text"));
+                        sendStoryBody.setStory_title(body.getString("story_title"));
+                        sendStoryBody.setStory_type(body.getString("story_type"));
+                        sendStoryBody.setStory_url(body.getString("story_url"));
+                        sendStoryBody.setThumbnail_url(body.getString("thumbnail_url"));
+                        //sendStoryBody.setViews(body.getString("views"));
+                        sendStoryBody.set_id(body.getString("_id"));
+                        sendStoryBody.setUser_id(body.getString("user_id"));
+                        sendStoryBody.setSubscription_id(body.getString("subscription_id"));
+                        sendStoryBody.setDisplay_doc_name(body.getString("display_doc_name"));
+
+                        SubscriptionStories subscriptionStories=new SubscriptionStories();
+                        subscriptionStories.set_id(sendStoryBody.get_id());
+                        subscriptionStories.setCreatedAt(sendStoryBody.getCreatedAt());
+                        subscriptionStories.setDaysAgo("0");
+                        subscriptionStories.setViews("0");
+                        subscriptionStories.setStoryText(sendStoryBody.getStory_text());
+                        subscriptionStories.setStoryTitle(sendStoryBody.getStory_title());
+                        subscriptionStories.setStoryType(sendStoryBody.getStory_type());
+                        subscriptionStories.setStoryUrl(sendStoryBody.getStory_url());
+                        subscriptionStories.setDisplay_doc_name(sendStoryBody.getDisplay_doc_name());
+                        subscriptionStories.setThumbnail_url(sendStoryBody.getThumbnail_url());
+
+
+                        UserDetails details = new UserDetails();
+                        details.setId(sendStoryBody.get_id());
+                        details.setUserName(user_name);
+                        details.setImageUrl(profileUrl);
+                        //subscriptionStories.setUserDetails(details);
+
+                        storyDataArrayList.addFirst(subscriptionStories);
+
+                        recyclerView.smoothScrollToPosition(0);
+                        recyclerView.scrollToPosition(0);
+                        subscriptionStoriesAdapter.notifyDataSetChanged();
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+//
+                }
+
+
+                break;
+
+            case FAIL:
+
+                rey_loading.stop();
+                layLoading.setVisibility(View.GONE);
+                showToast("uploading is fail, please try again");
+//                layProgress.setVisibility(View.GONE);
+                break;
+
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -374,416 +712,13 @@ public class StoryDetailActivity extends BaseActivity implements View.OnClickLis
         if(requestCode==Constant.PAGE_REFRESH)
         {
             refreshFlag=true;
-        }
-    }
-
-    private String getparamSubcriptionGroup()
-    {
-        JSONObject jsonObject= null;
-        try {
-            jsonObject = new JSONObject();
-            jsonObject.put("subscription_group_cd",subscription_group_cd);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject.toString();
-
-
-    }
-
-
-
-
-    private JsonObject getSubsGroupParameter()
-    {
-        JsonObject gsonObject = new JsonObject();
-        try {
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("subscription_id",subscription_id);
-            JsonParser jsonParser = new JsonParser();
-            gsonObject = (JsonObject) jsonParser.parse(jsonObject.toString());
-            return gsonObject;
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        return gsonObject;
-    }
-
-
-
-
-    private void callGetStory()
-    {
-        if (isInternetConnected())
-        {
-
-            showLoading();
-            new BaseAsych(Urls.GET_STORY_ALL, getStoryParameter(), new RequestCallback() {
-                @Override
-                public void onSuccess(JSONObject js, String success) {
-                    dismiss_loading();
-                    try {
-                        swipeRefreshLayout.setRefreshing(false);
-                        mShimmerViewContainer.stopShimmerAnimation();
-                        mShimmerViewContainer.setVisibility(View.GONE);
-                        JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("result"+jsonObject.toString());
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
-                            try {
-                                if(db.getNotesCount()>0)
-                                {
-                                    db.deleteNote();
-                                }
-                                db.insertNote(js.toString());
-                                JSONArray jsonArray = js.getJSONArray("story_data");
-
-                                //showStoryData(jsonArray);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    showToast(success);
-
-                }
-
-                @Override
-                public void onFailed(JSONObject js, String failed, int status) {
-                    dismiss_loading();
-                    showToast(failed);
-
-
-                }
-
-                @Override
-                public void onNull(JSONObject js, String nullp) {
-                    dismiss_loading();
-                }
-
-                @Override
-                public void onException(JSONObject js, String exception) {
-                    dismiss_loading();
-                }
-            }).execute();
-
-        } else {
-            showInternetConnectionToast();
-        }
-    }
-    private String getStoryParameter() {
-
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("user_cd",userId);
-
-
-            return jsonObject.toString();
-
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //  System.out.println("input : " + gsonObject.toString());
-        return null ;
-    }
-
-
-
-
-
-
-    private void getStory() {
-        if (Utility.isConnectingToInternet(context))
-        {
-
-            ReqSubscriptionStories reqSubscriptionStories=new ReqSubscriptionStories();
-            reqSubscriptionStories.setSubscriptionId(subscription_id);
-            reqSubscriptionStories.setUser_id(userId);
-            reqSubscriptionStories.setLoad(""+load);
-
-            showLoading();
-            ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
-            Call<SubscriptionStoriesRoot> call = apiInterface.reqGetSubscriptionStories(accessToken, reqSubscriptionStories);
-            call.enqueue(new Callback<SubscriptionStoriesRoot>() {
-                @Override
-                public void onResponse(Call<SubscriptionStoriesRoot> call, Response<SubscriptionStoriesRoot> response)
-                {
-                    dismiss_loading();
-                    swipeRefreshLayout.setRefreshing(false);
-                    mShimmerViewContainer.stopShimmerAnimation();
-                    mShimmerViewContainer.setVisibility(View.GONE);
-                    if(response.body()!=null)
-                    {
-                        if(response.body().getStatus()==200)
-                        {
-                            total_pages=response.body().getSubscriptionStoriesRootBody().getTotal_Page();
-
-
-                            LinkedList<SubscriptionStories> list=new LinkedList<>();
-                            list =response.body().getSubscriptionStoriesRootBody().getSubscriptionStories();
-
-                            if(list.size()>0)
-                            {
-                                if(load <=total_pages) {
-                                    loading=true;
-                                    load++;
-                                }
-
-                                for(SubscriptionStories subscriptionStories:list)
-                                {
-                                    storyDataArrayList.addLast(subscriptionStories);
-                                }
-
-                                subscriptionStoriesAdapter.notifyDataSetChanged();
-
-
-                            }
-//                            else
-//                            {
-//                                subscriptionStoriesAdapter=new SubscriptionStoriesAdapter(context, storyDataArrayList, groupName, groupiconUrl, new ObjectCallback() {
-//                                    @Override
-//                                    public void getObject(Object object, int position,View view)
-//                                    {
-//                                        SubscriptionStories story=(SubscriptionStories)object;
-//                                        if(position==-1)
-//                                        {
-//                                            startActivity(new Intent(context, SubscriptionGroupProfileActivity.class));
-//                                        }
-//                                        else {
-//
-//                                            if(view.getId()==R.id.imgRemove)
-//                                            {
-//                                                if(story.getUserId().getId().equals(userId))
-//                                                {
-//                                                    showMenu(view,story,position,1);
-//                                                }
-//                                                else
-//                                                {
-//                                                    showMenu(view,story,position,0);
-//                                                }
-//                                            }
-//                                            else
-//                                            {
-//
-//                                                UserStory userStory=new UserStory();
-//                                                userStory.setId(story.get_id());
-//                                                userStory.setCreatedAt(story.getCreatedAt());
-//                                                userStory.setStoryText(story.getStoryText());
-//                                                userStory.setStoryTitle(story.getStoryTitle());
-//                                                userStory.setStoryType(story.getStoryType());
-//                                                userStory.setViews(story.getViews());
-//                                                userStory.setStoryUrl(story.getStoryUrl());
-//                                                userStory.setSubscriptionId(story.getSubscriptionId());
-//                                                UserDetails details=new UserDetails();
-//                                                details.setId(story.getUserId().getId());
-//                                                userStory.setUserDetails(details);
-//                                                Intent intent=new Intent(context,ShowStoryActivity.class);
-//                                                intent.putExtra("DATA",userStory);
-//                                                startActivity(intent);
-//                                            }
-//
-//
-//
-//                                        }
-//
-//                                    }
-//                                });
-//                                recyclerView.setAdapter(subscriptionStoriesAdapter);
-//                            }
-
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<SubscriptionStoriesRoot> call, Throwable t) {
-                   dismiss_loading();
-                }
-            });
-
-
-
-        } else {
-            showInternetConnectionToast();
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void showMenu(View v, final SubscriptionStories storyData, final int position,int userType ) {
-        PopupMenu popup = new PopupMenu(context, v);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-
-                    case R.id.menu_delete:
-
-                        callDeleteStory(storyData.get_id(), position);
-
-                        return true;
-
-                    case R.id.menu_edit:
-//                        Intent intent = new Intent(context, UpdateSubscriptionStoryActivity.class);
-//                        intent.putExtra("DATA", storyData);
-//                        Bundle arg = new Bundle();
-//                        arg.putSerializable("List", (Serializable) brief_cvList);
-//                        intent.putExtra("BUNDLE", arg);
-//                        intent.putExtra("ID", storyData.getId());
-//                        startActivity(intent);
-                        return true;
-
-
-                    default:
-                        return false;
-                }
+            if(data!=null) {
+                subscriptionStoriesAdapter.updateData(storyPosition);
+               // refreshFlag = data.getBooleanExtra("REFRESH", false);
+                Utility.log("refreshFlag : " + refreshFlag);
             }
-        });// to implement on click event on items of menu
-        MenuInflater inflater = popup.getMenuInflater();
-
-        if(userType==1)
-        {
-            inflater.inflate(R.menu.menu_subscription_story, popup.getMenu());
-        }
-        else
-        {
-            inflater.inflate(R.menu.menu_view_story, popup.getMenu());
-        }
 
 
-
-        popup.show();
-    }
-
-
-
-
-    private void callDeleteStory(String story_id, int position) {
-        if (isInternetConnected()) {
-            showLoading();
-
-            ReqDeleteStory deleteStory=new ReqDeleteStory();
-            deleteStory.setStoryId(story_id);
-            ApiInterface apiInterface=ApiClientProfile.getClient().create(ApiInterface.class);
-            Call<Root> call= apiInterface.reqDeleteStory(accessToken,deleteStory);
-            call.enqueue(new Callback<Root>() {
-                @Override
-                public void onResponse(Call<Root> call, Response<Root> response)
-                {
-                    dismiss_loading();
-                    if(response.body()!=null)
-                    {
-                        if(response.body().getStatus()==200)
-                        {
-                            subscriptionStoriesAdapter.updateData(position);
-
-                        }
-
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Root> call, Throwable t) {
-
-                }
-            });
-
-
-
-        } else {
-            showInternetConnectionToast();
         }
     }
-
-//    private void showStoryData(JSONArray jsonArray) {
-//        Type type = new TypeToken<ArrayList<StoryData>>() {
-//        }.getType();
-//
-//        storyDataArrayList = new Gson().fromJson(jsonArray.toString(), type);
-//        subscriptionStoryAdapter=new SubscriptionStoryAdapter(context, storyDataArrayList, user_name, groupiconUrl, new ObjectCallback() {
-//            @Override
-//            public void getObject(Object object, int position,View view)
-//            {
-//                if(position==-1) {
-//                    startActivity(new Intent(context, SubscriptionGroupProfileActivity.class));
-//                }
-//                else {
-//                    showMenu(view);
-//                }
-//
-//            }
-//        });
-//        recyclerView.setAdapter(subscriptionStoryAdapter);
-//    }
-
-    private void addNewStory() {
-        Intent intent = new Intent(context, AddSubscriptionStoryActivity.class);
-        Bundle arg = new Bundle();
-        arg.putSerializable("List", (Serializable) brief_cvList);
-        intent.putExtra("BUNDLE", arg);
-        intent.putExtra("ID", subscription_id);
-//        intent.putExtra("POSITION",mParam1);
-        startActivityForResult(intent, Constant.REQUEST_NEW_STORY);
-
-    }
-
-
-
-    public void setUpRecyclerListener() {
-        loading = true;
-        loaddingDone = true;
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-                visibleItemCount = linearLayoutManager.getChildCount();
-                totalItemCount = linearLayoutManager.getItemCount();
-                pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
-
-
-                if (loading && loaddingDone)
-                {
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                    {
-
-                        loading = false;
-                        Utility.Log("inside the recly litner");
-                        getStory();
-
-
-                    }
-                }
-            }
-        });
-    }
-
 }

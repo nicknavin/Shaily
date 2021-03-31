@@ -21,7 +21,7 @@ import com.app.session.baseFragment.BaseFragment;
 import com.app.session.customview.CustomEditText;
 import com.app.session.interfaces.ApiCallback;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.FilterConsultant;
+import com.app.session.data.model.FilterConsultant;
 import com.app.session.utility.Constant;
 
 import org.json.JSONArray;

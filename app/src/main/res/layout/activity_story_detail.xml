@@ -418,11 +418,60 @@ android:visibility="gone"
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
+        <RelativeLayout
+            android:id="@+id/layLoading"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/gray"
+            android:layout_below="@+id/toolbar_actionbar"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/imgStory"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/profil_image"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"/>
+
+            <com.app.session.customview.CustomTextView
+                android:id="@+id/txtPosting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Posting....."
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/imgStory"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:edittextfont="Roboto-Bold.ttf" />
+
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/rey_loading"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:max="50"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                app:pv_autostart="true"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                app:pv_progressStyle="@style/loadingstyle" />
+
+        </RelativeLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_actionbar"
+        android:layout_below="@+id/layLoading"
 
         >
     <RelativeLayout

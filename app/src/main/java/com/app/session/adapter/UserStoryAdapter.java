@@ -1,9 +1,7 @@
 package com.app.session.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
@@ -17,35 +15,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
-import com.app.session.Config;
 import com.app.session.R;
-import com.app.session.activity.MyProfileActivityNew;
-import com.app.session.activity.PlayerActivity;
-import com.app.session.activity.YoutubeActivity;
 import com.app.session.api.Urls;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.StoryModel;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.UserStory;
 import com.app.session.utility.Utility;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -53,10 +37,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.app.session.R;
 import com.app.session.api.Urls;
-import com.app.session.model.Country;
+import com.app.session.data.model.Country;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -12,7 +12,7 @@ import com.app.session.adapter.LanguageAdapter;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.Language;
+import com.app.session.data.model.Language;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 

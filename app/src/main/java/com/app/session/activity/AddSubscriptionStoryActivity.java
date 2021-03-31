@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -28,18 +27,13 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
-import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -48,30 +42,21 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.session.Config;
-import com.app.session.MainActivityW;
 import com.app.session.R;
-import com.app.session.adapter.CustomAdapter;
 import com.app.session.adapter.SpinnerCustomeAdapter;
-import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
-import com.app.session.database.DatabaseHelper;
-import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.Country;
-import com.app.session.model.ReqSendStory;
-import com.app.session.model.SendStoryBody;
-import com.app.session.model.SendStoryResponseRoot;
-import com.app.session.network.ApiClientNew;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.Country;
+import com.app.session.data.model.ReqSendStory;
+import com.app.session.data.model.SendStoryBody;
+import com.app.session.data.model.SendStoryResponseRoot;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
-import com.app.session.network.BaseAsych;
 import com.app.session.service.FileUploadService;
 import com.app.session.thumby.MainActivitythumby;
 import com.app.session.thumbyjava.ThumbyUtils;
@@ -79,15 +64,12 @@ import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
-import com.google.android.gms.common.util.IOUtils;
-import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -114,7 +96,6 @@ import androidx.core.content.FileProvider;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -159,9 +140,9 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
 
     ImageView imgMick, imgSend, imgAttach, imgRecordStop, imgRecordCancel;
     String mFileName = "";
-    String story_type = "", story_title = "", story_text = "", thumbnail_text = "", language_cd = "";
+    String story_type = "", story_title = "", story_text = "", thumbnail_text = "", language_cd = "5f108ad28e2da1c0cbcdfcf8";
     int position = 0;
-    String video_url = "", subscription_id = "";
+    String video_url = "", subscription_id = "",storyProvider="";
     //    YouTubeThumbnailView youTubeThumbnailView;
     ImageView imageVideo;
     LinearLayout layProgress;
@@ -193,7 +174,12 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
 
         if (getIntent().getStringExtra("ID") != null) {
             subscription_id = getIntent().getStringExtra("ID");
+            storyProvider="2";
             System.out.println("subscription_id " + subscription_id);
+        }
+        else
+        {
+            storyProvider="1";
         }
 
         position = getIntent().getIntExtra("POSITION", 0);
@@ -314,7 +300,8 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
                 if (brief_cvList.size() > 0) {
 //                    Toast.makeText(context, categoryArrayList.get(i).getCategory_name(), Toast.LENGTH_SHORT).show();
                     Brief_CV brief_cv = brief_cvList.get(i);
-                    language_cd = brief_cv.getLanguage_cd();
+                    //language_cd = brief_cv.getLanguage_cd();
+                    language_cd = "5f108ad28e2da1c0cbcdfcf8";
 //
                 }
             }
@@ -686,7 +673,8 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
                         callService();
 
                     }
-                    else if (story_type.equals("video_url")) {
+                    else if (story_type.equals("video_url"))
+                    {
                         //  callService("");
                         callSendVideoStory();
                     } else if (story_type.equals("anydoc")) {
@@ -960,11 +948,14 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
         ReqSendStory reqSendStory = new ReqSendStory();
         reqSendStory.setStoryText(story_text);
         reqSendStory.setStoryTitle(story_title);
+        reqSendStory.setStory_language_id(language_cd);
+        reqSendStory.setStoryProvider(storyProvider);
         reqSendStory.setStoryType(story_type);
         reqSendStory.setVideoUrl(video_url);
         reqSendStory.setSubscription_id(subscription_id);
         reqSendStory.setDocFileName(docName);
         reqSendStory.setDocFilePath(selectedDocumentPath);
+
 
         mIntent.putExtra("DATA", reqSendStory);
 //        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
@@ -1279,7 +1270,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             Call<SendStoryResponseRoot> call = null;
             if (subscription_id.isEmpty()) {
 
-                call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl,languageId ,productimg);
+              //  call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl,languageId ,productimg);
 
             } else {
 
@@ -1335,6 +1326,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             RequestBody storyText = RequestBody.create(MediaType.parse("text/plain"), story_text);
             RequestBody storyType = RequestBody.create(MediaType.parse("text/plain"), story_type);
             RequestBody storyTitle = RequestBody.create(MediaType.parse("text/plain"), story_title);
+            RequestBody stryProvider = RequestBody.create(MediaType.parse("text/plain"), storyProvider);
             RequestBody videoUrl = RequestBody.create(MediaType.parse("text/plain"), video_url);
             RequestBody languageId = RequestBody.create(MediaType.parse("text/plain"), language_cd);
 
@@ -1342,7 +1334,7 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
             MultipartBody.Part productimg = null;
 
             Call<SendStoryResponseRoot> call = null;
-            call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl,languageId, productimg);
+            call = apiInterface.reqUserSendsStory(accessToken, userCd, storyType, storyTitle, storyText, videoUrl,stryProvider,languageId, productimg);
 
             call.enqueue(new Callback<SendStoryResponseRoot>() {
                 @Override

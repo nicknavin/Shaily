@@ -8,7 +8,7 @@ import com.app.session.R;
 import com.app.session.adapter.FinancialAdapter;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.Financial;
+import com.app.session.data.model.Financial;
 
 import java.util.ArrayList;
 

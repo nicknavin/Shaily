@@ -14,7 +14,7 @@
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:layout_alignParentTop="true"
     android:background="#FAFAFA"
-    app:layout_scrollFlags="scroll|enterAlways"
+
     app:titleTextColor="@android:color/white">
     <RelativeLayout
 

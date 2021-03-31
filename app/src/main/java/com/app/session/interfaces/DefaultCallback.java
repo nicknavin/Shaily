@@ -1,7 +1,7 @@
 package com.app.session.interfaces;
 
-import com.app.session.model.Category;
-import com.app.session.model.Language;
+import com.app.session.data.model.Category;
+import com.app.session.data.model.Language;
 
 /**
  * Created by Vikas Sharma on 14/11/16.

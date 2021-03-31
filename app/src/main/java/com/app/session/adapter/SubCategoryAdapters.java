@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.SubCategoryModel;
+import com.app.session.data.model.SubCategoryModel;
 
 import java.util.ArrayList;
 

@@ -14,8 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,49 +23,37 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.androidquery.AQuery;
 import com.app.session.R;
 import com.app.session.adapter.BriefCvEditAdapter;
-import com.app.session.adapter.CategoryEditAdapter;
 import com.app.session.adapter.LanguageEditAdapter;
 import com.app.session.adapter.OfficeEditAdapters;
 import com.app.session.adapter.ProfileCategoryAdapter;
-import com.app.session.api.AqueryCall;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
-import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.ApiCallback;
-import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.AddressLocation;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.Category;
-import com.app.session.model.SubCategoryModel;
-import com.app.session.model.User;
-import com.app.session.model.UserBank;
-import com.app.session.model.UserId;
-import com.app.session.model.UserLangauges;
-import com.app.session.model.UserRoot;
+import com.app.session.data.model.AddressLocation;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.Category;
+import com.app.session.data.model.SubCategoryModel;
+import com.app.session.data.model.User;
+import com.app.session.data.model.UserBank;
+import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserLangauges;
+import com.app.session.data.model.UserRoot;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
-import com.app.session.utility.ConvetBitmap;
 import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,7 +66,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
@@ -101,7 +86,7 @@ public class ProfileEditConsultantActivity extends BaseActivity implements View.
 
     private Uri mCameraImageUri, mImageCaptureUri;
     byte[] ByteArray;
-
+    String encodedImage="";
 
 
     CircleImageView imgProfile;
@@ -570,6 +555,7 @@ public class ProfileEditConsultantActivity extends BaseActivity implements View.
 
                         try {
                             imgProfile.setImageBitmap(bmProfileImg);
+                            DataPrefrence.setPref(context,Constant.ENCODED_IMAGE,encodedImage);
                             ResponseBody  responseBody = response.body();
                             String data =responseBody.string();
                             JSONObject jsonObject=new JSONObject(data);
@@ -577,6 +563,7 @@ public class ProfileEditConsultantActivity extends BaseActivity implements View.
                             {
                                 JSONObject object=jsonObject.getJSONObject("body");
                                 String url =Urls.BASE_IMAGES_URL+object.getString("imageUrl");
+
                                 DataPrefrence.setPref(context,Constant.PROFILE_IMAGE,url);
 
                             }
@@ -810,7 +797,7 @@ dismiss_loading();
         try {
             isForCamera = true;
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory() + "/consultlot.png");
+            File f = new File(Environment.getExternalStorageDirectory() + "/sessionway.png");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 mCameraImageUri = Uri.fromFile(f);
             } else {
@@ -915,6 +902,11 @@ dismiss_loading();
 //                            Bitmap bm = BitmapFactory.decodeFile(PicturePath);
                             bmProfileImg=null;
                             bmProfileImg = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bmProfileImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] b = baos.toByteArray();
+                             encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
                             imgProfile.setImageBitmap(bmProfileImg);
                             imageFile = null;
                             imageFile = Utility.getFileByBitmap(context, bmProfileImg, "profileImage");

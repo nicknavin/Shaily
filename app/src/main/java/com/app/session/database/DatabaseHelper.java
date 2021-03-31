@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.app.session.model.StoryDb;
+import com.app.session.data.model.StoryDb;
 
 import java.util.ArrayList;
 import java.util.List;

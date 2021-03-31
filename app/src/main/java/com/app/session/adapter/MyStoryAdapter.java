@@ -23,7 +23,7 @@ import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.MyStory;
+import com.app.session.data.model.MyStory;
 import com.app.session.utility.Utility;
 
 import org.json.JSONObject;

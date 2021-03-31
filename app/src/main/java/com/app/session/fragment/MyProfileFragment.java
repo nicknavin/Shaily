@@ -37,7 +37,6 @@ import com.app.session.activity.AddSubscriptionStoryActivity;
 import com.app.session.activity.EditBriefActivity;
 
 import com.app.session.activity.VideoPlayerActivity;
-import com.app.session.activity.ui.home.HomeFragment;
 import com.app.session.activity.ui.profile.ProfileFragment;
 import com.app.session.adapter.UserStoryAdapter;
 import com.app.session.api.Urls;
@@ -46,14 +45,14 @@ import com.app.session.customspinner.NiceSpinner;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.ReqDeleteStory;
-import com.app.session.model.Root;
-import com.app.session.model.StoryModel;
-import com.app.session.model.User;
-import com.app.session.model.UserId;
-import com.app.session.model.UserRoot;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.ReqDeleteStory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.User;
+import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserRoot;
+import com.app.session.data.model.UserStory;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
@@ -105,6 +104,7 @@ import static com.app.session.thumby.ThumbyActivity.EXTRA_THUMBNAIL_POSITION;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_URI;
 import static com.app.session.thumby.ThumbyActivity.VIDEO_PATH;
 import static com.app.session.utility.Utility.isConnectingToInternet;
+import static com.app.session.utility.Utility.log;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -389,6 +389,7 @@ LinearLayoutManager linearLayoutManager;
             case R.id.imgBriefCV:
                 if (!videoUrl.isEmpty())
                 {
+                    log("videoUrl "+videoUrl);
                     intent = new Intent(context, VideoPlayerActivity.class);
                     intent.putExtra("URL", videoUrl);
                     startActivity(intent);
@@ -428,7 +429,7 @@ LinearLayoutManager linearLayoutManager;
 
                     case R.id.menu_delete:
 
-                            callDeleteStory(storyData.get_id(), position);
+                            callDeleteStory(storyData, position);
 
                         return true;
 
@@ -702,12 +703,13 @@ LinearLayoutManager linearLayoutManager;
 
     }
 
-    private void callDeleteStory(String story_id, int position) {
+    private void callDeleteStory(StoryModel storyModel, int position) {
         if (isInternetConnected()) {
             showLoading();
 
             ReqDeleteStory deleteStory=new ReqDeleteStory();
-            deleteStory.setStoryId(story_id);
+            deleteStory.setStoryId(storyModel.get_id());
+            deleteStory.setStory_provider(storyModel.getStory_provider());
             ApiInterface apiInterface=ApiClientProfile.getClient().create(ApiInterface.class);
            Call<Root> call= apiInterface.reqDeleteStory(accessToken,deleteStory);
            call.enqueue(new Callback<Root>() {

@@ -20,9 +20,9 @@ import com.app.session.api.Urls;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.StoryModel;
-import com.app.session.model.SubscriptionStories;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.SubscriptionStories;
+import com.app.session.data.model.UserStory;
 import com.app.session.utility.Utility;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.rey.material.widget.ProgressView;
@@ -30,7 +30,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 

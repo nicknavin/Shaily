@@ -11,7 +11,7 @@ import com.app.session.R;
 import com.app.session.api.Urls;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.SubscriptionGroup;
+import com.app.session.data.model.SubscriptionGroup;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;

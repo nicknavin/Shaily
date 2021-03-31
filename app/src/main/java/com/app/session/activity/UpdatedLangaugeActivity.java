@@ -19,7 +19,7 @@ import com.app.session.customview.CustomTextView;
 import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.ApiCallback;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.Language;
+import com.app.session.data.model.Language;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 

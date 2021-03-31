@@ -9,12 +9,9 @@ import android.widget.Filterable;
 
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
-import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.interfaces.CurrencyCallback;
 import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.CurrencyBody;
-import com.app.session.model.CurrencyRef;
-import com.google.android.gms.common.api.Api;
+import com.app.session.data.model.CurrencyBody;
+import com.app.session.data.model.CurrencyRef;
 
 import java.util.ArrayList;
 

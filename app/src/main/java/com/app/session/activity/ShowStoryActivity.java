@@ -1,13 +1,11 @@
 package com.app.session.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -30,14 +28,12 @@ import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
-import com.app.session.interfaces.ObjectCallback;
-import com.app.session.model.ReqDeleteStory;
-import com.app.session.model.Root;
-import com.app.session.model.StoryId;
-import com.app.session.model.StoryModel;
-import com.app.session.model.SubscriptionStories;
-import com.app.session.model.UserStory;
-import com.app.session.network.ApiClient;
+import com.app.session.data.model.ReqDeleteStory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.StoryId;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.SubscriptionStories;
+import com.app.session.data.model.UserStory;
 import com.app.session.network.ApiClientExplore;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
@@ -468,6 +464,7 @@ else
             StoryId storyId =new StoryId();
             storyId.setStory_id(userStory.getId());
             storyId.setUser_id(userId);
+//            storyId.setStory_id(userStory.get);
             ApiInterface apiInterface= ApiClientExplore.getClient().create(ApiInterface.class);
             Call<Root> call=apiInterface.reqSendViewsCount(storyId);
             call.enqueue(new Callback<Root>() {
@@ -524,7 +521,7 @@ else
 
                     case R.id.menu_delete:
 
-                        callDeleteStory(userStory.getId());
+                        callDeleteStory(userStory);
 
                         return true;
 
@@ -560,12 +557,13 @@ else
         popup.show();
     }
 
-    private void callDeleteStory(String story_id) {
+    private void callDeleteStory(UserStory userStory) {
         if (isInternetConnected()) {
             showLoading();
 
             ReqDeleteStory deleteStory=new ReqDeleteStory();
-            deleteStory.setStoryId(story_id);
+            deleteStory.setStoryId(userStory.getId());
+            deleteStory.setStory_provider(userStory.getStory_provider());
             ApiInterface apiInterface= ApiClientProfile.getClient().create(ApiInterface.class);
             Call<Root> call= apiInterface.reqDeleteStory(accessToken,deleteStory);
             call.enqueue(new Callback<Root>() {
@@ -577,6 +575,9 @@ else
                     {
                         if(response.body().getStatus()==200)
                         {
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra("REFRESH", false);
+                            setResult(Constant.PAGE_REFRESH, returnIntent);
                             finish();
 
                         }
@@ -603,6 +604,7 @@ else
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent();
+        intent.putExtra("REFRESH", true);
         setResult(Constant.PAGE_REFRESH, intent);
         finish();
     }

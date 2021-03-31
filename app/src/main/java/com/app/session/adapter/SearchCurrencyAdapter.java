@@ -10,7 +10,7 @@ import android.widget.Filterable;
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.CurrencyCallback;
-import com.app.session.model.CurrencyRef;
+import com.app.session.data.model.CurrencyRef;
 
 import java.util.ArrayList;
 

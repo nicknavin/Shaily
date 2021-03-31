@@ -1,6 +1,5 @@
 package com.app.session.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -11,17 +10,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.app.session.R;
-import com.app.session.adapter.AllChatUserAdapter;
 import com.app.session.adapter.ExpertFollowingsAdapter;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.BodyFollowers;
-import com.app.session.model.ChatUserId;
-import com.app.session.model.ChatedBody;
-import com.app.session.model.ChatedPersonsResponse;
-import com.app.session.model.RootFollowers;
-import com.app.session.model.UserId;
+import com.app.session.data.model.BodyFollowers;
+import com.app.session.data.model.ChatUserId;
+import com.app.session.data.model.ChatedBody;
+import com.app.session.data.model.ChatedPersonsResponse;
+import com.app.session.data.model.RootFollowers;
+import com.app.session.data.model.UserId;
 import com.app.session.network.ApiClient;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Utility;

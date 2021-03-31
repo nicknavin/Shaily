@@ -11,16 +11,15 @@ import com.app.session.activity.ExpertProfilePageActivity;
 import com.app.session.adapter.DemoAdapter;
 import com.app.session.baseFragment.BaseFragment;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.ConsultUser;
-import com.app.session.model.ConsultUserRoot;
-import com.app.session.model.ConsultantData;
-import com.app.session.model.ReqGetUser;
+import com.app.session.data.model.ConsultUser;
+import com.app.session.data.model.ConsultUserRoot;
+import com.app.session.data.model.ConsultantData;
+import com.app.session.data.model.ReqGetUser;
 import com.app.session.network.ApiClientExplore;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

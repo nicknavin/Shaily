@@ -3,17 +3,15 @@ package com.app.session.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.app.session.R;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.LoginBody;
-import com.app.session.model.LoginRoot;
-import com.app.session.model.LoginUser;
+import com.app.session.data.model.LoginBody;
+import com.app.session.data.model.LoginRoot;
+import com.app.session.data.model.LoginUser;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
@@ -134,89 +132,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
 
-    private void callLoging()
-    {
-        if (isConnectingToInternet(context)) {
-            showLoading();
-            ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call= apiInterface.callLoginRequest(email,pwd,fcmId);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
-                {
-                    dismiss_loading();
-                    ResponseBody responseBody=response.body();
-                    try {
-                        String data=  responseBody.string();
-                        try {
-                            JSONObject js=new JSONObject(data);
 
-                            showToast(js.getString("Message"));
-                            if (js.getBoolean("Status")) {
-                                JSONArray array = js.getJSONArray("User_Detail");
-                                JSONObject jsonObject = array.getJSONObject(0);
-                                DataPrefrence.setPref(context, Constant.LOGIN_FLAG, true);
-                                DataPrefrence.setPref(context, Constant.USER_ID, jsonObject.getString("user_cd"));
-                                DataPrefrence.setPref(context, Constant.EMAILID, jsonObject.getString("email_address"));
-                                DataPrefrence.setPref(context, Constant.USER_NAME, jsonObject.getString("login_user_id"));
-                                DataPrefrence.setPref(context, Constant.DIAL_Code, jsonObject.getString("dial_cd") );
-                                DataPrefrence.setPref(context, Constant.MOBILE_NO, jsonObject.getString("dial_cd") + jsonObject.getString("mobile_no"));
-                                DataPrefrence.setPref(context, Constant.FULLNAME, jsonObject.getString("user_name"));
-                                DataPrefrence.setPref(context, Constant.COUNTRY_ID, jsonObject.getString("country_cd"));
-                                DataPrefrence.setPref(context, Constant.ACCESS_TOKEN, jsonObject.getString("token_id"));
-                                DataPrefrence.setPref(context, Constant.PROFILE_IMAGE, jsonObject.getString("imageUrl"));
-                                System.out.println(jsonObject.getBoolean("is_language"));
-                                DataPrefrence.setPref(context, Constant.LANGUAGE_SELECTED, jsonObject.getBoolean("is_language"));
-                                DataPrefrence.setPref(context, Constant.CATEGORY_SELECTED, jsonObject.getBoolean("is_catecory"));
-                                if (jsonObject.getString("is_company").equals("0") && jsonObject.getString("is_consultant").equals("0"))
-                                {
-                                    DataPrefrence.setPref(context, Constant.LOGIN_TYPE, Constant.CLIENT);
-                                } else
-                                {
-                                    DataPrefrence.setPref(context, Constant.LOGIN_TYPE, Constant.CONSULTANT);
-                                }
-                                DataPrefrence.setPref(context, Constant.IS_COMPANY, jsonObject.getString("is_company"));
-                                DataPrefrence.setPref(context, Constant.IS_CONSULTANT, jsonObject.getString("is_consultant"));
-
-
-                                Intent intent;
-//                                if(DataPrefrence.getPref(context,Constant.IS_COMPANY,"").equals("1"))
-//                                {
-//                                    //intent = new Intent(context, CompanyHomeActivity.class);
-//                                }else {
-//                                    intent = new Intent(context, SnapchatActivity.class);
-//                                }
-                                intent = new Intent(context, ConsultantStoryActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
-
-
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-dismiss_loading();
-                }
-            });
-        }
-        else
-        {
-            showInternetConnectionToast();
-        }
-    }
 
     private void callUserLogin()
     {

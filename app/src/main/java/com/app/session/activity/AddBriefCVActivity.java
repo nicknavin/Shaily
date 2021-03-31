@@ -30,26 +30,23 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.androidquery.AQuery;
 import com.app.session.R;
 import com.app.session.adapter.TitleAddAdapter;
-import com.app.session.api.AqueryCall;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
-import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.TitleRef;
-import com.app.session.model.UpdateBriefReq;
-import com.app.session.model.User;
-import com.app.session.model.UserId;
-import com.app.session.model.UserLangauges;
-import com.app.session.model.UserRoot;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.TitleRef;
+import com.app.session.data.model.UpdateBriefReq;
+import com.app.session.data.model.User;
+import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserLangauges;
+import com.app.session.data.model.UserRoot;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;
@@ -61,10 +58,6 @@ import com.app.session.utility.Constant;
 import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
 import com.app.session.utils.MIMEType;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -76,8 +69,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -229,7 +220,7 @@ public class AddBriefCVActivity extends BaseActivity implements View.OnClickList
             if (brief_cv.getVideo_url() != null && !brief_cv.getVideo_url().isEmpty())
             {
 
-                videoUrl = Urls.BASE_VIDEO_URL + brief_cv.getVideo_url();
+                videoUrl = Urls.BASE_IMAGES_URL + brief_cv.getVideo_url();
                 layVideothumb.setVisibility(View.VISIBLE);
                 layUploadVideo.setVisibility(View.GONE);
 
@@ -309,7 +300,7 @@ public class AddBriefCVActivity extends BaseActivity implements View.OnClickList
             }
             if (brief_cv_param.getVideo_url() != null && !brief_cv_param.getVideo_url().isEmpty()) {
 
-                videoUrl = Urls.BASE_VIDEO_URL + brief_cv_param.getVideo_url();
+                videoUrl = Urls.BASE_IMAGES_URL + brief_cv_param.getVideo_url();
                 layVideothumb.setVisibility(View.VISIBLE);
                 layUploadVideo.setVisibility(View.GONE);
 
@@ -548,6 +539,7 @@ showLoading();
 
                 //navin nimade comment
                 if (!videoUrl.isEmpty() && videoUrl != null) {
+                    mlog("videoUrl "+videoUrl);
                     intent = new Intent(context, VideoPlayerActivity.class);
                     intent.putExtra("URL", videoUrl);
                     startActivity(intent);

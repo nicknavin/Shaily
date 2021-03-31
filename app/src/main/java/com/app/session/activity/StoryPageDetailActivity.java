@@ -23,13 +23,20 @@ import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.StoryData;
-import com.app.session.model.StoryModel;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.StoryData;
+import com.app.session.data.model.StoryId;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.UserStory;
+import com.app.session.network.ApiClientExplore;
+import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
 import com.app.session.utility.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -43,6 +50,9 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StoryPageDetailActivity extends BaseActivity {
     UserStory storyData;
@@ -76,6 +86,7 @@ public class StoryPageDetailActivity extends BaseActivity {
             storyData = getIntent().getParcelableExtra("DATA");
         }
         initView();
+        sendStoryView();
     }
 
     private void initView() {
@@ -405,6 +416,63 @@ public class StoryPageDetailActivity extends BaseActivity {
 
 
     }
+
+
+    private void sendStoryView()
+    {
+        if(isInternetConnected())
+        {
+            StoryId storyId =new StoryId();
+            storyId.setStory_id(storyData.getId());
+            storyId.setUser_id(userId);
+            storyId.setStory_provider(storyData.getStory_provider());
+            log("req data "+storyId.toString());
+            ApiInterface apiInterface= ApiClientExplore.getClient().create(ApiInterface.class);
+            Call<Root> call=apiInterface.reqSendViewsCount(storyId);
+            call.enqueue(new retrofit2.Callback<Root>() {
+                @Override
+                public void onResponse(Call<Root> call, Response<Root> response)
+                {
+                    if(response.body()!=null)
+                    {
+                        if(response.body().getStatus()==200) {
+                            System.out.println("count " + response.body().getMessage());
+                        }
+
+                    }
+                    else
+                    {
+                        try {
+                            ResponseBody responseBody=null;
+
+
+                            responseBody = response.errorBody();
+
+                            String data =responseBody.string();
+
+                            System.out.println("error1"+data);
+                            JSONObject jsonObject=new JSONObject(data);
+                            System.out.println("error2"+jsonObject.toString());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Root> call, Throwable t) {
+
+                }
+            });
+        }
+        else
+        {
+
+        }
+    }
+
 
 
     @Override

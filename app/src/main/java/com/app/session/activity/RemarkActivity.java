@@ -32,7 +32,7 @@ import com.app.session.api.Urls;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.RemarkModel;
+import com.app.session.data.model.RemarkModel;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;

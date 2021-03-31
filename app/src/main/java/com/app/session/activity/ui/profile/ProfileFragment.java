@@ -1,9 +1,11 @@
 package com.app.session.activity.ui.profile;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
@@ -58,31 +60,31 @@ import com.app.session.activity.ReportProblemActivity;
 import com.app.session.activity.StoryDetailActivity;
 import com.app.session.activity.VideoPlayerActivity;
 import com.app.session.activity.YoutubeActivity;
-import com.app.session.activity.ui.home.HomeFragment;
+import com.app.session.activity.ui.baseviewmodels.ViewModelFactory;
 import com.app.session.adapter.SampleDemoAdapter;
 import com.app.session.adapter.UserStoryAdapter;
 import com.app.session.api.Urls;
 import com.app.session.baseFragment.BaseFragment;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
+import com.app.session.data.model.SubscriptionGroupRoot;
 import com.app.session.fragment.MyProfileFragment;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.interfaces.ObjectCallback;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.ReqDeleteStory;
-import com.app.session.model.ReqStory;
-import com.app.session.model.Root;
-import com.app.session.model.SendStoryBody;
-import com.app.session.model.StoryBody;
-import com.app.session.model.StoryModel;
-import com.app.session.model.StoryRoot;
-import com.app.session.model.SubscriptionGroup;
-import com.app.session.model.SubscriptionGroupRoot;
-import com.app.session.model.UserDetails;
-import com.app.session.model.UserId;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.ReqDeleteStory;
+import com.app.session.data.model.ReqUserStory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.SendStoryBody;
+import com.app.session.data.model.StoryBody;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.StoryRoot;
+import com.app.session.data.model.SubscriptionGroup;
+import com.app.session.data.model.UserDetails;
+import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserStory;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
@@ -94,11 +96,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.engineio.client.transports.Polling;
-import com.github.nkzawa.socketio.client.Ack;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rey.material.widget.ProgressView;
@@ -114,7 +112,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -125,7 +122,7 @@ import static com.app.session.service.FileUploadService.FAIL;
 import static com.app.session.service.FileUploadService.SHOW_RESULT;
 import static com.app.session.service.FileUploadService.STATUS;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener,ServiceResultReceiver.Receiver{
+public class ProfileFragment extends BaseFragment implements View.OnClickListener, ServiceResultReceiver.Receiver {
 
     private ProfileViewModel mViewModel;
     public CustomTextView txtUserName, txt_follwr_count, txt_follwng_count;
@@ -143,7 +140,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     ArrayList<UserStory> storyDataArrayList = new ArrayList<>();
     MyProfileFragment myProfileFragment;
     public boolean flag = false;
-    public CustomTextView txtSubsciber=null;
+    public CustomTextView txtSubsciber = null;
 
     public int pageno = 1;
     public int total_pages = 0;
@@ -167,125 +164,122 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     View root;
     ImageView imgSetting;
     ConstraintLayout layBio;
-    public static ProfileFragment newInstance()
-    {
+
+    public static ProfileFragment newInstance() {
         return new ProfileFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context=getContext();
-
+        context = getContext();
+        mViewModel = new ViewModelProvider(this, new ViewModelFactory(getActivity().getApplication(), userId, accessToken)).get(ProfileViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root= inflater.inflate(R.layout.profile_fragment_demo, container, false);
+
+        root = inflater.inflate(R.layout.profile_fragment_demo, container, false);
         initView();
+
+        setObserver();
+
         return root;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
         // TODO: Use the ViewModel
     }
 
 
     public void initView() {
 
-        layBio=(ConstraintLayout) root.findViewById(R.id.layBio);
-        layLoading=(RelativeLayout)root.findViewById(R.id.layLoading);
-        imageStory=(ImageView)root.findViewById(R.id.imgStory);
-        imgSetting=root.findViewById(R.id.imgSetting);
+        layBio = (ConstraintLayout) root.findViewById(R.id.layBio);
+        layLoading = (RelativeLayout) root.findViewById(R.id.layLoading);
+        imageStory = (ImageView) root.findViewById(R.id.imgStory);
+        imgSetting = root.findViewById(R.id.imgSetting);
         imgSetting.setOnClickListener(this);
-        rey_loading=(ProgressView)root.findViewById(R.id.rey_loading);
+        rey_loading = (ProgressView) root.findViewById(R.id.rey_loading);
 
-        fab = (FloatingActionButton)root.findViewById(R.id.fab);
+        fab = (FloatingActionButton) root.findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        layDrop = (LinearLayout)root.findViewById(R.id.layDrop);
+        layDrop = (LinearLayout) root.findViewById(R.id.layDrop);
         layDrop.setOnClickListener(this);
-        imgDrop = (CheckBox)root.findViewById(R.id.imgDrop);
+        imgDrop = (CheckBox) root.findViewById(R.id.imgDrop);
 
-        recyclerViewtop = (RecyclerView)root.findViewById(R.id.recyclerViewtop);
+        recyclerViewtop = (RecyclerView) root.findViewById(R.id.recyclerViewtop);
         mShimmerViewContainer = root.findViewById(R.id.shimmer_view_container);
 
-        txtSubsciber = (CustomTextView)root.findViewById(R.id.txtSubsciber);
-        txt_follwr_count = (CustomTextView)root.findViewById(R.id.txt_follwr_count);
-        txt_follwng_count = (CustomTextView)root.findViewById(R.id.txt_follwng_count);
+        txtSubsciber = (CustomTextView) root.findViewById(R.id.txtSubsciber);
+        txt_follwr_count = (CustomTextView) root.findViewById(R.id.txt_follwr_count);
+        txt_follwng_count = (CustomTextView) root.findViewById(R.id.txt_follwng_count);
 
-        txtUserName = (CustomTextView)root.findViewById(R.id.txtUserName);
+        txtUserName = (CustomTextView) root.findViewById(R.id.txtUserName);
 
-        imgProfileProfile = (CircleImageView)root.findViewById(R.id.imgProfileProfile);
-        recyclerViewtop = (RecyclerView)root.findViewById(R.id.recyclerViewtop);
+        imgProfileProfile = (CircleImageView) root.findViewById(R.id.imgProfileProfile);
+        recyclerViewtop = (RecyclerView) root.findViewById(R.id.recyclerViewtop);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewtop.setLayoutManager(layoutManager);
-        viewPager = (ViewPager)root.findViewById(R.id.viewpager_favourite);
-        tabLayout = (TabLayout)root.findViewById(R.id.tabLayout_favourite);
+        viewPager = (ViewPager) root.findViewById(R.id.viewpager_favourite);
+        tabLayout = (TabLayout) root.findViewById(R.id.tabLayout_favourite);
         brief_cvList = DataPrefrence.getBriefLanguage(context, Constant.BRIEF_CV_DB);
 
 
     }
 
     public void setupStoryRecylerview() {
-        recyclerView = (RecyclerView)root.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         userStoryAdapter = new UserStoryAdapter(context, storyModelsList, user_name, profileUrl, new ObjectCallback() {
             @Override
-            public void getObject(Object object, int position, View view)
-            {
-                storyShare=null;
+            public void getObject(Object object, int position, View view) {
+                storyShare = null;
                 storyShare = (StoryModel) object;
 
-                if (view.getId() == R.id.imgRemove)
-                {
+                if (view.getId() == R.id.imgRemove) {
                     showMenu(view, storyShare, position);
                 }
 
-                if(view.getId()==R.id.layDocument)
-                {
+                if (view.getId() == R.id.layDocument) {
 
                     String url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
 
-                    new DownloadFile("",storyShare.getDisplay_doc_name(),"show").execute(url);
+                    new DownloadFile("", storyShare.getDisplay_doc_name(), "show").execute(url);
 //                    Utility.openFile(context,Urls.BASE_IMAGES_URL+storyShare.getStoryUrl());
                 }
 
-                if(view.getId()==R.id.layVideo)
-                {
-                    if (storyShare.getStoryType().equals("video_url"))
-                    {
+                if (view.getId() == R.id.layVideo) {
+                    if (storyShare.getStoryType().equals("video_url")) {
                         String id = Utility.extractYTId(storyShare.getStoryUrl());
-                        Intent intent=new Intent(context, YoutubeActivity.class);
-                        intent.putExtra("ID",id);
+                        Intent intent = new Intent(context, YoutubeActivity.class);
+                        intent.putExtra("ID", id);
                         startActivityForResult(intent, Constant.PAGE_REFRESH);
                     }
-                    if (storyShare.getStoryType().equals("video"))
-                    {
+                    if (storyShare.getStoryType().equals("video")) {
                         String videoUrl = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
                         Intent intent = new Intent(context, VideoPlayerActivity.class);
                         intent.putExtra("URL", videoUrl);
                         startActivityForResult(intent, Constant.PAGE_REFRESH);
                     }
                 }
-                if (view.getId() == R.id.imgShare)
-                {
+                if (view.getId() == R.id.imgShare) {
 
                     flag = true;
                     String url = "";
                     if (storyShare.getStoryType().equals("audio")) {
                         url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
                         String msg = storyShare.getStoryTitle() + "\n" + storyShare.getStoryText();
-                        new DownloadFile(msg,"audio.mp3","").execute(url);
+                        new DownloadFile(msg, "audio.mp3", "").execute(url);
                     }
-                    if (storyShare.getStoryType().equals("image"))
-                    {
+                    if (storyShare.getStoryType().equals("image")) {
                         url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
                         showLoading();
 
@@ -306,22 +300,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                                     public void onLoadCleared(@Nullable Drawable placeholder) {
                                     }
                                 });
-                    }
-                    else if (storyShare.getStoryType().equals("video_url"))
-                    {
+                    } else if (storyShare.getStoryType().equals("video_url")) {
                         Utility.shareVideoUrl(storyShare, context);
 //                            shareIt();
 
-                    }
-                    else if (storyShare.getStoryType().equals("video"))
-                    {
+                    } else if (storyShare.getStoryType().equals("video")) {
                         Utility.shareVideoUrl(storyShare, context);
-                    }
-                    else if (storyShare.getStoryType().equals("anydoc"))
-                    {
+                    } else if (storyShare.getStoryType().equals("anydoc")) {
                         url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
                         String msg = storyShare.getStoryTitle() + "\n" + storyShare.getStoryText();
-                        new DownloadFile(msg,storyShare.getDisplay_doc_name(),"").execute(url);
+                        new DownloadFile(msg, storyShare.getDisplay_doc_name(), "").execute(url);
                     }
 
 
@@ -348,91 +336,24 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         brief_cvList = DataPrefrence.getBriefLanguage(context, Constant.BRIEF_CV_DB);
 
         if (!flag) {
-            pageno = 1;
+            mViewModel.page = 1;
             storyModelsList = new LinkedList<>();
-            getSubscriptionGroup();
+
             initTablayout();
             setupStoryRecylerview();
             setUpRecyclerListener();
-            getUserStory();
+            callApis();
+
         }
     }
 
 
-    private void getSubscriptionGroup() {
-        if (Utility.isConnectingToInternet(context)) {
-            //showLoading();
-            UserId user = new UserId();
-            user.setUser_id(userId);
-            ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
-            Call<SubscriptionGroupRoot> call = apiInterface.reqGetUserSubscriptionGroups(accessToken, user);
-            call.enqueue(new Callback<SubscriptionGroupRoot>() {
-                @Override
-                public void onResponse(Call<SubscriptionGroupRoot> call, Response<SubscriptionGroupRoot> response) {
-                    mShimmerViewContainer.stopShimmerAnimation();
-                    mShimmerViewContainer.setVisibility(View.GONE);
-                    // dismiss_loading();
-                    if (response.body() != null) {
-                        SubscriptionGroupRoot root = response.body();
-                        subscriptionGroupsList = root.getSubscriptionGroupBodies();
-                        SubscriptionGroup group = new SubscriptionGroup();
-                        group.setGroup_name("New");
-                        group.set_id("-0new");
-                        subscriptionGroupsList.add(group);
-                        SampleDemoAdapter sampleDemoAdapter = new SampleDemoAdapter(context, subscriptionGroupsList, new ApiItemCallback() {
-                            @Override
-                            public void result(int position) {
-                                SubscriptionGroup group = subscriptionGroupsList.get(position);
-                                if (!group.get_id().equals("-0new")) {
-                                    Intent intent = new Intent(context, StoryDetailActivity.class);
-                                    intent.putExtra("ID", group.get_id());
-                                    intent.putExtra("GROUP_NAME", group.getGroup_name());
-                                    intent.putExtra("GROUP_IMAGE", group.getGroup_image_url());
-                                    intent.putExtra("USER_NAME", user_name);
-                                    intent.putExtra("USER_ID", userId);
-                                    intent.putExtra("USER_URL", group.getUserDetails().getImageUrl());
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("List", (Serializable) brief_cvList);
-                                    intent.putExtra("BUNDLE", bundle);
-                                    startActivity(intent);
-                                } else {
-                                    addStoryGroup();
-                                }
-                            }
-                        });
-                        recyclerViewtop.setAdapter(sampleDemoAdapter);
-
-
-                        //    System.out.println("data list"+subscriptionGroups.get(0).getUser_id());
-                    } else {
-                        try {
-                            ResponseBody responseBody = response.errorBody();
-                            String data = responseBody.string();
-                            JSONObject jsonObject = new JSONObject(data);
-                            System.out.println("error body " + jsonObject.toString());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
-                }
-
-                @Override
-                public void onFailure(Call<SubscriptionGroupRoot> call, Throwable t) {
-                    dismiss_loading();
-                }
-            });
-
-        } else {
-            showInternetConnectionToast();
-        }
+    private void callApis() {
+        mViewModel.loadUserSubcriptionGroupApi();
+        mViewModel.getUserStoriesApi();
     }
 
-    public void setCustomTextView()
-    {
+    public void setCustomTextView() {
 
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -447,15 +368,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void visibleBioSection(int visibleFlag)
-    {
-        if(visibleFlag==0) {
+    private void visibleBioSection(int visibleFlag) {
+        if (visibleFlag == 0) {
             tabLayout.setVisibility(View.INVISIBLE);
             imgDrop.setChecked(false);
             viewPager.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             tabLayout.setVisibility(View.VISIBLE);
             imgDrop.setChecked(true);
             viewPager.setVisibility(View.VISIBLE);
@@ -468,8 +386,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         switch (view.getId()) {
             case R.id.layDrop:
 
-                if (imgDrop.isChecked())
-                {
+                if (imgDrop.isChecked()) {
 
 //                    imgDrop.setChecked(false);
 //                    MyProfileFragment fragment = (MyProfileFragment) viewPager
@@ -501,8 +418,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    private void initTablayout()
-    {
+    private void initTablayout() {
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setCustomTextView();
@@ -561,7 +477,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
                     case R.id.menu_delete:
 
-                        callDeleteStory(storyData.get_id(), position);
+                        callDeleteStory(storyData, position);
 
                         return true;
 
@@ -589,11 +505,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         popup.show();
     }
 
-    private void callDeleteStory(String story_id, int position) {
+    private void callDeleteStory(StoryModel storyModel, int position) {
         if (isInternetConnected()) {
             showLoading();
             ReqDeleteStory deleteStory = new ReqDeleteStory();
-            deleteStory.setStoryId(story_id);
+            deleteStory.setStoryId(storyModel.get_id());
+            deleteStory.setStory_provider(storyModel.getStory_provider());
             ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
             Call<Root> call = apiInterface.reqDeleteStory(accessToken, deleteStory);
             call.enqueue(new Callback<Root>() {
@@ -662,7 +579,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (Utility.isConnectingToInternet(context)) {
 
 
-            ReqStory user = new ReqStory();
+            ReqUserStory user = new ReqUserStory();
             user.setmUserId(userId);
             user.setmLoad("" + pageno);
 //            showLoading();
@@ -674,8 +591,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 //                    dismiss_loading();
                     if (response.body() != null) {
-                        if (response.body().getStatus() == 200)
-                        {
+                        if (response.body().getStatus() == 200) {
                             StoryBody storyBody = response.body().getStoryBody();
 
                             total_pages = storyBody.getTotal_Page();
@@ -685,11 +601,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                             System.out.println("temp page " + pageno);
 
 
-                            if (temp.size() > 0)
-                            {
+                            if (temp.size() > 0) {
                                 visibleBioSection(0);
-                                if (pageno <= total_pages)
-                                {
+                                if (pageno <= total_pages) {
                                     loading = true;
                                     pageno++;
                                 }
@@ -711,10 +625,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //                                });
 //                                recyclerView.setAdapter(userStoryAdapter);
 
-                            }
-
-                            else
-                            {
+                            } else {
                                 visibleBioSection(1);
                             }
                         }
@@ -752,7 +663,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         loading = false;
                         Utility.Log("inside the recly litner");
 
-                        getUserStory();
+                        getUserStoriesApi();
 
 
                     }
@@ -761,16 +672,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         });
     }
 
-    private void addNewStory()
-    {
+    private void addNewStory() {
         mServiceResultReceiver = new ServiceResultReceiver(new Handler());
         mServiceResultReceiver.setReceiver(this);
         Intent intent = new Intent(context, AddSubscriptionStoryActivity.class);
         Bundle arg = new Bundle();
         arg.putSerializable("List", (Serializable) brief_cvList);
         intent.putExtra("BUNDLE", arg);
-        intent.putExtra("ID", "");
         intent.putExtra("POSITION", 0);
+
         intent.putExtra(RECEIVER, mServiceResultReceiver);
         intent.setAction(ACTION_DOWNLOAD);
         startActivityForResult(intent, Constant.REQUEST_NEW_STORY);
@@ -807,13 +717,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private class DownloadFile extends AsyncTask<String, Integer, File> {
 
         String msg = "";
-        String fileName="";
-        String type="";
-        DownloadFile(String msg,String fileName,String type)
-        {
+        String fileName = "";
+        String type = "";
+
+        DownloadFile(String msg, String fileName, String type) {
             this.msg = msg;
-            this.fileName=fileName;
-            this.type=type;
+            this.fileName = fileName;
+            this.type = type;
         }
 
         @Override
@@ -835,8 +745,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 // downlod the file
                 File filesDir = context.getFilesDir();
                 File audioFile = new File(filesDir, fileName);
-                if(audioFile.exists())
-                {
+                if (audioFile.exists()) {
                     audioFile.delete();
 
                 }
@@ -872,16 +781,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
             dismiss_loading();
-            flag=true;
+            flag = true;
             if (file != null) {
-                if(type.equals("show"))
-                {
+                if (type.equals("show")) {
                     String sharePath = file.getPath();
                     Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
-                    Utility.displayDocument(context,uri);
+                    Utility.displayDocument(context, uri);
 
-                }
-                else {
+                } else {
                     String sharePath = file.getPath();
                     Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
                     Intent share = new Intent(Intent.ACTION_SEND);
@@ -895,7 +802,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
 
     }
-
 
 
     private void initAudioPlayer(File file) {
@@ -919,7 +825,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -927,8 +832,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (myFragment != null) {
             myFragment.onActivityResult(requestCode, resultCode, data);
         }
-        if(requestCode==Constant.PAGE_REFRESH)
-        {
+        if (requestCode == Constant.PAGE_REFRESH) {
             flag = true;
         }
         if (requestCode == Constant.REQUEST_NEW_STORY) {
@@ -971,17 +875,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             }
         }
         if (requestCode == Constant.REQUEST_CODE_MY_PICK) {
-            if(data!=null)
-            {
+            if (data != null) {
                 String appName = data.getComponent().flattenToShortString();
-                if(appName.toLowerCase().contains("session"))
-                {
+                if (appName.toLowerCase().contains("session")) {
 
 
-                }
-                else
-                {
-                    Utility.shareVideoUrl(storyShare,context);
+                } else {
+                    Utility.shareVideoUrl(storyShare, context);
                 }
                 System.out.println("app name ");
             }
@@ -1006,7 +906,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    public  void shareVideoUrl(StoryModel storyData, Context context) {
+    public void shareVideoUrl(StoryModel storyData, Context context) {
         List<Intent> targetedShareIntents = new ArrayList<Intent>();
         String msg = storyData.getStoryTitle() + "\n" + storyData.getStoryText();
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -1021,18 +921,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //    i.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
         shareIntent.putExtra(Intent.EXTRA_TEXT, storyData.getStoryUrl());
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(shareIntent, 0);
-        if (!resInfo.isEmpty())
-        {
+        if (!resInfo.isEmpty()) {
             for (ResolveInfo info : resInfo) {
-                if(!info.activityInfo.packageName.toLowerCase().equals("com.app.session"))
-                {
+                if (!info.activityInfo.packageName.toLowerCase().equals("com.app.session")) {
                     Intent targetedShare = new Intent(android.content.Intent.ACTION_SEND);
-                    String[] mimetypes = {"image/*","text/plain"};
+                    String[] mimetypes = {"image/*", "text/plain"};
                     targetedShare.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
                     targetedShare.setPackage(info.activityInfo.packageName.toLowerCase());
                     targetedShareIntents.add(targetedShare);
                 }
-
 
 
                 Intent intentPick = new Intent();
@@ -1053,48 +950,37 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    boolean isFlag=false;
+    boolean isFlag = false;
+
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
 
         switch (resultCode) {
             case SHOW_RESULT:
                 if (resultData != null) {
-                    if(!isFlag) {
+                    if (!isFlag) {
 
-                        if(resultData.getString("TYPE").equals("anydoc"))
-                        {
-                            if(resultData.getString("FILENAME").contains(".doc"))
-                            {
+                        if (resultData.getString("TYPE").equals("anydoc")) {
+                            if (resultData.getString("FILENAME").contains(".doc")) {
                                 imageStory.setImageResource(R.mipmap.docs_story);
-                            }
-                            else if(resultData.getString("FILENAME").contains(".pdf"))
-                            {
+                            } else if (resultData.getString("FILENAME").contains(".pdf")) {
                                 imageStory.setImageResource(R.mipmap.pdf_story);
-                            }
-                            else if(resultData.getString("FILENAME").contains(".zip"))
-                            {
+                            } else if (resultData.getString("FILENAME").contains(".zip")) {
                                 imageStory.setImageResource(R.mipmap.zip_story);
-                            }
-                            else if(resultData.getString("FILENAME").contains(".xls"))
-                            {
+                            } else if (resultData.getString("FILENAME").contains(".xls")) {
                                 imageStory.setImageResource(R.mipmap.xls_story);
                             }
 
-                        }
-                        else if(resultData.getString("TYPE").equals("image")||resultData.getString("TYPE").equals("video"))
-                        {
+                        } else if (resultData.getString("TYPE").equals("image") || resultData.getString("TYPE").equals("video")) {
                             Bitmap bm = resultData.getParcelable("IMAGE");
                             imageStory.setImageBitmap(bm);
                             imageStory.setImageBitmap(bm);
-                        }
-                        else if(resultData.getString("TYPE").equals("audio"))
-                        {
+                        } else if (resultData.getString("TYPE").equals("audio")) {
                             imageStory.setImageResource(R.mipmap.attach_audio);
                         }
 
 
-                        isFlag=true;
+                        isFlag = true;
                     }
                     layLoading.setVisibility(View.VISIBLE);
                     rey_loading.start();
@@ -1105,7 +991,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 rey_loading.stop();
                 layLoading.setVisibility(View.GONE);
                 showToast("File is uploaded ");
-              
+
                 NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancelAll();
 
@@ -1121,10 +1007,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         sendStoryBody.setStory_type(body.getString("story_type"));
                         sendStoryBody.setStory_url(body.getString("story_url"));
                         sendStoryBody.setThumbnail_url(body.getString("thumbnail_url"));
-                        sendStoryBody.setViews(body.getString("views"));
+                      //  sendStoryBody.setViews(body.getString("views"));
                         sendStoryBody.set_id(body.getString("_id"));
                         sendStoryBody.setUser_id(body.getString("user_id"));
-                        sendStoryBody.setSubscription_id(body.getString("subscription_id"));
+                        if(!body.isNull("subscription_id")) {
+                            sendStoryBody.setSubscription_id(body.getString("subscription_id"));
+                        }
                         sendStoryBody.setDisplay_doc_name(body.getString("display_doc_name"));
                         StoryModel storyModel = new StoryModel();
                         storyModel.set_id(sendStoryBody.get_id());
@@ -1180,11 +1068,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         if (baseActivity.isConnectingToInternet(context)) {
                             if (is_consultant.equals("0") && is_company.equals("1")) {
                                 startActivity(new Intent(context, ProfileCompanyEditActivity.class));
-                            } else
-                            if (is_consultant.equals("1"))
-                            {
+                            } else if (is_consultant.equals("1")) {
                                 startActivity(new Intent(context, ProfileEditConsultantActivity.class));
-                            } else if (is_consultant.equals("0") ) {
+                            } else if (is_consultant.equals("0")) {
                                 startActivity(new Intent(context, ProfileEditUserActivity.class));
                             }
                         } else {
@@ -1294,6 +1180,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
         popup.show();
     }
+
     private void shareTextUrl() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -1310,10 +1197,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             dd.setContentView(R.layout.dialog_iphone_confirm);
             dd.getWindow().setLayout(-1, -2);
             dd.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            if(type==1) {
+            if (type == 1) {
                 ((CustomTextView) dd.findViewById(R.id.tvConfirmOk)).setText("Logout");
-            }else
-            {
+            } else {
                 ((CustomTextView) dd.findViewById(R.id.tvConfirmTitle)).setText("Do you want delete account");
             }
 
@@ -1321,12 +1207,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 @Override
                 public void onClick(View v) {
 
-                    if(type==1) {
+                    if (type == 1) {
                         getUserLogout();
 
-                    }
-                    else
-                    {
+                    } else {
                         getUserDeleteAccount();
                     }
                     dd.dismiss();
@@ -1345,6 +1229,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             // Log.d(TAG, "Exception: " + e.getMessage());
         }
     }
+
     private void getUserDeleteAccount() {
         if (isInternetConnected()) {
             showLoading();
@@ -1353,9 +1238,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 public void onSuccess(JSONObject js, String success) {
                     dismiss_loading();
                     try {
-                        JSONObject jsonObject=js.getJSONObject("result");
-                        if (!jsonObject.getString("rstatus").equals("0"))
-                        {
+                        JSONObject jsonObject = js.getJSONObject("result");
+                        if (!jsonObject.getString("rstatus").equals("0")) {
                             baseActivity.clearDataBase();
                             Intent intent = new Intent(context, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -1366,8 +1250,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
 
 
                 }
@@ -1409,16 +1291,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
         return null;
     }
+
     private void getUserLogout() {
 
-        if (Utility.isConnectingToInternet(context))
-        {
+        if (Utility.isConnectingToInternet(context)) {
 
             showLoading();
             ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
-            UserId userID=new UserId();
+            UserId userID = new UserId();
             userID.setUser_id(userId);
-            Call<ResponseBody> call = apiInterface.callLogoutRequest(accessToken,userID);
+            Call<ResponseBody> call = apiInterface.callLogoutRequest(accessToken, userID);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1458,5 +1340,110 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             showInternetConnectionToast();
         }
     }
+
+    private void getUserStoriesApi() {
+        mViewModel.getUserStoriesApi();
+    }
+
+    private void setObserver() {
+        mViewModel.getStoryRootMutableLiveData().observe(getViewLifecycleOwner(), new Observer<StoryRoot>() {
+            @Override
+            public void onChanged(StoryRoot storyRoot) {
+
+                setupUserStoryDataUI(storyRoot);
+            }
+        });
+        mViewModel.getSubscriptionGroupMutableLiveData().observe(getViewLifecycleOwner(), new Observer<SubscriptionGroupRoot>() {
+            @Override
+            public void onChanged(SubscriptionGroupRoot root)
+            {
+                setupSubscriptionGroupUI(root);
+            }
+        });
+
+    }
+
+    private void setupSubscriptionGroupUI(SubscriptionGroupRoot root) {
+        subscriptionGroupsList = root.getSubscriptionGroupBodies();
+        SubscriptionGroup group = new SubscriptionGroup();
+        group.setGroup_name("New");
+        group.set_id("-0new");
+        subscriptionGroupsList.add(group);
+        SampleDemoAdapter sampleDemoAdapter = new SampleDemoAdapter(context, subscriptionGroupsList, new ApiItemCallback() {
+            @Override
+            public void result(int position) {
+                SubscriptionGroup group = subscriptionGroupsList.get(position);
+                if (!group.get_id().equals("-0new")) {
+                    Intent intent = new Intent(context, StoryDetailActivity.class);
+                    intent.putExtra("ID", group.get_id());
+                    intent.putExtra("GROUP_NAME", group.getGroup_name());
+                    intent.putExtra("GROUP_IMAGE", group.getGroup_image_url());
+                    intent.putExtra("USER_NAME", user_name);
+                    intent.putExtra("USER_ID", userId);
+                    intent.putExtra("USER_URL", group.getUserDetails().getImageUrl());
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("List", (Serializable) brief_cvList);
+                    intent.putExtra("BUNDLE", bundle);
+                    startActivity(intent);
+                } else {
+                    addStoryGroup();
+                }
+            }
+        });
+        recyclerViewtop.setAdapter(sampleDemoAdapter);
+    }
+
+
+    private void setupUserStoryDataUI(StoryRoot response) {
+        if (response.getStatus() == 200) {
+            StoryBody storyBody = response.getStoryBody();
+            mViewModel.page = storyBody.getTotal_Page();
+            mViewModel.totalPage = storyBody.getTotalOverAllStories();
+            total_pages = storyBody.getTotal_Page();
+            LinkedList<StoryModel> temp = new LinkedList<>();
+            temp = storyBody.getUserStories();
+            System.out.println("temp size " + temp.size());
+            System.out.println("temp page " + pageno);
+
+
+            if (temp.size() > 0) {
+                visibleBioSection(0);
+                if (mViewModel.page <= mViewModel.totalPage) {
+                    loading = true;
+                    mViewModel.page++;
+                }
+                for (StoryModel storyModel : temp) {
+                    storyModelsList.addLast(storyModel);
+                }
+                temp.clear();
+                userStoryAdapter.notifyDataSetChanged();
+//                                userStoryAdapter = new UserStoryAdapter(context, storyModelsList, user_name, profileUrl, new ObjectCallback() {
+//                                    @Override
+//                                    public void getObject(Object object, int position, View view) {
+//                                        if (position != -1) {
+//                                            StoryModel storyData = (StoryModel) object;
+//
+//                                            //  showMenu(view, storyData, position);
+//                                        }
+////                                      showMenu(view,storyData,position);
+//                                    }
+//                                });
+//                                recyclerView.setAdapter(userStoryAdapter);
+
+            } else {
+                visibleBioSection(1);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 }

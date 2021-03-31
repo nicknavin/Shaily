@@ -16,7 +16,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.app.session.R;
 import com.app.session.customview.CircleImageView;
-import com.app.session.model.AllStory;
+import com.app.session.data.model.AllStory;
 import com.app.session.utility.DynamicHeightImageView;
 import com.app.session.utility.DynamicHeightTextView;
 import com.rey.material.widget.ProgressView;

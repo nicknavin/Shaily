@@ -11,7 +11,7 @@ import com.app.session.api.Urls;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.ApiItemCallback;
-import com.app.session.model.BodyFollowers;
+import com.app.session.data.model.BodyFollowers;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 

@@ -1,52 +1,53 @@
 package com.app.session.network;
 
 
-import com.app.session.model.AddBriefCv;
-import com.app.session.model.AddCategoryRoot;
-import com.app.session.model.AgoraRoot;
-import com.app.session.model.CategoryRoot;
-import com.app.session.model.ChatUserId;
-import com.app.session.model.ChatedPersonsResponse;
-import com.app.session.model.ClearChat;
-import com.app.session.model.ConsultUserRoot;
-import com.app.session.model.CurrencyRefResponse;
-import com.app.session.model.CurrencyRoot;
-import com.app.session.model.DeleteLangReq;
-import com.app.session.model.LanguageCd;
-import com.app.session.model.LanguagesRoot;
-import com.app.session.model.LoadMessage;
-import com.app.session.model.LoginRoot;
-import com.app.session.model.OtherUserId;
-import com.app.session.model.PersonalUserStory;
-import com.app.session.model.ProfileUpdateReq;
-import com.app.session.model.ReqAllUser;
-import com.app.session.model.ReqCategory;
-import com.app.session.model.ReqDeleteCategory;
-import com.app.session.model.ReqDeleteStory;
-import com.app.session.model.ReqFollowUser;
-import com.app.session.model.ReqGetUser;
-import com.app.session.model.ReqMessageRead;
-import com.app.session.model.ReqStory;
-import com.app.session.model.ReqSubscribeGroupStories;
-import com.app.session.model.ReqSubscriptionStories;
-import com.app.session.model.ReqUpdateBank;
-import com.app.session.model.ReqUserProfile;
-import com.app.session.model.RequestUpdateCategory;
-import com.app.session.model.Root;
-import com.app.session.model.RootChatMessage;
-import com.app.session.model.RootFollowers;
-import com.app.session.model.SearchUser;
-import com.app.session.model.SendStoryResponseRoot;
-import com.app.session.model.StoryId;
-import com.app.session.model.StoryRoot;
-import com.app.session.model.SubscribedAllStroiesRoot;
-import com.app.session.model.SubscriptionGroupRoot;
-import com.app.session.model.SubscriptionStoriesRoot;
-import com.app.session.model.UpdateBriefReq;
-import com.app.session.model.UserId;
-import com.app.session.model.UserInformation;
-import com.app.session.model.UserProfileRoot;
-import com.app.session.model.UserRoot;
+import com.app.session.data.model.AddBriefCv;
+import com.app.session.data.model.AddCategoryRoot;
+import com.app.session.data.model.AgoraRoot;
+import com.app.session.data.model.CategoryRoot;
+import com.app.session.data.model.ChatUserId;
+import com.app.session.data.model.ChatedPersonsResponse;
+import com.app.session.data.model.ClearChat;
+import com.app.session.data.model.ConsultUserRoot;
+import com.app.session.data.model.CurrencyRefResponse;
+import com.app.session.data.model.CurrencyRoot;
+import com.app.session.data.model.DeleteLangReq;
+import com.app.session.data.model.LanguageCd;
+import com.app.session.data.model.LanguagesRoot;
+import com.app.session.data.model.LoadMessage;
+import com.app.session.data.model.LoginRoot;
+import com.app.session.data.model.OtherUserId;
+import com.app.session.data.model.PersonalUserStory;
+import com.app.session.data.model.ProfileUpdateReq;
+import com.app.session.data.model.ReqAllUser;
+import com.app.session.data.model.ReqCategory;
+import com.app.session.data.model.ReqDeleteCategory;
+import com.app.session.data.model.ReqDeleteStory;
+import com.app.session.data.model.ReqFollowUser;
+import com.app.session.data.model.ReqGetUser;
+import com.app.session.data.model.ReqMessageRead;
+import com.app.session.data.model.ReqUserStory;
+import com.app.session.data.model.ReqSubscribeGroupStories;
+import com.app.session.data.model.ReqSubscriptionStories;
+import com.app.session.data.model.ReqUpdateBank;
+import com.app.session.data.model.ReqUserProfile;
+import com.app.session.data.model.RequestUpdateCategory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.RootChatMessage;
+import com.app.session.data.model.RootFollowers;
+import com.app.session.data.model.SearchUser;
+import com.app.session.data.model.SendStoryResponseRoot;
+import com.app.session.data.model.StoriesFollowingUsers;
+import com.app.session.data.model.StoryId;
+import com.app.session.data.model.StoryRoot;
+import com.app.session.data.model.SubscribedAllStroiesRoot;
+import com.app.session.data.model.SubscriptionGroupRoot;
+import com.app.session.data.model.SubscriptionStoriesRoot;
+import com.app.session.data.model.UpdateBriefReq;
+import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserInformation;
+import com.app.session.data.model.UserProfileRoot;
+import com.app.session.data.model.UserRoot;
 import com.google.gson.JsonObject;
 
 import okhttp3.MultipartBody;
@@ -249,6 +250,10 @@ public interface ApiInterface {
     public Call<SubscriptionGroupRoot> reqGetUserSubscriptionGroups(@Header("Authorization") String token, @Body UserId jsonObject);
 
     @Headers("Content-Type: application/json")
+    @POST("getStoriesOfFollowingUsers")
+    public Call<ResponseBody> getStoriesFollowingUsers(@Header("Authorization") String token,@Body StoriesFollowingUsers jsonObject);
+
+    @Headers("Content-Type: application/json")
     @POST("upateUserLanguage")
     public Call<ResponseBody> reqUpateUserLanguage(@Header("Authorization") String token, @Body JsonObject jsonObject);
 
@@ -300,7 +305,7 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST("getAllStroies")
-    public Call<StoryRoot> reqGetAllStroies(@Header("Authorization") String token, @Body ReqStory userId);
+    public Call<StoryRoot> reqGetAllStroies(@Header("Authorization") String token, @Body ReqUserStory userId);
 
 
     @Headers("Content-Type: application/json")
@@ -321,7 +326,7 @@ public interface ApiInterface {
     @POST("getAllUsers")
     public Call<ConsultUserRoot> reqGetAllUsers(@Header("Authorization") String token, @Body ReqAllUser reqAllUser);
 
-    @Headers("Content-Type: application/json")
+    @Headers("Content-1Type: application/json")
     @POST("deleteStory")
     public Call<Root> reqDeleteStory(@Header("Authorization") String token, @Body ReqDeleteStory reqDeleteStory);
 
@@ -355,6 +360,7 @@ public interface ApiInterface {
                                                          @Part("story_title") RequestBody story_title,
                                                          @Part("story_text") RequestBody story_text,
                                                          @Part("video_url") RequestBody video_url,
+                                                         @Part("story_provider") RequestBody story_provider,
                                                          @Part("story_language_id") RequestBody story_language_id,
                                                          @Part MultipartBody.Part storyImage
     );

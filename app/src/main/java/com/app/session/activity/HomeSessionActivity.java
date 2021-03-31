@@ -1,30 +1,23 @@
 package com.app.session.activity;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.app.session.R;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
-import com.app.session.fragment.AllStoryFragment;
 import com.app.session.fragment.HomeSessionFragment;
-import com.app.session.fragment.HomeStoryFragment;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.CategoryBody;
-import com.app.session.model.CategoryData;
-import com.app.session.model.CategoryRoot;
-import com.app.session.model.LanguageCd;
-import com.app.session.model.UserLangauges;
+import com.app.session.data.model.CategoryBody;
+import com.app.session.data.model.CategoryData;
+import com.app.session.data.model.CategoryRoot;
+import com.app.session.data.model.LanguageCd;
+import com.app.session.data.model.UserLangauges;
 import com.app.session.network.ApiClientExplore;
 import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;

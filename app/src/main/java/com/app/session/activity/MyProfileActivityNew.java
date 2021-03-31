@@ -1,6 +1,5 @@
 package com.app.session.activity;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -16,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,19 +33,19 @@ import com.app.session.fragment.MyProfileFragment;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.interfaces.ObjectCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
-import com.app.session.model.Brief_CV;
-import com.app.session.model.ReqDeleteStory;
-import com.app.session.model.ReqStory;
-import com.app.session.model.Root;
-import com.app.session.model.SendStoryBody;
-import com.app.session.model.StoryBody;
-import com.app.session.model.StoryModel;
-import com.app.session.model.StoryRoot;
-import com.app.session.model.SubscriptionGroup;
-import com.app.session.model.SubscriptionGroupRoot;
-import com.app.session.model.UserDetails;
-import com.app.session.model.UserId;
-import com.app.session.model.UserStory;
+import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.ReqDeleteStory;
+import com.app.session.data.model.ReqUserStory;
+import com.app.session.data.model.Root;
+import com.app.session.data.model.SendStoryBody;
+import com.app.session.data.model.StoryBody;
+import com.app.session.data.model.StoryModel;
+import com.app.session.data.model.StoryRoot;
+import com.app.session.data.model.SubscriptionGroup;
+import com.app.session.data.model.SubscriptionGroupRoot;
+import com.app.session.data.model.UserDetails;
+import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserStory;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
@@ -86,7 +84,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import okhttp3.ResponseBody;
@@ -522,7 +519,7 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
 
                     case R.id.menu_delete:
 
-                        callDeleteStory(storyData.get_id(), position);
+                        callDeleteStory(storyData, position);
 
                         return true;
 
@@ -550,11 +547,12 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
         popup.show();
     }
 
-    private void callDeleteStory(String story_id, int position) {
+    private void callDeleteStory(StoryModel storyModel, int position) {
         if (isInternetConnected()) {
             showLoading();
             ReqDeleteStory deleteStory = new ReqDeleteStory();
-            deleteStory.setStoryId(story_id);
+            deleteStory.setStoryId(storyModel.get_id());
+            deleteStory.setStory_provider(storyModel.getStory_provider());
             ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
             Call<Root> call = apiInterface.reqDeleteStory(accessToken, deleteStory);
             call.enqueue(new Callback<Root>() {
@@ -623,7 +621,7 @@ public class MyProfileActivityNew extends BaseActivity implements View.OnClickLi
         if (Utility.isConnectingToInternet(context)) {
 
 
-            ReqStory user = new ReqStory();
+            ReqUserStory user = new ReqUserStory();
             user.setmUserId(userId);
             user.setmLoad("" + pageno);
 //            showLoading();

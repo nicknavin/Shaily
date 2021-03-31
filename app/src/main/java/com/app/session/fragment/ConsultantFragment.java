@@ -26,9 +26,9 @@ import com.app.session.baseFragment.BaseFragment;
 import com.app.session.customview.AnimatedExpandableListView;
 import com.app.session.customview.MyDialog;
 import com.app.session.interfaces.RequestCallback;
-import com.app.session.model.Profession;
-import com.app.session.model.RegisterLanguage;
-import com.app.session.model.Specialist;
+import com.app.session.data.model.Profession;
+import com.app.session.data.model.RegisterLanguage;
+import com.app.session.data.model.Specialist;
 import com.app.session.utility.Constant;
 import com.app.session.utility.Utility;
 

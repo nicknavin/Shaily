@@ -74,6 +74,7 @@ public class Constant {
     public static final int PICK_VIDEO_URI = 21;
     public static final int REQUEST_BRIEF = 22;
     public static final int REQUEST_NEW_STORY = 23;
+
     public static final int REQUEST_CODE_MY_PICK = 27;
     public static final String LANGUAGE_SPEAK = "language_speak";
     public static  final int LANGUAGE_CODE = 7;
@@ -142,6 +143,7 @@ public class Constant {
 
     public static String VERIFICATION_FLAG = "verification_flag";
     public static String ACCESS_TOKEN = "access_token";
+    public static String ENCODED_IMAGE = "encodedImage";
     public static String USER_ID = "user_id";
     public static String LOGIN_USER_ID = "login_user_id";
     public static String DEVICE_ID = "device_id";

@@ -9,7 +9,7 @@ import android.widget.Filter;
 
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
-import com.app.session.model.RegisterLanguage;
+import com.app.session.data.model.RegisterLanguage;
 
 import java.util.ArrayList;
 import java.util.HashMap;

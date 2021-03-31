@@ -11,7 +11,7 @@ import android.widget.Filterable;
 import com.app.session.R;
 import com.app.session.customview.CustomTextView;
 import com.app.session.interfaces.TitleCallback;
-import com.app.session.model.TitleRef;
+import com.app.session.data.model.TitleRef;
 
 import java.util.ArrayList;
 

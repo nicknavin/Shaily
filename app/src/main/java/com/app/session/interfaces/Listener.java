@@ -1,6 +1,6 @@
 package com.app.session.interfaces;
 
-import com.app.session.model.RemarkModel;
+import com.app.session.data.model.RemarkModel;
 
 /**
  * Created by ITEGRITYPRO on 13-07-2018.
