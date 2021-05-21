@@ -13,7 +13,10 @@ public class CurrencyBody implements Parcelable {
     private String currency_cd;
     @SerializedName("currency_name")
     private String currency_name;
+    public CurrencyBody()
+    {
 
+    }
     protected CurrencyBody(Parcel in) {
         _id = in.readString();
         currency_cd = in.readString();
@@ -66,5 +69,14 @@ public class CurrencyBody implements Parcelable {
         parcel.writeString(_id);
         parcel.writeString(currency_cd);
         parcel.writeString(currency_name);
+    }
+
+    @Override
+    public String toString() {
+        return "CurrencyBody{" +
+                "_id='" + _id + '\'' +
+                ", currency_cd='" + currency_cd + '\'' +
+                ", currency_name='" + currency_name + '\'' +
+                '}';
     }
 }

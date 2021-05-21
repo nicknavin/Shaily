@@ -2,9 +2,12 @@ package com.app.session.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SubscriptionGroupDetailRoot {
+public class SubscriptionGroupDetailRoot
+{
+    @SerializedName("status")
     private int status;
 
+    @SerializedName("message")
     private String message;
 
     @SerializedName("body")

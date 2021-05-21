@@ -34,10 +34,48 @@ public interface RestApiService {
                                                    @Part("subscription_price") RequestBody subscription_price,
                                                    @Part("group_description") RequestBody group_description,
                                                    @Part("group_name") RequestBody group_name,
-                                                   @Part("uploading") RequestBody uploading,
+                                                   @Part MultipartBody.Part groupImage,
                                                    @Part MultipartBody.Part video,
+                                                   @Part MultipartBody.Part videoImage
+    );
+
+    @Multipart
+    @POST("addSubscription")
+    public Single<ResponseBody> reqAddSubscriptionVideoImage(@Header("Authorization") String token,
+                                                   @Part("user_id") RequestBody user_cd,
+                                                   @Part("language_id") RequestBody language_id,
+                                                   @Part("category_id") RequestBody category_id,
+                                                   @Part("currency_id") RequestBody currency_id,
+                                                   @Part("subscription_price") RequestBody subscription_price,
+                                                   @Part("group_description") RequestBody group_description,
+                                                   @Part("group_name") RequestBody group_name,
+                                                   @Part MultipartBody.Part groupImage,
+                                                   @Part MultipartBody.Part video,
+                                                   @Part MultipartBody.Part videoImage
+    );
+
+
+
+    @Multipart
+    @POST("updateSubscriptionImage")
+    public Single<ResponseBody> updateSubsGruopImage(@Header("Authorization") String token,
+                                                   @Part("subscription_id") RequestBody subscription_id,
                                                    @Part MultipartBody.Part storyImage
     );
+    @Multipart
+    @POST("updateSubscriptionThumbnail")
+    public Single<ResponseBody> updateSubscriptionThumbnail(@Header("Authorization") String token,
+                                                   @Part("subscription_id") RequestBody subscription_id,
+                                                   @Part MultipartBody.Part storyImage
+    );
+
+
+    @Multipart
+    @POST("SubscriptionGroupVideo")
+    public Single<ResponseBody> updateSubscriptinGroupVideo(@Header("Authorization") String token,
+                                                            @Part("subscription_id") RequestBody subscription_id,
+                                                            @Part MultipartBody.Part video);
+
 
 
     @Multipart

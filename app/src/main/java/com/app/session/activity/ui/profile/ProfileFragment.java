@@ -57,17 +57,27 @@ import com.app.session.activity.ProfileCompanyEditActivity;
 import com.app.session.activity.ProfileEditConsultantActivity;
 import com.app.session.activity.ProfileEditUserActivity;
 import com.app.session.activity.ReportProblemActivity;
+import com.app.session.activity.ShowStoryActivity;
 import com.app.session.activity.StoryDetailActivity;
+import com.app.session.activity.StoryPageDetailActivity;
+import com.app.session.activity.UpdateSubscriptionStoryActivity;
 import com.app.session.activity.VideoPlayerActivity;
 import com.app.session.activity.YoutubeActivity;
 import com.app.session.activity.ui.baseviewmodels.ViewModelFactory;
+import com.app.session.adapter.OtherSubscribeGroupAdapter;
 import com.app.session.adapter.SampleDemoAdapter;
 import com.app.session.adapter.UserStoryAdapter;
 import com.app.session.api.Urls;
 import com.app.session.baseFragment.BaseFragment;
 import com.app.session.customview.CircleImageView;
+import com.app.session.customview.CustomPager;
 import com.app.session.customview.CustomTextView;
+import com.app.session.customview.DynamicHeightViewPager;
+import com.app.session.data.api.ApiClients;
+import com.app.session.data.model.StoryRead;
 import com.app.session.data.model.SubscriptionGroupRoot;
+import com.app.session.data.model.UserSubscriptionGroupsBody;
+import com.app.session.data.model.UserSubscriptionGroupsRoot;
 import com.app.session.fragment.MyProfileFragment;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.interfaces.ObjectCallback;
@@ -129,11 +139,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     CircleImageView imgProfileProfile;
     private ViewPagerAdapter adapter;
     ArrayList<Brief_CV> brief_cvList;
-    ArrayList<SubscriptionGroup> subscriptionGroupsList = new ArrayList<>();
+    ArrayList<UserSubscriptionGroupsBody> groupsBodyArrayList;
     RecyclerView recyclerViewtop;
-    private ShimmerFrameLayout mShimmerViewContainer;
+
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private DynamicHeightViewPager viewPager;
     CheckBox imgDrop;
     LinearLayout layDrop;
     private FragmentRefreshListener fragmentRefreshListener;
@@ -173,7 +183,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
-        mViewModel = new ViewModelProvider(this, new ViewModelFactory(getActivity().getApplication(), userId, accessToken)).get(ProfileViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity(), new ViewModelFactory( userId,accessToken)).get(ProfileViewModel.class);
     }
 
     @Override
@@ -213,8 +223,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         layDrop.setOnClickListener(this);
         imgDrop = (CheckBox) root.findViewById(R.id.imgDrop);
 
-        recyclerViewtop = (RecyclerView) root.findViewById(R.id.recyclerViewtop);
-        mShimmerViewContainer = root.findViewById(R.id.shimmer_view_container);
+
+
 
         txtSubsciber = (CustomTextView) root.findViewById(R.id.txtSubsciber);
         txt_follwr_count = (CustomTextView) root.findViewById(R.id.txt_follwr_count);
@@ -226,7 +236,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         recyclerViewtop = (RecyclerView) root.findViewById(R.id.recyclerViewtop);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewtop.setLayoutManager(layoutManager);
-        viewPager = (ViewPager) root.findViewById(R.id.viewpager_favourite);
+        viewPager = (DynamicHeightViewPager) root.findViewById(R.id.viewpager_favourite);
         tabLayout = (TabLayout) root.findViewById(R.id.tabLayout_favourite);
         brief_cvList = DataPrefrence.getBriefLanguage(context, Constant.BRIEF_CV_DB);
 
@@ -244,11 +254,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 storyShare = null;
                 storyShare = (StoryModel) object;
 
-                if (view.getId() == R.id.imgRemove) {
+                if (view.getId() == R.id.imgRemove)
+                {
                     showMenu(view, storyShare, position);
                 }
 
-                if (view.getId() == R.id.layDocument) {
+               else if (view.getId() == R.id.layDocument) {
 
                     String url = Urls.BASE_IMAGES_URL + storyShare.getStoryUrl();
 
@@ -256,7 +267,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //                    Utility.openFile(context,Urls.BASE_IMAGES_URL+storyShare.getStoryUrl());
                 }
 
-                if (view.getId() == R.id.layVideo) {
+                else if (view.getId() == R.id.layVideo) {
                     if (storyShare.getStoryType().equals("video_url")) {
                         String id = Utility.extractYTId(storyShare.getStoryUrl());
                         Intent intent = new Intent(context, YoutubeActivity.class);
@@ -270,7 +281,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         startActivityForResult(intent, Constant.PAGE_REFRESH);
                     }
                 }
-                if (view.getId() == R.id.imgShare) {
+                else if (view.getId() == R.id.imgShare) {
 
                     flag = true;
                     String url = "";
@@ -314,6 +325,33 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
                 }
+                else
+                {
+                    UserStory data = new UserStory();
+
+                    data.setDaysAgo(storyShare.getDaysAgo());
+
+                    data.setCreatedAt(storyShare.getCreatedAt());
+                    data.setDisplay_doc_name(storyShare.getDisplay_doc_name());
+                    data.setId(storyShare.get_id());
+
+                    data.setStoryText(storyShare.getStoryText());
+                    data.setStoryTitle(storyShare.getStoryTitle());
+                    data.setStoryUrl(storyShare.getStoryUrl());
+                    data.setStoryType(storyShare.getStoryType());
+                    data.setStoryRead(storyShare.getStoryRead());
+                    data.setStory_provider(storyShare.getStory_provider());
+                    //data.setStoryViewed(storyShare.getViews());
+                    data.setThumbnail_url(storyShare.getThumbnail_url());
+                    data.setUserDetails(storyShare.getUserDetails());
+
+
+                    Intent intent = new Intent(context, ShowStoryActivity.class);
+                    intent.putExtra("DATA", data);
+                    intent.putExtra(Constant.POSITION,position);
+
+                    startActivityForResult(intent, Constant.PAGE_REFRESH);
+                }
 
 //                                      showMenu(view,storyData,position);
             }
@@ -326,6 +364,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+
         profileUrl = DataPrefrence.getPref(context, Constant.PROFILE_IMAGE, "");
 
         if (profileUrl != null && !profileUrl.isEmpty()) {
@@ -338,24 +377,22 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (!flag) {
             mViewModel.page = 1;
             storyModelsList = new LinkedList<>();
-
             initTablayout();
             setupStoryRecylerview();
             setUpRecyclerListener();
             callApis();
 
         }
+
     }
 
 
     private void callApis() {
-        mViewModel.loadUserSubcriptionGroupApi();
+        mViewModel.loadUserGroup();
         mViewModel.getUserStoriesApi();
     }
 
     public void setCustomTextView() {
-
-
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             //noinspection ConstantConditions
             CustomTextView tv = (CustomTextView) LayoutInflater.from(context).inflate(R.layout.custom_tab_brief, null);
@@ -419,22 +456,24 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void initTablayout() {
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setCustomTextView();
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(DynamicHeightViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-        for (int i = 0; i < brief_cvList.size(); i++) {
-            myProfileFragment = MyProfileFragment.newInstance(i, storyDataArrayList);
-            adapter.addFragment(myProfileFragment, brief_cvList.get(i).getLanguage_id().getNativeName());
+        if(brief_cvList!=null) {
+            for (int i = 0; i < brief_cvList.size(); i++) {
+                myProfileFragment = MyProfileFragment.newInstance(i, storyDataArrayList);
+                Utility.log("frag name " + brief_cvList.get(i).getLanguage_id().getNativeName());
+                adapter.addFragment(myProfileFragment, brief_cvList.get(i).getLanguage_id().getNativeName());
+            }
         }
-
         viewPager.setAdapter(adapter);
 
-//        viewPager.setOffscreenPageLimit(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -444,6 +483,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onPageSelected(int position) {
                 adapter.getItem(position).isVisible();
+
+
 
                 MyProfileFragment fragment = (MyProfileFragment) viewPager
                         .getAdapter()
@@ -457,6 +498,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     viewPager.setVisibility(View.GONE);
                 }
 
+
             }
 
             @Override
@@ -468,8 +510,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    public void showMenu(View v, final StoryModel storyData, final int position) {
+    public void showMenu(View v, final StoryModel storyData, final int position)
+    {
         PopupMenu popup = new PopupMenu(context, v);
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -483,13 +527,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
                     case R.id.menu_edit:
-//                        Intent intent = new Intent(context, UpdateSubscriptionStoryActivity.class);
-//                        intent.putExtra("DATA", storyData);
-//                        Bundle arg = new Bundle();
-//                        arg.putSerializable("List", (Serializable) brief_cvList);
-//                        intent.putExtra("BUNDLE", arg);
-//                        intent.putExtra("ID", storyData.get_id());
-//                        startActivity(intent);
+                        Intent intent = new Intent(context, UpdateSubscriptionStoryActivity.class);
+                        intent.putExtra("DATA", storyData);
+                        Bundle arg = new Bundle();
+                        arg.putSerializable("List", (Serializable) brief_cvList);
+                        intent.putExtra("BUNDLE", arg);
+                        intent.putExtra("ID", storyData.get_id());
+                        startActivity(intent);
                         return true;
 
 
@@ -499,7 +543,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             }
         });// to implement on click event on items of menu
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_subscription_story, popup.getMenu());
+        inflater.inflate(R.menu.menu_login_user_story, popup.getMenu());
 
 
         popup.show();
@@ -541,7 +585,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
-
+        private int mCurrentPosition = -1;
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
@@ -565,6 +609,36 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+//        @Override
+//        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+//            super.setPrimaryItem(container, position, object);
+//
+//            if (position != mCurrentPosition && container instanceof CustomPager) {
+//                Fragment fragment = (Fragment) object;
+//                CustomPager pager = (CustomPager) container;
+//
+//                if (fragment != null && fragment.getView() != null) {
+//                    mCurrentPosition = position;
+//                    pager.measureCurrentView(   fragment.getView());
+//                }
+//            }
+//        }
+
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            super.setPrimaryItem(container, position, object);
+
+            if (position != mCurrentPosition && container instanceof DynamicHeightViewPager) {
+                Fragment fragment = (Fragment) object;
+                DynamicHeightViewPager pager = (DynamicHeightViewPager) container;
+
+                if (fragment != null && fragment.getView() != null) {
+                    mCurrentPosition = position;
+                    pager.measureCurrentView(fragment.getView());
+                }
+            }
+        }
     }
 
     private void addStoryGroup() {
@@ -575,75 +649,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         startActivity(intent);
     }
 
-    public void getUserStory() {
-        if (Utility.isConnectingToInternet(context)) {
-
-
-            ReqUserStory user = new ReqUserStory();
-            user.setmUserId(userId);
-            user.setmLoad("" + pageno);
-//            showLoading();
-            ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
-            Call<StoryRoot> call = apiInterface.reqGetAllStroies(accessToken, user);
-            call.enqueue(new Callback<StoryRoot>() {
-                @Override
-                public void onResponse(Call<StoryRoot> call, Response<StoryRoot> response) {
-
-//                    dismiss_loading();
-                    if (response.body() != null) {
-                        if (response.body().getStatus() == 200) {
-                            StoryBody storyBody = response.body().getStoryBody();
-
-                            total_pages = storyBody.getTotal_Page();
-                            LinkedList<StoryModel> temp = new LinkedList<>();
-                            temp = storyBody.getUserStories();
-                            System.out.println("temp size " + temp.size());
-                            System.out.println("temp page " + pageno);
-
-
-                            if (temp.size() > 0) {
-                                visibleBioSection(0);
-                                if (pageno <= total_pages) {
-                                    loading = true;
-                                    pageno++;
-                                }
-                                for (StoryModel storyModel : temp) {
-                                    storyModelsList.addLast(storyModel);
-                                }
-                                temp.clear();
-                                userStoryAdapter.notifyDataSetChanged();
-//                                userStoryAdapter = new UserStoryAdapter(context, storyModelsList, user_name, profileUrl, new ObjectCallback() {
-//                                    @Override
-//                                    public void getObject(Object object, int position, View view) {
-//                                        if (position != -1) {
-//                                            StoryModel storyData = (StoryModel) object;
-//
-//                                            //  showMenu(view, storyData, position);
-//                                        }
-////                                      showMenu(view,storyData,position);
-//                                    }
-//                                });
-//                                recyclerView.setAdapter(userStoryAdapter);
-
-                            } else {
-                                visibleBioSection(1);
-                            }
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<StoryRoot> call, Throwable t) {
-
-                }
-            });
-
-
-        } else {
-            showInternetConnectionToast();
-        }
-    }
 
     public void setUpRecyclerListener() {
         loading = true;
@@ -832,7 +837,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (myFragment != null) {
             myFragment.onActivityResult(requestCode, resultCode, data);
         }
-        if (requestCode == Constant.PAGE_REFRESH) {
+        if (requestCode == Constant.PAGE_REFRESH)
+        {
+            if(data!=null)
+            {
+                int position=data.getIntExtra(Constant.POSITION,-1);
+                if(data.getStringExtra(Constant.TYPE).equals(Constant.DELETE)) {
+                    userStoryAdapter.updateData(position);
+                }
+
+            }
+
             flag = true;
         }
         if (requestCode == Constant.REQUEST_NEW_STORY) {
@@ -904,6 +919,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+
+
+
 
 
     public void shareVideoUrl(StoryModel storyData, Context context) {
@@ -1007,6 +1026,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         sendStoryBody.setStory_type(body.getString("story_type"));
                         sendStoryBody.setStory_url(body.getString("story_url"));
                         sendStoryBody.setThumbnail_url(body.getString("thumbnail_url"));
+
                       //  sendStoryBody.setViews(body.getString("views"));
                         sendStoryBody.set_id(body.getString("_id"));
                         sendStoryBody.setUser_id(body.getString("user_id"));
@@ -1019,6 +1039,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         storyModel.setCreatedAt(sendStoryBody.getCreatedAt());
                         storyModel.setDaysAgo("0");
                         storyModel.setViews("0");
+                        StoryRead storyRead=new StoryRead();
+                        storyRead.setCount(0);
+                        storyModel.setStoryRead(storyRead);
                         storyModel.setStoryText(sendStoryBody.getStory_text());
                         storyModel.setStoryTitle(sendStoryBody.getStory_title());
                         storyModel.setStoryType(sendStoryBody.getStory_type());
@@ -1050,7 +1073,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
                 rey_loading.stop();
                 layLoading.setVisibility(View.GONE);
-                showToast("uploading is fail, please try again");
+               // showToast("uploading is fail, please try again");
 //                layProgress.setVisibility(View.GONE);
                 break;
 
@@ -1315,11 +1338,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
                             //if(js.getBoolean("Status"))
                             {
+
+
+
                                 baseActivity.clearDataBase();
                                 Intent intent = new Intent(context, LoginActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                getActivity().startActivity(intent);
                                 getActivity().finish();
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1353,45 +1382,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 setupUserStoryDataUI(storyRoot);
             }
         });
-        mViewModel.getSubscriptionGroupMutableLiveData().observe(getViewLifecycleOwner(), new Observer<SubscriptionGroupRoot>() {
+        mViewModel.getGroupsRootMutableLiveData().observe(getViewLifecycleOwner(), new Observer<UserSubscriptionGroupsRoot>() {
             @Override
-            public void onChanged(SubscriptionGroupRoot root)
+            public void onChanged(UserSubscriptionGroupsRoot userSubscriptionGroupsRoot)
             {
-                setupSubscriptionGroupUI(root);
+                setupGroupData(userSubscriptionGroupsRoot);
+
             }
         });
 
     }
 
-    private void setupSubscriptionGroupUI(SubscriptionGroupRoot root) {
-        subscriptionGroupsList = root.getSubscriptionGroupBodies();
-        SubscriptionGroup group = new SubscriptionGroup();
-        group.setGroup_name("New");
-        group.set_id("-0new");
-        subscriptionGroupsList.add(group);
-        SampleDemoAdapter sampleDemoAdapter = new SampleDemoAdapter(context, subscriptionGroupsList, new ApiItemCallback() {
-            @Override
-            public void result(int position) {
-                SubscriptionGroup group = subscriptionGroupsList.get(position);
-                if (!group.get_id().equals("-0new")) {
-                    Intent intent = new Intent(context, StoryDetailActivity.class);
-                    intent.putExtra("ID", group.get_id());
-                    intent.putExtra("GROUP_NAME", group.getGroup_name());
-                    intent.putExtra("GROUP_IMAGE", group.getGroup_image_url());
-                    intent.putExtra("USER_NAME", user_name);
-                    intent.putExtra("USER_ID", userId);
-                    intent.putExtra("USER_URL", group.getUserDetails().getImageUrl());
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("List", (Serializable) brief_cvList);
-                    intent.putExtra("BUNDLE", bundle);
-                    startActivity(intent);
-                } else {
-                    addStoryGroup();
-                }
-            }
-        });
-        recyclerViewtop.setAdapter(sampleDemoAdapter);
-    }
 
 
     private void setupUserStoryDataUI(StoryRoot response) {
@@ -1436,7 +1437,41 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    private void setupGroupData(UserSubscriptionGroupsRoot root) {
+        if (root.getStatus() == 200) {
+            groupsBodyArrayList = root.getGroupsBodyArrayList();
+            UserSubscriptionGroupsBody groupsBody=new UserSubscriptionGroupsBody();
+            groupsBody.setGroup_name("New");
+            groupsBody.set_id("-0new");
+            groupsBodyArrayList.add(groupsBody);
+            OtherSubscribeGroupAdapter otherSubscribeGroupAdapter = new OtherSubscribeGroupAdapter(context, groupsBodyArrayList, new ApiItemCallback() {
+                @Override
+                public void result(int position) {
+                    UserSubscriptionGroupsBody group = groupsBodyArrayList.get(position);
 
+                    if (!group.get_id().equals("-0new")) {
+                        Intent intent = new Intent(context, StoryDetailActivity.class);
+                        intent.putExtra("ID", group.get_id());
+                        intent.putExtra("GROUP_NAME", group.getGroup_name());
+                        intent.putExtra("GROUP_IMAGE", group.getGroup_image_url());
+                        intent.putExtra("USER_NAME", user_name);
+                        intent.putExtra("USER_ID", userId);
+                        intent.putExtra("USER_URL", group.getUserDetails().getImageUrl());
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("List", (Serializable) brief_cvList);
+                        intent.putExtra(Constant.SUBS_GROUP,group);
+                        intent.putExtra("BUNDLE", bundle);
+                        startActivity(intent);
+                    } else {
+                        addStoryGroup();
+                    }
+                }
+            });
+            recyclerViewtop.setAdapter(otherSubscribeGroupAdapter);
+
+
+        }
+    }
 
 
 

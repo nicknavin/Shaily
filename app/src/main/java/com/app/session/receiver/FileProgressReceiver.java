@@ -10,6 +10,7 @@ import android.os.ResultReceiver;
 import com.app.session.R;
 import com.app.session.activity.HomeUserChatProfileActivity;
 import com.app.session.notification.NotificationHelper;
+import com.app.session.utility.Constant;
 
 import java.util.Objects;
 
@@ -68,6 +69,11 @@ public class FileProgressReceiver extends BroadcastReceiver {
                     Bundle bundle = new Bundle();
                     bundle.putString("STATUS", "Done");
                     bundle.putString("DATA", data);
+                    if(intent.getStringExtra("REQTYPE")!=null)
+                    {
+                        String type=intent.getStringExtra("REQTYPE");
+                            bundle.putString("REQTYPE", intent.getStringExtra("REQTYPE"));
+                    }
                     resultReceiver.send(STATUS, bundle);
                 }
 

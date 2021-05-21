@@ -229,4 +229,25 @@ public class SubscriptionStories implements Parcelable {
     public void setStory_provider(String story_provider) {
         this.story_provider = story_provider;
     }
+
+    @Override
+    public String toString() {
+        return "SubscriptionStories{" +
+                "_V=" + _V +
+                ", _id='" + _id + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", storyText='" + storyText + '\'' +
+                ", storyTitle='" + storyTitle + '\'' +
+                ", storyType='" + storyType + '\'' +
+                ", storyUrl='" + storyUrl + '\'' +
+                ", subscriptionId=" + subscriptionId +
+                ", userId=" + userId +
+                ", views='" + views + '\'' +
+                ", daysAgo='" + daysAgo + '\'' +
+                ", storyViewed=" + storyViewed +
+                ", thumbnail_url='" + thumbnail_url + '\'' +
+                ", display_doc_name='" + display_doc_name + '\'' +
+                ", story_provider='" + story_provider + '\'' +
+                '}';
+    }
 }

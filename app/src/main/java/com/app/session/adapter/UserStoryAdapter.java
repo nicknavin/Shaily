@@ -189,7 +189,9 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.View
 
             txtweek.setText(userStory.getDaysAgo() + "days");
 
-            txtViewCount.setText("" + userStory.getViews());
+            if(userStory.getStoryRead()!=null) {
+                txtViewCount.setText("" + userStory.getStoryRead().getCount());
+            }
             txtStoryTitle.setVisibility(View.VISIBLE);
             if (userStory.getStoryTitle() != null && !userStory.getStoryTitle().isEmpty())
             {

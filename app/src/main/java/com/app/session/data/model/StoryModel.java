@@ -1,44 +1,134 @@
 
 package com.app.session.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 
-public class StoryModel {
+public class StoryModel implements Parcelable {
 
     @SerializedName("_id")
     private String _id;
+
     @SerializedName("story_provider")
     private String story_provider;
 
     @SerializedName("subscription_id")
     @Nullable
-   private ArrayList<SubscriptionId> subscriptionIds;
+    private ArrayList<SubscriptionId> subscriptionIds;
 
 
     @SerializedName("createdAt")
     private String createdAt;
-    @SerializedName("daysAgo")
-    private String daysAgo;
-    @SerializedName("story_text")
-    private String storyText;
-    @SerializedName("story_title")
-    private String storyTitle;
+
+
+
     @SerializedName("story_type")
     private String storyType;
+
+    @SerializedName("story_text")
+    private String storyText;
+
+    @SerializedName("story_title")
+    private String storyTitle;
+
+
+
     @SerializedName("story_url")
     private String storyUrl;
-    @SerializedName("user_id")
-    private UserDetails userDetails;
-    @SerializedName("views")
-    private String views;
+
     @SerializedName("thumbnail_url")
     private String thumbnail_url;
+
+
     @SerializedName("display_doc_name")
     private String display_doc_name;
+
+
+    @SerializedName("views")
+    private String views;
+
+
+    @SerializedName("daysAgo")
+    private String daysAgo;
+
+
+
+
+
+    @SerializedName("user_id")
+    private UserDetails userDetails;
+
+
+
+
+
+    @SerializedName("read")
+    @Nullable
+    public StoryRead storyRead;
+
+
+    public StoryModel()
+    {
+
+    }
+
+    protected StoryModel(Parcel in) {
+        _id = in.readString();
+        story_provider = in.readString();
+        subscriptionIds = in.createTypedArrayList(SubscriptionId.CREATOR);
+        createdAt = in.readString();
+        storyType = in.readString();
+        storyText = in.readString();
+        storyTitle = in.readString();
+        storyUrl = in.readString();
+        thumbnail_url = in.readString();
+        display_doc_name = in.readString();
+        views = in.readString();
+        daysAgo = in.readString();
+        userDetails = in.readParcelable(UserDetails.class.getClassLoader());
+        storyRead = in.readParcelable(StoryRead.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_id);
+        dest.writeString(story_provider);
+        dest.writeTypedList(subscriptionIds);
+        dest.writeString(createdAt);
+        dest.writeString(storyType);
+        dest.writeString(storyText);
+        dest.writeString(storyTitle);
+        dest.writeString(storyUrl);
+        dest.writeString(thumbnail_url);
+        dest.writeString(display_doc_name);
+        dest.writeString(views);
+        dest.writeString(daysAgo);
+        dest.writeParcelable(userDetails, flags);
+        dest.writeParcelable(storyRead, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<StoryModel> CREATOR = new Creator<StoryModel>() {
+        @Override
+        public StoryModel createFromParcel(Parcel in) {
+            return new StoryModel(in);
+        }
+
+        @Override
+        public StoryModel[] newArray(int size) {
+            return new StoryModel[size];
+        }
+    };
 
     public String get_id() {
         return _id;
@@ -143,5 +233,14 @@ public class StoryModel {
 
     public void setStory_provider(String story_provider) {
         this.story_provider = story_provider;
+    }
+
+    @Nullable
+    public StoryRead getStoryRead() {
+        return storyRead;
+    }
+
+    public void setStoryRead(@Nullable StoryRead storyRead) {
+        this.storyRead = storyRead;
     }
 }

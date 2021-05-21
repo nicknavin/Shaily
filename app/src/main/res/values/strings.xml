@@ -544,6 +544,7 @@
     <string name="title_chat">Chat</string>
     <string name="title_profile">Profile</string>
     <string name="title_activity_home_user_chat_profile">MainActivity</string>
+    <string name="purchase_group">Purchase</string>
     <string-array name="hour">
         <item>1</item>
         <item>2</item>

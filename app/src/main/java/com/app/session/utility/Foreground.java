@@ -352,6 +352,14 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
         mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.connect();
     }
+    public Socket getmSocket()
+    {
+        if(mSocket!=null) {
+            return mSocket;
+        }
+        return null;
+    }
+
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {

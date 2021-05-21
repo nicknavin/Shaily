@@ -51,6 +51,7 @@ import com.app.session.network.ApiInterface;
 import com.app.session.network.BaseAsych;
 import com.app.session.service.FileUploadService;
 import com.app.session.utility.Constant;
+import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
 import com.squareup.picasso.Picasso;
@@ -144,14 +145,14 @@ UserStory storyData;
         });
 
 
-        Intent intent = getIntent();
-        bundle = intent.getBundleExtra("BUNDLE");
-        if (bundle != null) {
-            brief_cvList = (ArrayList<Brief_CV>) bundle.getSerializable("List");
-            language_cd=brief_cvList.get(0).getLanguage_id().getCode();
-
-        }
-
+//        Intent intent = getIntent();
+//        bundle = intent.getBundleExtra("BUNDLE");
+//        if (bundle != null) {
+//            brief_cvList = (ArrayList<Brief_CV>) bundle.getSerializable("List");
+//            language_cd=brief_cvList.get(0).getLanguage_id().getCode();
+//
+//        }
+        brief_cvList = DataPrefrence.getBriefLanguage(context, Constant.BRIEF_CV_DB);
         layAudioPlay = (LinearLayout) findViewById(R.id.layAudioPlay);
         layAudio = (RelativeLayout) findViewById(R.id.layAudio);
         imgRecordStop = (ImageView) findViewById(R.id.imgRecordStop);

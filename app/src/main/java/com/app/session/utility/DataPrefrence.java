@@ -17,9 +17,9 @@ import java.util.ArrayList;
 public class DataPrefrence {
 
     public static final String PREFRENCE_NAME = "Data_Prefs";
-    public static boolean isFacebook = false;
 
     public static void setPref(Context c, String pref, String val) {
+
         SharedPreferences.Editor e = c.getSharedPreferences(PREFRENCE_NAME, Context.MODE_PRIVATE).edit();
         e.putString(pref, val);
         e.commit();

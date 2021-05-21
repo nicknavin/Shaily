@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.app.session.BuildConfig;
 import com.app.session.R;
 
 import java.io.File;
@@ -19,7 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 public class Constant {
-
+    public static final int JOB_STARTED = 1;
+    public static final int JOB_STOPPED = 2;
+    public static final String MESSENGER_INTENT_KEY
+            = BuildConfig.APPLICATION_ID + ".MESSENGER_INTENT_KEY";
     public static final String CHAT_SERVER_URL = "https://www.sessionway.com/";
     public static final String NEW_MESSAGE = "new_message";
     public static final String EVENT_JOIN = "join";
@@ -28,6 +32,19 @@ public class Constant {
     public static final String IS_ONLINE = "isOnline";//emit
     public static final String JOINMOBILEUSERS = "joinMobileUsers";//emit
     public static final String BACKGROUNDSTATE = "backgroundstate";//emit
+    public static final String ADD_NEW_STORY = "add_new_story";
+    public static final int GROUP_UPDATED = 31;
+    public static final String GROUP_DATA = "group_data";
+    public static final String BRIEF_CV_VIDEO = "brief_cv_video";
+    public static final String BRIEF_CV_IMAGE = "brief_cv_image";
+    public static final int REQUEST_IMAGE = 32;
+    public static final String TYPE = "type";
+    public static final String POSITION = "position";
+    public static final String DELETE = "delete";
+    public static final String EDIT = "edit";
+    public static final String KEY = "AAAAMfi_9do:APA91bHv3rc4u1arZjPbDn7nJb3afgXJB3bO9XgBA9L0JBSuHOvx31DI21Y5x8w4dR2aoxpUOZPxdqiufEf1nHAhx_CKklboD35MWLnwo3yYmLUHM7opJnx9L1G9nQWmDYeGMTwWcnwF";
+    public static String REQ_GALLERY="GALLERY";
+    public static String REQ_CAMERA="camera";
 
     public static  String IS_TYPING = "isTyping";
     public static final String TYPING = "typing";
@@ -143,8 +160,16 @@ public class Constant {
 
     public static String VERIFICATION_FLAG = "verification_flag";
     public static String ACCESS_TOKEN = "access_token";
+    public static String TOKEN = "token";
+
+    public final static String UPDATE_GROUP_IMAGE = "update_group_image";
+    public final static String GROUP_IMAGE = "group_image";
+    public final static String VIDEO_IMAGE = "video_image";
+    public final static String GROUP_VIDEO = "group_video";
+    public final static String SUBSCN_GROUP_CD = "subscn_group_cd";
     public static String ENCODED_IMAGE = "encodedImage";
     public static String USER_ID = "user_id";
+    public static String U_ID = "u_id";
     public static String LOGIN_USER_ID = "login_user_id";
     public static String DEVICE_ID = "device_id";
     public static String ID = "id";
@@ -152,14 +177,23 @@ public class Constant {
     public static String VERIFICATION_CODE = "verification_code";
     public final static String MEDIA_PATH = "media_path";
 
-    /*Day*/
-    public static String SUNDAY = "sunday";
-    public static String MONDAY = "monday";
-    public static String TUESDAY = "tuesday";
-    public static String WEDNESDAY = "wednesday";
-    public static String THURSDAY = "thursday";
-    public static String FRIDAY = "friday";
-    public static String SATURDAY = "saturday";
+
+
+    public static final String CHANNEL_ID = "ForegroundServiceChannel";
+    public static final String CHANNEL_ID_AUDIO_CALL = "com.app.session.service.audiocall";
+    public static final String CHANNEL_ID_AUDIO_VIDEO_MISSED_CALL = "com.app.session.service.missedcall";
+    public static final String CHANNEL_ID_MESSAGE = "com.app.session.service.message";
+
+
+
+
+
+
+
+    public final static String SUBS_GROUP = "subs_group";
+
+    public final static String PURCHASE_GROUP = "purchase_group";
+
 
     public static Integer LOCATION = 0x1;
 

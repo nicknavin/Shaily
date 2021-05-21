@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 
-public class UserStory implements Parcelable {
+public class UserStory implements Parcelable{
 
 	@SerializedName("__v")
 	public String V;
@@ -15,11 +15,19 @@ public class UserStory implements Parcelable {
 	@SerializedName("_id")
 	public String id;
 
-	@SerializedName("createdAt")
-	public String createdAt;
+	@SerializedName("story_provider")
+	public String story_provider;
 
 	@SerializedName("subscription_id")
 	public SubscriptionId subscriptionId;
+
+
+
+
+	@SerializedName("createdAt")
+	public String createdAt;
+
+
 
 	@SerializedName("story_type")
 	public String storyType;
@@ -57,12 +65,12 @@ public class UserStory implements Parcelable {
 	@SerializedName("StoryViewed")
 	public boolean storyViewed;
 
-    @SerializedName("story_provider")
-	public String story_provider;
-
 
     @SerializedName("read")
 	public StoryRead storyRead;
+
+	@SerializedName("isUserFollwoingPeopleStory")
+	public boolean isUserFollwoingPeopleStory;
 
 
 	public UserStory() {
@@ -83,34 +91,10 @@ public class UserStory implements Parcelable {
 		views = in.readString();
 		daysAgo = in.readString();
 		userDetails = in.readParcelable(UserDetails.class.getClassLoader());
-		storyRead = in.readParcelable(StoryRead.class.getClassLoader());
 		storyViewed = in.readByte() != 0;
 		story_provider = in.readString();
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(V);
-		dest.writeString(id);
-		dest.writeString(createdAt);
-		dest.writeParcelable(subscriptionId, flags);
-		dest.writeString(storyType);
-		dest.writeString(storyText);
-		dest.writeString(storyTitle);
-		dest.writeString(storyUrl);
-		dest.writeString(thumbnail_url);
-		dest.writeString(display_doc_name);
-		dest.writeString(views);
-		dest.writeString(daysAgo);
-		dest.writeParcelable(userDetails, flags);
-		dest.writeParcelable(storyRead,flags);
-		dest.writeByte((byte) (storyViewed ? 1 : 0));
-		dest.writeString(story_provider);
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
+		storyRead = in.readParcelable(StoryRead.class.getClassLoader());
+		isUserFollwoingPeopleStory = in.readByte() != 0;
 	}
 
 	public static final Creator<UserStory> CREATOR = new Creator<UserStory>() {
@@ -124,7 +108,6 @@ public class UserStory implements Parcelable {
 			return new UserStory[size];
 		}
 	};
-
 
 	public String getV() {
 		return V;
@@ -254,7 +237,39 @@ public class UserStory implements Parcelable {
 		this.storyRead = storyRead;
 	}
 
+	public boolean isUserFollwoingPeopleStory() {
+		return isUserFollwoingPeopleStory;
+	}
 
+	public void setUserFollwoingPeopleStory(boolean userFollwoingPeopleStory) {
+		isUserFollwoingPeopleStory = userFollwoingPeopleStory;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int i) {
+		parcel.writeString(V);
+		parcel.writeString(id);
+		parcel.writeString(createdAt);
+		parcel.writeParcelable(subscriptionId, i);
+		parcel.writeString(storyType);
+		parcel.writeString(storyText);
+		parcel.writeString(storyTitle);
+		parcel.writeString(storyUrl);
+		parcel.writeString(thumbnail_url);
+		parcel.writeString(display_doc_name);
+		parcel.writeString(views);
+		parcel.writeString(daysAgo);
+		parcel.writeParcelable(userDetails, i);
+		parcel.writeByte((byte) (storyViewed ? 1 : 0));
+		parcel.writeString(story_provider);
+		parcel.writeParcelable(storyRead, i);
+		parcel.writeByte((byte) (isUserFollwoingPeopleStory ? 1 : 0));
+	}
 }
 
 

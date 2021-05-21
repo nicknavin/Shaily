@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -24,12 +23,18 @@ import android.widget.Toast;
 
 import com.app.session.R;
 import com.app.session.customview.CircleImageView;
-import com.app.session.service.MyForgroundService;
+import com.app.session.data.model.AudioVideoData;
+import com.app.session.data.model.NotificationModel;
 import com.app.session.utility.Constant;
+import com.app.session.utility.Foreground;
+import com.app.session.utility.Utility;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +45,11 @@ import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
 import io.agora.rtc.video.VideoEncoderConfiguration;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 
 public class VideoChatViewActivity extends AppCompatActivity {
@@ -468,12 +478,92 @@ public class VideoChatViewActivity extends AppCompatActivity {
         removeFromParent(mRemoteVideo);
         mRemoteVideo = null;
         leaveChannel();
-        Intent service = new Intent(context, MyForgroundService.class);
-        service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_CALL_DISCONNET_CALLER);
-        service.putExtra("DATA",data);
-        startService(service);
+//        Intent service = new Intent(context, MyForgroundService.class);
+//        service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_CALL_DISCONNET_CALLER);
+//        service.putExtra("DATA",data);
+//        startService(service);
+        callDisconnectFromCaller(data);
         finish();
     }
+    public void callDisconnectFromCaller(String req) {
+        try {
+            Log.d(TAG, " EVENT_CALL_DISCONNET EMIT CALL");
+            JSONObject jsonObject = new JSONObject(req);
+            JSONObject object = new JSONObject();
+            object.put("callerID", jsonObject.getString("userId"));
+            object.put("reciverId", jsonObject.getString("reciverId"));
+            object.put("callingType", jsonObject.getString("callType"));
+            object.put("reciverName", jsonObject.getString("reciverName"));
+            object.put("callerName", jsonObject.getString("callerName"));
+            object.put("ProfileUrl", jsonObject.getString("ProfileUrl"));
+            object.put("agoraTockenID", jsonObject.getString("agoraTockenID"));
+            object.put("agorachannelName", jsonObject.getString("agorachannelName"));
+            Foreground.get().getmSocket().emit(Constant.CALL_DISCONNECT_CALLER_END, object);
+            sendPushNotification(object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    void sendPushNotification(JSONObject jsonObject)
+    {
+        Gson gson = new Gson();
+        NotificationModel notificationModel = new NotificationModel();
+        String body = jsonObject.toString();
+        String msg="";
+
+        try {
+            if(jsonObject.getString("callingType").equals("audio"))
+            {
+                msg="Missed voice call";
+            }
+            else
+            {
+                msg="Missed video call";
+            }
+           // notificationModel.notification.body = msg;
+          //  notificationModel.notification.title = jsonObject.getString("callerName");//audioVideoData.getCallerName();
+            notificationModel.data.title = jsonObject.getString("callerName");
+            notificationModel.data.message = msg;
+            notificationModel.data.body = body;
+
+//        notificationModel.to = "/topics/" +"rPg55d1dciOafYF3P8eFI2PHJng2";//navin
+            notificationModel.to = "/topics/" +jsonObject.getString("reciverId");//audioVideoData.getReciverId();//iron
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        okhttp3.RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"),
+                gson.toJson(notificationModel));
+        okhttp3.Request request = new Request.Builder()
+                .header("Content-Type", "application/json")
+                .addHeader("Authorization", "key=" + Constant.KEY)//key = your Database Key
+                .url("https://fcm.googleapis.com/fcm/send")
+                .post(requestBody)
+                .build();
+
+        okhttp3.OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                ResponseBody responseBody = response.body();
+                String data = responseBody.string();
+                String result = requestBody.toString();
+
+                Utility.log(result);
+                Utility.log(data);
+
+            }
+        });
+
+    }
+
+
 
     private void showButtons(boolean show) {
         int visibility = show ? View.VISIBLE : View.GONE;

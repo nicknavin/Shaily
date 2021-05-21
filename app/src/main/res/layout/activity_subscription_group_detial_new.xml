@@ -505,7 +505,8 @@ android:visibility="gone"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/white"
         app:rippleColor="@color/btn_color"
-        app:srcCompat="@mipmap/plus" />
+        app:srcCompat="@mipmap/plus"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

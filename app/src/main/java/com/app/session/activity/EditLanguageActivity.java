@@ -380,9 +380,9 @@ String langId="";
         if (isConnectingToInternet(context)) {
             showLoading();
             AddBriefCv addBriefCv =new AddBriefCv();
-addBriefCv.setLanguageId(id);
-addBriefCv.setUserId(userId);
-addBriefCv.setBriefCv(" ");
+            addBriefCv.setLanguageId(id);
+            addBriefCv.setUserId(userId);
+            addBriefCv.setBriefCv(" ");
 
             ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
             Call<Root> call = apiInterface.reqAddBriefCv(accessToken,addBriefCv);

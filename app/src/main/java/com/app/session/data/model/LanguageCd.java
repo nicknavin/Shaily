@@ -9,7 +9,7 @@ import java.util.List;
 public class LanguageCd implements Serializable {
 
 	@SerializedName("language_cd")
-	public List<String> languageCd;
+	private List<String> languageCd;
 
 	public List<String> getLanguageCd() {
 		return languageCd;

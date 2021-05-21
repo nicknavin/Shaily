@@ -15,6 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.app.session.R;
+import com.app.session.activity.ExpertProfilePageActivity;
 import com.app.session.activity.FollowingExpertProfilePageActivity;
 import com.app.session.adapter.ExpertFollowingsAdapter;
 import com.app.session.api.Urls;
@@ -85,11 +86,19 @@ initView(root);
                                 public void result(int position)
                                 {
                                     BodyFollowers followers=followersArrayList.get(position);
-                                    Intent intent=new Intent(getContext(), FollowingExpertProfilePageActivity.class);
+//                                    Intent intent=new Intent(getContext(), FollowingExpertProfilePageActivity.class);
+//                                    intent.putExtra("ID",followers.getFollowerUsers().get_id());
+//                                    intent.putExtra("NAME",followers.getFollowerUsers().getLogin_user_id());
+//                                    intent.putExtra("URL", Urls.BASE_IMAGES_URL +followers.getFollowerUsers().getImageUrl());
+//                                    startActivity(intent);
+
+                                    Intent intent=new Intent(getContext(), ExpertProfilePageActivity.class);
                                     intent.putExtra("ID",followers.getFollowerUsers().get_id());
                                     intent.putExtra("NAME",followers.getFollowerUsers().getLogin_user_id());
                                     intent.putExtra("URL", Urls.BASE_IMAGES_URL +followers.getFollowerUsers().getImageUrl());
                                     startActivity(intent);
+
+
                                 }
                             });
                             recyclerView.setAdapter(expertFollowingsAdapter);

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.app.session.data.model.PurchaseSubscribeGroup;
+import com.app.session.data.model.PurchaseSubscribeGroupRoot;
 import com.app.session.data.model.StoriesFollowingUsers;
 import com.app.session.data.model.SubscribedAllStroiesRoot;
 import com.app.session.data.model.SubscriptionGroupRoot;
@@ -14,34 +16,33 @@ import com.app.session.data.repository.MainRepository;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class HomeViewModel extends AndroidViewModel {
+public class HomeViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+
     private MutableLiveData<SubscribedAllStroiesRoot>subscribedAllStroiesRootMutableLiveData=new MutableLiveData<>();
     private MutableLiveData<SubscribedAllStroiesRoot>unSubscribedAllStroiesRootMutableLiveData=new MutableLiveData<>();
 
-    private MutableLiveData<SubscriptionGroupRoot>subscriptionGroupRootMutableLiveData=new MutableLiveData<>();
+    private MutableLiveData<PurchaseSubscribeGroupRoot>subscriptionGroupRootMutableLiveData=new MutableLiveData<>();
     private MutableLiveData<UserRoot> userRootMutableLiveData=new MutableLiveData<>();
 
     Context context;
-    String userid,accessToken;
-    MainRepository mainRepository;
+    String userid;
+    MainRepository mainRepository=null;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
    public int page=1,totalPage=0,stories=0;
    public int unsubscribePage=1,unsubscribeTotalPage=0;
 
-    public HomeViewModel(@NonNull Application application, String id, String token)
+    public HomeViewModel(String id,String token)
     {
-        super(application);
-        context=application.getApplicationContext();
         userid =id;
-        this.accessToken=token;
-        mainRepository=MainRepository.getInstance(context);
+        mainRepository=new MainRepository(token);
+        getSubscriptinGroupApi();
     }
 
 
@@ -73,25 +74,27 @@ public class HomeViewModel extends AndroidViewModel {
     //<editor-fold desc="getSubscriptionGroup">
     public void getSubscriptinGroupApi()
     {
-        mainRepository=MainRepository.getInstance(context);
+
         UserId user=new UserId();
         user.setUser_id(userid);
 
         compositeDisposable.add(
-                mainRepository.getSubscribedSubscriptionGroups(user).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableSingleObserver<SubscriptionGroupRoot>() {
+                mainRepository.getSubscribedSubscriptionGroups(user).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<PurchaseSubscribeGroupRoot>() {
                     @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull SubscriptionGroupRoot subscriptionGroupRoot)
+                    public void onSuccess(@io.reactivex.annotations.NonNull PurchaseSubscribeGroupRoot purchaseSubscribeGroupRoot)
                     {
-                        subscriptionGroupRootMutableLiveData.setValue(subscriptionGroupRoot);
+                        subscriptionGroupRootMutableLiveData.setValue(purchaseSubscribeGroupRoot);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
 
                     }
-                })
+                }));
 
-        );
+
     }
 
     //</editor-fold>
@@ -99,7 +102,7 @@ public class HomeViewModel extends AndroidViewModel {
     //<editor-fold desc="Get Story of Following Story ">
     public void getFollowingUserStoryApi()
     {
-        mainRepository=MainRepository.getInstance(context);
+
         StoriesFollowingUsers storiesFollowingUsers=new StoriesFollowingUsers();
         storiesFollowingUsers.setUser_id(userid);
         storiesFollowingUsers.setLoad(page);
@@ -127,7 +130,7 @@ public class HomeViewModel extends AndroidViewModel {
 
     public void getUnFollowingUserStoryApi()
     {
-        mainRepository=MainRepository.getInstance(context);
+
         StoriesFollowingUsers storiesFollowingUsers=new StoriesFollowingUsers();
         storiesFollowingUsers.setUser_id(userid);
         storiesFollowingUsers.setLoad(unsubscribePage);
@@ -171,7 +174,7 @@ public class HomeViewModel extends AndroidViewModel {
 //
 
 
-    public MutableLiveData<SubscriptionGroupRoot> getSubscriptionGroupRootMutableLiveData() {
+    public MutableLiveData<PurchaseSubscribeGroupRoot> getSubscriptionGroupRootMutableLiveData() {
         return subscriptionGroupRootMutableLiveData;
     }
 

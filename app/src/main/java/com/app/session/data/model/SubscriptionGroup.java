@@ -11,14 +11,13 @@ public class SubscriptionGroup implements Parcelable
     private String category_name;
     private String currency_cd;
     private String currency_name_en;
+
     private String group_desc;
-
-
     private String group_url_image_address;
     private String group_thumbnail_url;
+
     private String language_cd;
     private String language;
-
     private String subscription_group_cd;
     private String user_cd;
 

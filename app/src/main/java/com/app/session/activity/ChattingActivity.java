@@ -2,15 +2,21 @@ package com.app.session.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,38 +51,39 @@ import com.app.session.audioplayer.MediaPlayerUtils;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
-import com.app.session.interfaces.ChatCallback;
-import com.app.session.interfaces.ServiceResultReceiver;
 import com.app.session.data.model.AgoraBody;
 import com.app.session.data.model.AgoraRoot;
 import com.app.session.data.model.AudioVideoData;
-import com.app.session.data.model.UserInformation;
-import com.app.session.room.ChatMessage;
-import com.app.session.room.ChatMessageBody;
 import com.app.session.data.model.ClearChat;
 import com.app.session.data.model.Conversation;
 import com.app.session.data.model.LoadMessage;
 import com.app.session.data.model.MessageChat;
+import com.app.session.data.model.NotificationModel;
 import com.app.session.data.model.ReqMessageRead;
 import com.app.session.data.model.Root;
 import com.app.session.data.model.RootChatMessage;
+import com.app.session.data.model.SendChatMsg;
+import com.app.session.data.model.UserInformation;
+import com.app.session.interfaces.ChatCallback;
+import com.app.session.interfaces.ServiceResultReceiver;
 import com.app.session.network.ApiClient;
 import com.app.session.network.ApiInterface;
+import com.app.session.room.ChatMessage;
+import com.app.session.room.ChatMessageBody;
 import com.app.session.room.MyDatabase;
 import com.app.session.service.FileUploadService;
-import com.app.session.service.MyForgroundService;
 import com.app.session.thumbyjava.ThumbyUtils;
 import com.app.session.utility.Constant;
 import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.engineio.client.transports.Polling;
 import com.github.nkzawa.socketio.client.Ack;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONException;
@@ -98,7 +105,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -106,8 +113,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -123,6 +133,11 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
     public static final String RECEIVER = "receiver";
+    public static final int NOTIFICATION_ID_ORDER = 1;
+    public static final int NOTIFICATION_ID_MESSAGE_FILE = 5;
+    public static final int NOTIFICATION_ID_AUDIO_VIDEO_CALL = 2;
+    public static final int NOTIFICATION_ID_AUDIO_VIDEO_CALL_END = 3;
+    public static final String KEY_BROADCAST_MESSAGE_AUDIO_VIDEO_CALLING = "session_message_audio_video_calling";
     private AudioRecordView audioRecordView;
     private RecyclerView recyclerViewMessages;
     int load = 0;
@@ -167,6 +182,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
+
         if(getIntent().getIntExtra("notificationId",0)!=0)
         {
             int notificationId=getIntent().getIntExtra("notificationId",0);
@@ -196,17 +212,26 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 //
 //        }
 
-
     }
+
+
+
     public void startService() {
-        Intent serviceIntent = new Intent(this, MyForgroundService.class);
-        serviceIntent.putExtra("Sessionway", "Notification");
-        serviceIntent.putExtra("userId",userId);
-        ContextCompat.startForegroundService(this, serviceIntent);
+       // Intent serviceIntent = new Intent(this, MyForgroundService.class);
+//        serviceIntent.putExtra("Sessionway", "Notification");
+//        serviceIntent.putExtra("userId",userId);
+//        ContextCompat.startForegroundService(this, serviceIntent);
     }
     private void setUpDB() {
         myDatabase = Room.databaseBuilder(context, MyDatabase.class, "SessionChatDB").allowMainThreadQueries().build();
     }
+
+
+
+
+
+
+
 
     private void insertInDB(ChatMessage chat) {
         audioStatusList.addLast(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
@@ -593,6 +618,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         mSocket.on(Constant.IS_ON, isOnline);
         mSocket.on(Constant.TYPING, onTyping);
         mSocket.on(Constant.IS_CONTENTREAD, isContentRead);
+        mSocket.on(Constant.CALL_NOTIFY, callNotify);
+        mSocket.on(Constant.CALL_DISCONNECT_CALLED_END_NOTIFY, callDisconnectCalledEndNotify);
+        mSocket.on(Constant.CALL_DISCONNECT_NOTIFY,callDisconnectNotify);
 
 //        mSocket.on(Constant.CALL_NOTIFY,onCallNotify);
         mSocket.connect();
@@ -853,6 +881,91 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         }
     };
 
+//call is coming in this
+    private Emitter.Listener callNotify=new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (args.length > 0)
+                    {
+
+                        try {
+                            Log.d(TAG, "run : my service " + args[0].toString());
+                            JSONObject obj = (JSONObject) args[0];
+                            String imageUrl=obj.getString("ProfileUrl");
+                            String request = obj.toString();
+                            showToast("get calling noticfication");
+                            Gson gson=new Gson();
+
+                            JSONObject object = new JSONObject(request);
+                            AudioVideoData audioVideoData= gson.fromJson(object.toString(), AudioVideoData.class);
+
+                            //createAudioVideoNotification(request);
+//                            sendPushNotification(audioVideoData);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+        }
+    };
+
+    //call dissconnect by caller
+    private Emitter.Listener callDisconnectCalledEndNotify=new Emitter.Listener() {
+        @Override
+        public void call(Object... args)
+        {
+            Log.d(TAG, "run : CALL_DISCONNECT_CALLED_END_NOTIFY " + args[0].toString());
+            try {
+                JSONObject jsonObject = new JSONObject(args[0].toString());
+
+                if (jsonObject.getString("callingType").equals("audio"))
+                {
+                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(NOTIFICATION_ID_AUDIO_VIDEO_CALL);
+//                    Intent intent = new Intent(Constant.CUSTOME_BROADCAST);
+//                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                } else {
+                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(NOTIFICATION_ID_AUDIO_VIDEO_CALL);
+//                    Intent intent = new Intent(Constant.CUSTOME_BROADCAST);
+//                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                }
+                //createMissedAudioVideoNotification(jsonObject.toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private Emitter.Listener callDisconnectNotify=new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d(TAG, "run : CALL_DISCONNECT_NOTIFY " + args[0].toString());
+            try {
+
+                JSONObject jsonObject = new JSONObject(args[0].toString());
+                if (jsonObject.getString("callingType").equals("audio")) {
+
+                    Intent intent = new Intent(Constant.DISCONNECT_AUDIO);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                } else {
+
+                    Intent intent = new Intent(Constant.DISCONNECT_VIDEO);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
 
     private void sendVideoCallNotification() {
@@ -962,7 +1075,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             }
         });
     }
-
+    SendChatMsg sendChatMsg=null;
     private void SendMessage(String message)
     {
         mTyping=true;
@@ -977,6 +1090,15 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             jsonObject.put("reciverName", receiverName);
             jsonObject.put("reciverProfileUrl", receiverUrl);
             jsonObject.put("senderProfileUrl", profileUrl);
+            sendChatMsg=new SendChatMsg();
+            sendChatMsg.setMessage(message);
+            sendChatMsg.setReceiverID(receiverID);
+            sendChatMsg.setUserId(userId);
+            sendChatMsg.setReciverName(receiverName);
+            sendChatMsg.setSenderName(login_user_id);
+
+            sendChatMsg.setReciverProfileUrl(receiverUrl);
+            sendChatMsg.setSenderProfileUrl(profileUrl);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -997,16 +1119,63 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         log(" send msg : "+jsonObject.toString());
         mSocket.emit("privateMessage", jsonObject, new Ack()
         {
+
             @Override
             public void call(Object... args) {
 
+               sendPushNotification(sendChatMsg);
                 if (args.length > 0) {
                     JSONObject data = (JSONObject) args[0];
                     Log.d(TAG,"privateMessage : "+data.toString());
                 }
+
             }
         });
     }
+
+    public void callDisconnectSocket(String req) {
+        try {
+            Log.d(TAG, " EVENT_CALL_DISCONNET EMIT CALL");
+            JSONObject jsonObject = new JSONObject(req);
+            JSONObject object = new JSONObject();
+            object.put("callerID", jsonObject.getString("userId"));
+            object.put("reciverId", jsonObject.getString("reciverId"));
+            object.put("callingType", jsonObject.getString("callType"));
+            object.put("reciverName", "");
+
+            mSocket.emit(Constant.CALL_DISCONNECT, object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void callDisconnectFromCaller(String req) {
+        try {
+            Log.d(TAG, " EVENT_CALL_DISCONNET EMIT CALL");
+            JSONObject jsonObject = new JSONObject(req);
+            JSONObject object = new JSONObject();
+            object.put("callerID", jsonObject.getString("userId"));
+            object.put("reciverId", jsonObject.getString("reciverId"));
+            object.put("callingType", jsonObject.getString("callType"));
+            object.put("reciverName", jsonObject.getString("reciverName"));
+            object.put("callerName", jsonObject.getString("callerName"));
+            object.put("ProfileUrl", jsonObject.getString("ProfileUrl"));
+            object.put("agoraTockenID", jsonObject.getString("agoraTockenID"));
+            object.put("agorachannelName", jsonObject.getString("agorachannelName"));
+
+
+            mSocket.emit(Constant.CALL_DISCONNECT_CALLER_END, object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
 
 
     private boolean isSocketConnected() {
@@ -1211,7 +1380,8 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                             audioVideoData.setReciverId(receiverID);
                             audioVideoData.setCallType(callingType);
                             audioVideoData.setReciverName(receiverName);
-                            sendAudioCalling(audioVideoData);
+//                            sendAudioCalling(audioVideoData);
+                            sendVideoCallNotification(audioVideoData);
                         }
                     }
                 }
@@ -1228,6 +1398,55 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         }
     }
 
+    private void sendVideoCallNotification(AudioVideoData audioVideoData) {
+        try {
+            Gson gson = new Gson();
+            String request = gson.toJson(audioVideoData);
+            Log.d(TAG, request);
+
+            JSONObject jsonObject = new JSONObject(request);
+
+            mSocket.emit(Constant.CALL_NOTIFICATION, jsonObject, new Ack() {
+                @Override
+                public void call(Object... args) {
+
+
+                }
+            });
+            sendPushNotification(audioVideoData);
+            Intent callingintent1=null;
+            if(audioVideoData.getCallType().equals("audio"))
+            {
+                mlog("onReceive 33333");
+                callingintent1 = new Intent(context, VoiceChatViewActivity.class);
+            }
+            else {
+                mlog("onReceive 444 ");
+                callingintent1 = new Intent(context, VideoChatViewActivity.class);
+            }
+            callingintent1.putExtra("DATA", request);
+            startActivity(callingintent1);
+
+
+
+
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+//        Intent intent = new Intent(this, VideoChatViewActivity.class);
+//        startActivity(intent);
+    }
+
+
+
+
 
     private void scrollToBottom() {
         linearLayoutManager.scrollToPosition(chatMessageLinkedList.size() - 1);
@@ -1236,17 +1455,17 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
             private void sendMsg(String message)
             {
 
-                Intent service = new Intent(this, MyForgroundService.class);
-                service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_VIDEO_CALLING);
-                service.putExtra("USER_ID",userId);
-                service.putExtra("MESSAGE", message);
-                service.putExtra("SENDER_NAME",login_user_id);
-                service.putExtra("RECEIVER_ID",receiverID);
-                service.putExtra("RECIVER_NAME",receiverName);
-                service.putExtra("RECIVER_PROFILE_URL",receiverUrl);
-                service.putExtra("SENDER_PROFILE_URL",profileUrl);
-
-                startService(service);
+//                Intent service = new Intent(this, MyForgroundService.class);
+//                service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_VIDEO_CALLING);
+//                service.putExtra("USER_ID",userId);
+//                service.putExtra("MESSAGE", message);
+//                service.putExtra("SENDER_NAME",login_user_id);
+//                service.putExtra("RECEIVER_ID",receiverID);
+//                service.putExtra("RECIVER_NAME",receiverName);
+//                service.putExtra("RECIVER_PROFILE_URL",receiverUrl);
+//                service.putExtra("SENDER_PROFILE_URL",profileUrl);
+//
+//                startService(service);
             }
 
     public void readMessage() {
@@ -1715,7 +1934,21 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                         JSONObject jsonObject = new JSONObject(data);
                         JSONObject body = jsonObject.getJSONObject("body");
                         JSONObject fileData = body.getJSONObject("fileData");
+                       String file= fileData.getString("file");
+                       String messageType=fileData.getString("messageType");
                         id = fileData.getString("_id");
+                        sendChatMsg=new SendChatMsg();
+                        sendChatMsg.setMessage("");
+                        sendChatMsg.setReceiverID(receiverID);
+                        sendChatMsg.setUserId(userId);
+                        sendChatMsg.setReciverName(receiverName);
+                        sendChatMsg.setSenderName(login_user_id);
+                        sendChatMsg.setReciverProfileUrl(receiverUrl);
+                        sendChatMsg.setSenderProfileUrl(profileUrl);
+                        sendChatMsg.setFile(true);
+                        sendChatMsg.setFileUrl(file);
+                        sendChatMsg.setMessageType(messageType);
+                        sendPushNotification(sendChatMsg);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1728,7 +1961,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
                 break;
 
             case FAIL:
-                showToast("uploading is fail, please try again");
+                //showToast("uploading is fail, please try again");
 //                layProgress.setVisibility(View.GONE);
                 break;
 
@@ -2051,7 +2284,7 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     }
 
 
-    private BroadcastReceiver broadcastReceiver=new BroadcastReceiver()
+    private BroadcastReceiver broadcastReceiverAudioVideoCalling =new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent)
@@ -2107,23 +2340,27 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
 
     private void sendAudioCalling(AudioVideoData audioVideoData)
     {
-        Log.d(TAG,"sendAudioCalling ");
-        Intent service = new Intent(this, MyForgroundService.class);
-        service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_VIDEO_CALLING);
-        service.putExtra("DATA",audioVideoData);
-        service.putExtra("RECEIVER_NAME",receiverName);
-        startService(service);
+//        Log.d(TAG,"sendAudioCalling ");
+//        Intent service = new Intent(this, MyForgroundService.class);
+//        service.putExtra(MyForgroundService.EXTRA_EVENT_TYPE, MyForgroundService.EVENT_VIDEO_CALLING);
+//        service.putExtra("DATA",audioVideoData);
+//        service.putExtra("RECEIVER_NAME",receiverName);
+//        startService(service);
     }
+
+
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (broadcastReceiver != null) {
+        if (broadcastReceiverAudioVideoCalling != null) {
          //   showToast("register broadcast");
-            IntentFilter intentFilter = new IntentFilter(MyForgroundService.KEY_BROADCAST_MESSAGE);
+            IntentFilter intentFilter = new IntentFilter(KEY_BROADCAST_MESSAGE_AUDIO_VIDEO_CALLING);
 
-            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, intentFilter);
+            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiverAudioVideoCalling, intentFilter);
         }
     }
 
@@ -2131,9 +2368,9 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
     protected void onPause() {
         super.onPause();
 
-        if (broadcastReceiver != null) {
+        if (broadcastReceiverAudioVideoCalling != null) {
            // showToast("unregister broadcast");
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiverAudioVideoCalling);
         }
     }
 
@@ -2153,5 +2390,300 @@ public class ChattingActivity extends BaseActivity implements AudioRecordView.Re
         MediaPlayerUtils.releaseMediaPlayer();
     }
 
+    void sendPushNotification(SendChatMsg sendChatMsg)
+    {
+        Gson gson = new Gson();
+        NotificationModel notificationModel = new NotificationModel();
+        String body = gson.toJson(sendChatMsg);
+        //notificationModel.notification.body = sendChatMsg.getMessage();
+        //notificationModel.notification.title = sendChatMsg.getSenderName();
+        notificationModel.data.title = sendChatMsg.getSenderName();
+        notificationModel.data.message = sendChatMsg.getMessage();
+        notificationModel.data.body = body;
+
+//        notificationModel.to = "/topics/" +"rPg55d1dciOafYF3P8eFI2PHJng2";//navin
+        notificationModel.to = "/topics/" +sendChatMsg.getReceiverID();//iron
+        okhttp3.RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"),
+                gson.toJson(notificationModel));
+        okhttp3.Request request = new Request.Builder()
+                .header("Content-Type", "application/json")
+                .addHeader("Authorization", "key=" + Constant.KEY)//key = your Database Key
+                .url("https://fcm.googleapis.com/fcm/send")
+                .post(requestBody)
+                .build();
+
+        okhttp3.OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                ResponseBody responseBody = response.body();
+                String data = responseBody.string();
+                String result = requestBody.toString();
+
+                Utility.log(result);
+                Utility.log(data);
+
+            }
+        });
+
+    }
+
+
+    void sendPushNotification(AudioVideoData audioVideoData)
+    {
+        Gson gson = new Gson();
+        NotificationModel notificationModel = new NotificationModel();
+        String body = gson.toJson(audioVideoData);
+        String msg="";
+        if(audioVideoData.getCallType().equals("audio"))
+        {
+            msg="Incoming voice call";
+        }
+        else
+        {
+            msg="Incoming video call";
+        }
+       // notificationModel.notification.body = msg;
+        //notificationModel.notification.title = audioVideoData.getCallerName();
+        notificationModel.data.title = audioVideoData.getCallerName();
+        notificationModel.data.message = msg;
+        notificationModel.data.body = body;
+
+//        notificationModel.to = "/topics/" +"rPg55d1dciOafYF3P8eFI2PHJng2";//navin
+        notificationModel.to = "/topics/" +audioVideoData.getReciverId();//iron
+        okhttp3.RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"),
+                gson.toJson(notificationModel));
+        okhttp3.Request request = new Request.Builder()
+                .header("Content-Type", "application/json")
+                .addHeader("Authorization", "key=" + Constant.KEY)//key = your Database Key
+                .url("https://fcm.googleapis.com/fcm/send")
+                .post(requestBody)
+                .build();
+
+        okhttp3.OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                ResponseBody responseBody = response.body();
+                String data = responseBody.string();
+                String result = requestBody.toString();
+
+                Utility.log(result);
+                Utility.log(data);
+
+            }
+        });
+
+    }
+
+
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
+    public void createAudioVideoNotification(String request)
+    {
+        Intent connectIntent = null;
+        String title = "", message = "",profileUrl="";
+
+        try {
+            JSONObject object = new JSONObject(request);
+            title = object.getString("callerName");
+            profileUrl = object.getString("ProfileUrl");
+
+            if (object.getString("callType").equals("audio"))
+            {
+                message = "Incoming voice call";
+                connectIntent = new Intent(context, VoiceChatViewActivity.class);
+            } else
+            {
+                message = "Incoming video call";
+                connectIntent = new Intent(context, VideoChatViewActivity.class);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap=null;
+//        try {
+//            bitmap= Glide.with(this).asBitmap()
+//                    .load(profileUrl).submit().get();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        /**Creates an explicit intent for an Activity in your app**/
+
+        connectIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        connectIntent.putExtra("DATA", request);
+        connectIntent.putExtra("CALLING_TYPE","receiver");
+        connectIntent.putExtra("notificationId", NOTIFICATION_ID_AUDIO_VIDEO_CALL);
+        PendingIntent connecPendingIntent = PendingIntent.getActivity(context,
+                0 /* Request code */, connectIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent declineIntent = new Intent(context, NotifyActivityHandler.class);
+        declineIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        declineIntent.setAction(Constant.DISCONNECT_CALL);
+        declineIntent.putExtra("notificationId", NOTIFICATION_ID_AUDIO_VIDEO_CALL);
+        declineIntent.putExtra("DATA", request);
+        PendingIntent declinePendingIntent = PendingIntent.getActivity(context,
+                0 /* Request code */,declineIntent, PendingIntent.FLAG_UPDATE_CURRENT   );
+
+        Uri ring = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        long when = System.currentTimeMillis();
+        mBuilder = new NotificationCompat.Builder(this, Constant.CHANNEL_ID_AUDIO_CALL);
+        mBuilder.setSmallIcon(R.drawable.app_new_icon);
+        mBuilder.setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(false)
+                .setWhen(when)
+                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                .setOngoing(true)
+                .setLargeIcon(bitmap)
+                .setSound(ring)
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .addAction(0, "Decline", declinePendingIntent)
+                .addAction(0, "Answer", connecPendingIntent);
+
+
+        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            AudioAttributes att = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel(Constant.CHANNEL_ID_AUDIO_CALL, "Call notifications", importance);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setImportance(importance);
+            notificationChannel.setSound(ring, att);
+            notificationChannel.setShowBadge(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            assert mNotificationManager != null;
+            mBuilder.setChannelId(Constant.CHANNEL_ID_AUDIO_CALL);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        mNotificationManager.notify(NOTIFICATION_ID_AUDIO_VIDEO_CALL, mBuilder.build());
+
+    }
+    public void createMissedAudioVideoNotification(String request) {
+
+        Log.d(TAG, "MISSED " + request);
+        Intent connectIntent = null;
+        String title = "", message = "",profileUrl="";
+
+        try {
+            JSONObject object = new JSONObject(request);
+            title = object.getString("callerName");
+            profileUrl=object.getString("ProfileUrl");
+
+            if (object.getString("callingType").equals("audio")) {
+                message = "Missed voice call";
+//                connectIntent = new Intent(this, VoiceChatViewActivity.class);
+            } else {
+                message = "Missed video call";
+//                connectIntent = new Intent(this, VideoChatViewActivity.class);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap=null;
+//        try {
+//            bitmap= Glide.with(this).asBitmap()
+//                    .load(profileUrl).submit().get();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+
+//
+//        /**Creates an explicit intent for an Activity in your app**/
+//
+//        connectIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        connectIntent.putExtra("DATA", request);
+//        connectIntent.putExtra("notificationId", NOTIFICATION_ID_AUDIO_VIDEO_CALL_END);
+//        PendingIntent connecPendingIntent = PendingIntent.getActivity(this,
+//                0 /* Request code */, connectIntent,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+
+
+
+
+        Intent callBackIntent = new Intent(context, NotifyActivityHandler.class);
+//        callBackIntent.putExtra("KEY",Constant.CALL_BACK);
+        callBackIntent.setAction(Constant.CALL_BACK);
+        callBackIntent.putExtra("notificationId", NOTIFICATION_ID_AUDIO_VIDEO_CALL_END);
+        callBackIntent.putExtra("DATA", request);
+        PendingIntent callBackPendingIntent = PendingIntent.getActivity(context,
+                0 /* Request code */, callBackIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        Intent declineIntent = new Intent(context, NotifyActivityHandler.class);
+//        declineIntent.putExtra("KEY",Constant.DISCONNECT_MISSED_CALL);
+        declineIntent.setAction(Constant.DISCONNECT_MISSED_CALL);
+        PendingIntent declinePendingIntent = PendingIntent.getActivity(context,
+                0 /* Request code */, declineIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        long when = System.currentTimeMillis();
+        mBuilder = new NotificationCompat.Builder(this, Constant.CHANNEL_ID_AUDIO_VIDEO_MISSED_CALL);
+        mBuilder.setSmallIcon(R.drawable.app_new_icon);
+        mBuilder.setLargeIcon(bitmap);
+        mBuilder.setContentTitle(title)
+                .setContentText(message)
+                .setWhen(when)
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .setPriority(Notification.DEFAULT_ALL)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(0, "Decline", declinePendingIntent)
+                .addAction(0, "Call back", callBackPendingIntent);
+
+
+        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel notificationChannel = new NotificationChannel(Constant.CHANNEL_ID_AUDIO_VIDEO_MISSED_CALL, "default", NotificationManager.IMPORTANCE_LOW);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(false);
+            notificationChannel.setImportance(importance);
+            notificationChannel.setShowBadge(true);
+
+
+
+            mBuilder.setChannelId(Constant.CHANNEL_ID_AUDIO_VIDEO_MISSED_CALL);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        mNotificationManager.notify(NOTIFICATION_ID_AUDIO_VIDEO_CALL_END, mBuilder.build());
+
+    }
+
+
 
 }
+
+/*
+{"status":200,"message":"uploaded successfully","body":{"fileData":{"message":"","file":"userFiles/chatFiles/chatFiles-1620740850250-880-image.jpg","displayFileName":"","durationTime":"0","reciverProfileUrl":"http://sessionway.com/userFiles/userProfileImage/profilePic-1618987534312-80145.png","senderProfileUrl":"http://sessionway.com/userFiles/userProfileImage/profilePic-1619020265592-82146.png","isRead":true,"_id":"609a8af22aba0b3aca52863c","messageType":"image","senderId":"607fc59f9082c632bde7c001","reciverId":"607fc9079082c632bde7c005","senderName":"navin.nimade","reciverName":"baniya.nimade","createdAt":"2021-05-11T13:47:30.538Z","__v":0},"fileDelevered":true}}
+* */

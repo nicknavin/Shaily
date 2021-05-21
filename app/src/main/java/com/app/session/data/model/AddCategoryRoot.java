@@ -34,4 +34,7 @@ public class AddCategoryRoot
     public void setBody(CategoryId body) {
         this.body = body;
     }
+
+
+
 }

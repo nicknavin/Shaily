@@ -1,5 +1,7 @@
 package com.app.session.data.model;
 
+import java.util.Objects;
+
 /**
  * Created by sourabh on 23/8/17.
  */
@@ -62,5 +64,22 @@ public class Category {
 
     public void setLanguageCd(String languageCd) {
         this.languageCd = languageCd;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+        Category category = (Category) o;
+        return isChecked() == category.isChecked() &&
+                Objects.equals(getCategoryID(), category.getCategoryID()) &&
+                Objects.equals(getCategoryName(), category.getCategoryName()) &&
+                Objects.equals(getLanguageCd(), category.getLanguageCd());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCategoryID(), getCategoryName(), getLanguageCd(), isChecked());
     }
 }

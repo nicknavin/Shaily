@@ -36,6 +36,7 @@ import com.app.session.activity.AddSubscriptionGroupActivity;
 import com.app.session.activity.AddSubscriptionStoryActivity;
 import com.app.session.activity.EditBriefActivity;
 
+import com.app.session.activity.UpdateVideoImageActivity;
 import com.app.session.activity.VideoPlayerActivity;
 import com.app.session.activity.ui.profile.ProfileFragment;
 import com.app.session.adapter.UserStoryAdapter;
@@ -44,6 +45,7 @@ import com.app.session.baseFragment.BaseFragment;
 import com.app.session.customspinner.NiceSpinner;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
+
 import com.app.session.interfaces.ServiceResultReceiver;
 import com.app.session.data.model.Brief_CV;
 import com.app.session.data.model.ReqDeleteStory;
@@ -66,10 +68,12 @@ import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonArray;
 import com.rey.material.widget.ProgressView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,6 +87,7 @@ import java.util.LinkedList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -111,8 +116,7 @@ import static com.app.session.utility.Utility.log;
  * Use the {@link MyProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyProfileFragment extends BaseFragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ServiceResultReceiver.Receiver
-{
+public class MyProfileFragment extends BaseFragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ServiceResultReceiver.Receiver {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -125,12 +129,12 @@ public class MyProfileFragment extends BaseFragment implements View.OnClickListe
     CustomTextView txtUserName, txtTitleBriefCV, txtUploading, txtBriefTab;
     ReadMoreTextView txtBriefCV;
     CircleImageView imgProfile;
-    ImageView imgSetting, imgBriefCV;
+    ImageView imgSetting,imgBriefCV;
     Bitmap bitUpload;
     RelativeLayout layPlaceholder;
     ArrayList<Brief_CV> brief_cvList;
     NiceSpinner spinnerBrief;
-    String language_cd = "",language_id="";
+    String language_cd = "", language_id = "";
     private Dialog dialogSelect;
     public boolean isForCamera = false;
     private Uri mCameraImageUri, mImageCaptureUri;
@@ -150,7 +154,7 @@ public class MyProfileFragment extends BaseFragment implements View.OnClickListe
     Bitmap bmCover;
     View view;
 
-   public UserStoryAdapter userStoryAdapter;
+    public UserStoryAdapter userStoryAdapter;
     LinkedList<StoryModel> storyDataArrayList = new LinkedList<>();
     ArrayList<UserStory> list = new ArrayList<>();
     String groupiconUrl = "", userName = "";
@@ -158,11 +162,13 @@ public class MyProfileFragment extends BaseFragment implements View.OnClickListe
     LinearLayout layBios;
 
     SwipeRefreshLayout swipeRefreshLayout;
-    String load="1";
+    String load = "1";
     public boolean loaddingDone = true;
     public boolean loading = true;
     public int pastVisiblesItems, visibleItemCount, totalItemCount;
-LinearLayoutManager linearLayoutManager;
+    LinearLayoutManager linearLayoutManager;
+
+
     public MyProfileFragment() {
         // Required empty public constructor
     }
@@ -172,7 +178,7 @@ LinearLayoutManager linearLayoutManager;
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
+     *               //     * @param param2 Parameter 2.
      * @return A new instance of fragment MyProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -184,12 +190,15 @@ LinearLayoutManager linearLayoutManager;
         fragment.setArguments(args);
         return fragment;
     }
+
     ProfileFragment parentFrag;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
+
 //            list = (ArrayList<UserStory>) getArguments().getSerializable(ARG_PARAM2);
 //
 //            for(UserStory userStory:list)
@@ -199,14 +208,17 @@ LinearLayoutManager linearLayoutManager;
         }
         context = getContext();
 
-        userName=user_name;
-        groupiconUrl=profileUrl;
-         parentFrag = ((ProfileFragment)this.getParentFragment());
+        userName = user_name;
+        groupiconUrl = profileUrl;
+        parentFrag = ((ProfileFragment) this.getParentFragment());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
         // Inflate the layout for this fragment
         Bundle bundle = this.getArguments();
 //        brief_cvList = (ArrayList<Brief_CV>) bundle.getSerializable("List");
@@ -240,7 +252,7 @@ LinearLayoutManager linearLayoutManager;
         this.view = view;
         initView();
         //setupStoryRecylerview();
-       // setSwipeLayout();
+        // setSwipeLayout();
         System.out.println("111onViewCreated ");
 
         getUserDetail(0);
@@ -248,11 +260,9 @@ LinearLayoutManager linearLayoutManager;
     }
 
 
-
-
     public void initView() {
-      //  swipeRefreshLayout = ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout));
-        layBios=(LinearLayout)view.findViewById(R.id.layBios);
+        //  swipeRefreshLayout = ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout));
+        layBios = (LinearLayout) view.findViewById(R.id.layBios);
 
         spinnerBrief = (NiceSpinner) view.findViewById(R.id.spinnerBrief);
         layProfile = (LinearLayout) view.findViewById(R.id.layProfile);
@@ -278,8 +288,8 @@ LinearLayoutManager linearLayoutManager;
         imgSetting.setOnClickListener(this);
 
 
-
     }
+
     public void setSwipeLayout() {
 
         swipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -289,34 +299,26 @@ LinearLayoutManager linearLayoutManager;
             @Override
             public void onRefresh() {
 
-              //  callGetStory();
+                //  callGetStory();
 
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
-    public void setVisibleBio(boolean flag)
-    {
-        if(flag)
-        {
-            if(layBios!=null) {
-  layBios.setVisibility(View.VISIBLE);
+
+    public void setVisibleBio(boolean flag) {
+        if (flag) {
+            if (layBios != null) {
+                layBios.setVisibility(View.VISIBLE);
             }
-        }
-        else
-        {
-            if(layBios!=null)
-            {
+        } else {
+            if (layBios != null) {
 
                 layBios.setVisibility(View.GONE);
             }
         }
 
     }
-
-
-
-
 
 
     @Override
@@ -331,13 +333,12 @@ LinearLayoutManager linearLayoutManager;
 
             briefCvData = briefCv;
             language_cd = briefCv.getLanguage_cd();
-            language_id=briefCv.getLanguage_id().get_id();
+            language_id = briefCv.getLanguage_id().get_id();
             mFileName = language_cd + "introduction.mp4";
-            if(!briefCv.getVideo_url().isEmpty()) {
+            if (!briefCv.getVideo_url().isEmpty()) {
                 videoUrl = Urls.BASE_IMAGES_URL + briefCv.getVideo_url();
             }
-            if (briefCv.getVideo_thumbnail() != null && !briefCv.getVideo_thumbnail().isEmpty() && !briefCv.getVideo_thumbnail().equals("null"))
-            {
+            if (briefCv.getVideo_thumbnail() != null && !briefCv.getVideo_thumbnail().isEmpty() && !briefCv.getVideo_thumbnail().equals("null")) {
                 String url = Urls.BASE_IMAGES_URL + briefCv.getVideo_thumbnail();
                 System.out.println("cover_img" + url);
                 layPlaceholder.setVisibility(View.GONE);
@@ -358,8 +359,7 @@ LinearLayoutManager linearLayoutManager;
                 imgBriefCV.setVisibility(View.GONE);
                 layPlaceholder.setVisibility(View.GONE);
             }
-            if (!briefCv.getTitle_name().equals("0"))
-            {
+            if (!briefCv.getTitle_name().equals("0")) {
                 txtTitleBriefCV.setText(briefCv.getTitle_name());
             }
 
@@ -387,9 +387,8 @@ LinearLayoutManager linearLayoutManager;
 
 
             case R.id.imgBriefCV:
-                if (!videoUrl.isEmpty())
-                {
-                    log("videoUrl "+videoUrl);
+                if (!videoUrl.isEmpty()) {
+                    log("videoUrl " + videoUrl);
                     intent = new Intent(context, VideoPlayerActivity.class);
                     intent.putExtra("URL", videoUrl);
                     startActivity(intent);
@@ -429,7 +428,7 @@ LinearLayoutManager linearLayoutManager;
 
                     case R.id.menu_delete:
 
-                            callDeleteStory(storyData, position);
+                        callDeleteStory(storyData, position);
 
                         return true;
 
@@ -480,9 +479,9 @@ LinearLayoutManager linearLayoutManager;
                 return true;
             case R.id.menu_select_cover:
 
-                 //   ((MyProfileActivityNew)getActivity()).flag=true;
+                //   ((MyProfileActivityNew)getActivity()).flag=true;
 
-                parentFrag.flag=true;
+                parentFrag.flag = true;
                 flagRefresh = false;
                 dialog();
                 return true;
@@ -508,6 +507,13 @@ LinearLayoutManager linearLayoutManager;
         Intent intent = new Intent(context, MainActivitythumby.class);
         startActivityForResult(intent, Constant.PICK_VIDEO_THUMB);
 
+    }
+
+    public void getImageUri(String type)
+    {
+        Intent intent = new Intent(context, UpdateVideoImageActivity.class);
+        intent.putExtra(Constant.TYPE,type);
+        startActivityForResult(intent, Constant.REQUEST_IMAGE);
     }
 
     public void dialog() {
@@ -542,25 +548,29 @@ LinearLayoutManager linearLayoutManager;
     }
 
 
+    private void callService(String path,String type)
+    {
 
-
-
-    private void callService(String path) {
-        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
-        mServiceResultReceiver.setReceiver(this);
-        Intent mIntent = new Intent(getActivity(), FileUploadService.class);
-        mIntent.putExtra("mFilePath", path);
-        mIntent.putExtra("FileName", mFileName);
-        mIntent.putExtra("LANGUAGE_ID", language_id);
-        mIntent.putExtra("USER_ID", userId);
-        mIntent.putExtra("TOKEN", accessToken);
-        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(getActivity(), mIntent);
+        if (isConnectingToInternet(context)) {
+            mServiceResultReceiver = new ServiceResultReceiver(new Handler());
+            mServiceResultReceiver.setReceiver(this);
+            Intent mIntent = new Intent(getActivity(), FileUploadService.class);
+            mIntent.putExtra("mFilePath", path);
+            mIntent.putExtra("FileName", mFileName);
+            mIntent.putExtra("LANGUAGE_ID", language_id);
+            mIntent.putExtra("USER_ID", userId);
+            mIntent.putExtra("TYPE", type);
+            mIntent.putExtra("TOKEN", accessToken);
+            mIntent.putExtra(RECEIVER, mServiceResultReceiver);
+            mIntent.setAction(ACTION_DOWNLOAD);
+            FileUploadService.enqueueWork(getActivity(), mIntent);
+        }
+        else
+        {
+            showInternetConnectionToast();
+        }
 
     }
-
-
 
 
     @Override
@@ -574,6 +584,33 @@ LinearLayoutManager linearLayoutManager;
                 break;
 
             case STATUS:
+
+                if (resultData != null) {
+                    if (resultData.getString("REQTYPE") != null && resultData.getString("REQTYPE").equals(Constant.BRIEF_CV_VIDEO)) {
+                        String data = resultData.getString("DATA");
+                        System.out.println("data " + data);
+                        try {
+                            JSONObject object = new JSONObject(data);
+                            JSONObject body = object.getJSONObject("body");
+                            JSONArray jsonArray=body.getJSONArray("briefCV");
+                            for(int i=0;i<jsonArray.length();i++)
+                            {
+                                JSONObject jsonObject= jsonArray.getJSONObject(i);
+                                log("Title Name  "+ jsonObject.getString("title_name"));
+                                if(mParam1==i)
+                                {
+                                    log("Title Name  "+ jsonObject.getString("title_name")+" Video url "+jsonObject.getString("video_url"));
+                                    videoUrl= Urls.BASE_IMAGES_URL+jsonObject.getString("video_url").trim();
+                                }
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
                 layProgress.setVisibility(View.GONE);
                 callUpdateBriefCvImage();
                 break;
@@ -586,10 +623,6 @@ LinearLayoutManager linearLayoutManager;
 
         }
     }
-
-
-
-
 
 
     public String getPath(Uri uri) {
@@ -619,11 +652,9 @@ LinearLayoutManager linearLayoutManager;
     }
 
 
-
-
     private void getUserDetail(int refresh) {
-        if (Utility.isConnectingToInternet(context))
-        {  UserId user=new UserId();
+        if (Utility.isConnectingToInternet(context)) {
+            UserId user = new UserId();
             user.setUser_id(userId);
 //            showLoading();
             ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
@@ -633,12 +664,10 @@ LinearLayoutManager linearLayoutManager;
                 public void onResponse(Call<UserRoot> call, Response<UserRoot> response) {
 //                    dismiss_loading();
 
-                    if(response.body()!=null)
-                    {
+                    if (response.body() != null) {
                         UserRoot root = response.body();
-                        if(root.getStatus()==200)
-                        {
-                            User user=root.getUserBody().getUser();
+                        if (root.getStatus() == 200) {
+                            User user = root.getUserBody().getUser();
                             userName = user.getUser_name();
 
 //                            if((MyProfileActivityNew)getActivity()!=null)
@@ -649,31 +678,25 @@ LinearLayoutManager linearLayoutManager;
 //                                    ((MyProfileActivityNew) getActivity()).profileUrl = Urls.BASE_IMAGES_URL + root.getUserBody().getUser().getImageUrl();
 //                                }
 //                            }
-                            if(parentFrag!=null)
-                            {
+                            if (parentFrag != null) {
                                 if (parentFrag.txtSubsciber != null) {
                                     parentFrag.txtSubsciber.setText("" + root.getUserBody().getFollowers());
                                     parentFrag.txtUserName.setText(root.getUserBody().getUser().getUser_name());
                                     parentFrag.profileUrl = Urls.BASE_IMAGES_URL + root.getUserBody().getUser().getImageUrl();
                                 }
                             }
-                            if(!user.getImageUrl().isEmpty()&&user.getImageUrl()!=null)
-                            {
-                                groupiconUrl=user.getImageUrl();
+                            if (!user.getImageUrl().isEmpty() && user.getImageUrl() != null) {
+                                groupiconUrl = user.getImageUrl();
                             }
-                            brief_cvList=user.getBriefCV();
-                            if (refresh == 0)
-                            {
-                                if(brief_cvList.size()>0) {
+                            brief_cvList = user.getBriefCV();
+                            if (refresh == 0) {
+                                if (brief_cvList.size() > 0) {
                                     setBriefLayout(brief_cvList.get(mParam1));
                                 }
                             }
 
                         }
                     }
-
-
-
 
 
                 }
@@ -689,17 +712,14 @@ LinearLayoutManager linearLayoutManager;
     }
 
 
-
-
-
     private void addNewStory() {
         Intent intent = new Intent(context, AddSubscriptionStoryActivity.class);
         Bundle arg = new Bundle();
         arg.putSerializable("List", (Serializable) brief_cvList);
         intent.putExtra("BUNDLE", arg);
         intent.putExtra("ID", "");
-        intent.putExtra("POSITION",mParam1);
-        startActivityForResult(intent,Constant.REQUEST_NEW_STORY);
+        intent.putExtra("POSITION", mParam1);
+        startActivityForResult(intent, Constant.REQUEST_NEW_STORY);
 
     }
 
@@ -707,46 +727,35 @@ LinearLayoutManager linearLayoutManager;
         if (isInternetConnected()) {
             showLoading();
 
-            ReqDeleteStory deleteStory=new ReqDeleteStory();
+            ReqDeleteStory deleteStory = new ReqDeleteStory();
             deleteStory.setStoryId(storyModel.get_id());
             deleteStory.setStory_provider(storyModel.getStory_provider());
-            ApiInterface apiInterface=ApiClientProfile.getClient().create(ApiInterface.class);
-           Call<Root> call= apiInterface.reqDeleteStory(accessToken,deleteStory);
-           call.enqueue(new Callback<Root>() {
-               @Override
-               public void onResponse(Call<Root> call, Response<Root> response)
-               {
-                   dismiss_loading();
-                   if(response.body()!=null)
-                   {
-                       if(response.body().getStatus()==200)
-                       {
-                           userStoryAdapter.updateData(position);
-                       }
+            ApiInterface apiInterface = ApiClientProfile.getClient().create(ApiInterface.class);
+            Call<Root> call = apiInterface.reqDeleteStory(accessToken, deleteStory);
+            call.enqueue(new Callback<Root>() {
+                @Override
+                public void onResponse(Call<Root> call, Response<Root> response) {
+                    dismiss_loading();
+                    if (response.body() != null) {
+                        if (response.body().getStatus() == 200) {
+                            userStoryAdapter.updateData(position);
+                        }
 
 
-                   }
-               }
+                    }
+                }
 
-               @Override
-               public void onFailure(Call<Root> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Root> call, Throwable t) {
 
-               }
-           });
-
+                }
+            });
 
 
         } else {
             showInternetConnectionToast();
         }
     }
-
-
-
-
-
-
-
 
 
     public void TakePic() {
@@ -782,8 +791,10 @@ LinearLayoutManager linearLayoutManager;
                 }
             }
         }
-        TakePic();
+
+        getImageUri(Constant.REQ_CAMERA);
     }
+
 
     public void setGalleryPermission() {
         if (Build.VERSION.SDK_INT >= PermissionsUtils.SDK_INT_MARSHMALLOW) {
@@ -792,7 +803,8 @@ LinearLayoutManager linearLayoutManager;
             }
         }
 
-        Gallery();
+        //Gallery();
+        getImageUri(Constant.REQ_GALLERY);
     }
 
     //REQUEST_CODE_ALBUM
@@ -808,6 +820,7 @@ LinearLayoutManager linearLayoutManager;
             startActivityForResult(i, Constant.REQUEST_CODE_ALBUM);
         }
     }
+
     private void goToSettings() {
         Intent myAppSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + context.getPackageName()));
         myAppSettings.addCategory(Intent.CATEGORY_DEFAULT);
@@ -818,7 +831,7 @@ LinearLayoutManager linearLayoutManager;
     public void checkIfPermissionsGranted() {
         AlertDialog alertDialog;
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context,R.style.CustomDialogTheme);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, R.style.CustomDialogTheme);
         alertDialogBuilder.setMessage(getString(R.string.permission));
 
         alertDialogBuilder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
@@ -844,12 +857,10 @@ LinearLayoutManager linearLayoutManager;
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case PermissionsUtils.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
-                {
-                    showToast("onRequestPermissionsResult");
+            case PermissionsUtils.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                showToast("onRequestPermissionsResult");
                 Log.d("Checking", "permissions: " + Arrays.asList(permissions) + ", grantResults:" + Arrays.asList(grantResults));
-                if (PermissionsUtils.getInstance(context).areAllPermissionsGranted(grantResults))
-                {
+                if (PermissionsUtils.getInstance(context).areAllPermissionsGranted(grantResults)) {
                     if (isForCamera)
                         TakePic();
                     else
@@ -865,9 +876,7 @@ LinearLayoutManager linearLayoutManager;
     }
 
 
-
-
-//    private void showStoryData(JSONArray jsonArray) {
+    //    private void showStoryData(JSONArray jsonArray) {
 //        Type type = new TypeToken<ArrayList<StoryData>>() {
 //        }.getType();
 //        storyDataArrayList = new Gson().fromJson(jsonArray.toString(), type);
@@ -884,46 +893,41 @@ LinearLayoutManager linearLayoutManager;
 //        });
 //        recyclerView.setAdapter(subscriptionStoryAdapter);
 //    }
-    File imageFile =null;
+    File imageFile = null;
 
-    private void callUpdateBriefCvImage()
-    {
-        if (isConnectingToInternet(context))
-        {
+    private void callUpdateBriefCvImage() {
+        if (isConnectingToInternet(context)) {
             showLoading();
-            RequestBody usercd=RequestBody.create( MediaType.parse("text/plain"),userId);
-            RequestBody languageId=RequestBody.create( MediaType.parse("text/plain"),language_id);
-            MultipartBody.Part productimg= null;
-            RequestBody requestfile=null;
-            if (imageFile !=null) {
-                requestfile=RequestBody.create(MediaType.parse("image/jpeg"),imageFile);
-                productimg = MultipartBody.Part.createFormData("image",imageFile.getName(),requestfile);
+            RequestBody usercd = RequestBody.create(MediaType.parse("text/plain"), userId);
+            RequestBody languageId = RequestBody.create(MediaType.parse("text/plain"), language_id);
+            MultipartBody.Part productimg = null;
+            RequestBody requestfile = null;
+            if (imageFile != null) {
+                requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+                productimg = MultipartBody.Part.createFormData("image", imageFile.getName(), requestfile);
             }
 
             ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call= apiInterface.reqUpdateBriefThumbnail(accessToken,usercd,languageId,productimg);
+            Call<ResponseBody> call = apiInterface.reqUpdateBriefThumbnail(accessToken, usercd, languageId, productimg);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
-                {
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     dismiss_loading();
-                    if(response.body()!=null)
-                    {
+                    if (response.body() != null) {
 //                        errorBody(response,true);
 
                         try {
                             try {
-                                ResponseBody responseBody=null;
+                                ResponseBody responseBody = null;
 
                                 responseBody = response.body();
 
-                                String data =responseBody.string();
+                                String data = responseBody.string();
 
-                                System.out.println("error1"+data);
-                                JSONObject jsonObject=new JSONObject(data);
+                                System.out.println("error1" + data);
+                                JSONObject jsonObject = new JSONObject(data);
 
-                                if(jsonObject.getInt("status")==200)
-                                {
+                                if (jsonObject.getInt("status") == 200) {
                                     showToast(jsonObject.getString("message"));
                                     imgBriefCV.setVisibility(View.VISIBLE);
                                     imgBriefCV.setImageBitmap(bitUpload);
@@ -937,9 +941,7 @@ LinearLayoutManager linearLayoutManager;
                         }
 
 
-                    }
-                    else
-                    {
+                    } else {
 //                        errorBody(response,false);
                     }
                 }
@@ -950,9 +952,7 @@ LinearLayoutManager linearLayoutManager;
                 }
             });
 
-        }
-        else
-        {
+        } else {
             showInternetConnectionToast();
         }
     }
@@ -971,6 +971,7 @@ LinearLayoutManager linearLayoutManager;
                             .setCropShape(CropImageView.CropShape.RECTANGLE)
                             .setAspectRatio(2, 1)
                             .start(getActivity());
+                    callUploadImage(mCameraImageUri);
 
                     break;
 
@@ -982,10 +983,12 @@ LinearLayoutManager linearLayoutManager;
 //                        bm = ConvetBitmap.Mytransform(bm);
 //                        bm = Utility.rotateImage(bm, new File(mImageCaptureUri.getPath()));
 //                        imgBriefCV.setImageBitmap(bm);
-                        CropImage.activity(mImageCaptureUri)
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)
-                                .setAspectRatio(2, 1)
-                                .start(getActivity());
+//                        CropImage.activity(mImageCaptureUri)
+//                                .setCropShape(CropImageView.CropShape.RECTANGLE)
+//                                .setAspectRatio(2, 1)
+//                                .start(getActivity());
+
+                        //callUploadImage(mImageCaptureUri);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -994,7 +997,7 @@ LinearLayoutManager linearLayoutManager;
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
 //                    ((MyProfileActivityNew)getActivity()).flag=true;
-                    parentFrag.flag=true;
+                    parentFrag.flag = true;
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     if (resultCode == RESULT_OK) {
                         Uri resultUri = result.getUri();
@@ -1006,8 +1009,8 @@ LinearLayoutManager linearLayoutManager;
                             imgBriefCV.setImageBitmap(bm);
                             ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
                             bm.compress(Bitmap.CompressFormat.JPEG, 100, datasecond);
-                            bitUpload=bm;
-                            imageFile =Utility.getFileByBitmap(context,bm,"thumb");
+                            bitUpload = bm;
+                            imageFile = Utility.getFileByBitmap(context, bm, "thumb");
                             callUpdateBriefCvImage();
 //
 //                            ByteArray = datasecond.toByteArray();
@@ -1022,6 +1025,10 @@ LinearLayoutManager linearLayoutManager;
                     }
                     break;
 
+                    case CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE:
+                        log("getting erroor");
+                        break;
+
 
                 default:
                     break;
@@ -1031,44 +1038,42 @@ LinearLayoutManager linearLayoutManager;
         }
         if (requestCode == Constant.REQUEST_CODE_ALBUM_Gallery) {
 //            ((MyProfileActivityNew)getActivity()).flag=true;
-            parentFrag.flag=true;
+            parentFrag.flag = true;
             if (data != null) {
 
                 Uri contentURI = data.getData();
                 String selectedVideoPath = getPath(contentURI);
-                callService(selectedVideoPath);
+                callService(selectedVideoPath,Constant.BRIEF_CV_IMAGE);
                 Log.d("path", selectedVideoPath);
 
             }
         }
         if (requestCode == Constant.PICK_VIDEO_THUMB) {
 //            ((MyProfileActivityNew)getActivity()).flag=true;
-            parentFrag.flag=true;
+            parentFrag.flag = true;
             if (data != null) {
 
                 long location = data.getLongExtra(EXTRA_THUMBNAIL_POSITION, 0);
                 Uri uri = data.getParcelableExtra(EXTRA_URI);
                 Bitmap bitmap = ThumbyUtils.getBitmapAtFrame(context, uri, location, 200, 200);
-                bitUpload=bitmap;
+                bitUpload = bitmap;
                 imgBriefCV.setImageBitmap(bitmap);
                 ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 70, datasecond);
-                imageFile =Utility.getFileByBitmap(context,bitmap,"thumb");
+                imageFile = Utility.getFileByBitmap(context, bitmap, "thumb");
                 byte[] ByteArray = datasecond.toByteArray();
-
                 String selectedVideoPath = data.getStringExtra(VIDEO_PATH);
 //                imgBriefCV.setImageBitmap(bm);
 
 
-                callService(selectedVideoPath);
+                callService(selectedVideoPath,Constant.BRIEF_CV_VIDEO);
 
             }
 
         }
-        if (requestCode == Constant.REQUEST_BRIEF)
-        {
+        if (requestCode == Constant.REQUEST_BRIEF) {
 //            ((MyProfileActivityNew)getActivity()).flag=true;
-            parentFrag.flag=true;
+            parentFrag.flag = true;
             if (data != null) {
 
                 String briefcvtxt = data.getStringExtra("DATA");
@@ -1088,6 +1093,28 @@ LinearLayoutManager linearLayoutManager;
             }
 
 
+        }
+        if(requestCode==Constant.REQUEST_IMAGE)
+        {
+            parentFrag.flag = true;
+            if (data != null)
+            {
+
+                try {
+                    Uri resultUri = data.getParcelableExtra("URI");
+                    ByteArray = null;
+                    Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+                    bmCover = bm;
+                    imgBriefCV.setImageBitmap(bm);
+                    ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.JPEG, 100, datasecond);
+                    bitUpload = bm;
+                    imageFile = Utility.getFileByBitmap(context, bm, "thumb");
+                    callUpdateBriefCvImage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
 //        if (requestCode == Constant.REQUEST_NEW_STORY)
@@ -1129,6 +1156,31 @@ LinearLayoutManager linearLayoutManager;
 
     }
 
+
+
+    private void callUploadImage( Uri resultUri)
+    {
+     //   Uri resultUri = result.getUri();
+        try {
+            ByteArray = null;
+            Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+            bmCover = bm;
+
+            imgBriefCV.setImageBitmap(bm);
+            ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, datasecond);
+            bitUpload = bm;
+            imageFile = Utility.getFileByBitmap(context, bm, "thumb");
+            callUpdateBriefCvImage();
+//
+//                            ByteArray = datasecond.toByteArray();
+//                            String coverImg = base64String(ByteArray);
+//                            callUploadImage(coverImg, Utility.getTimeOnly() + "_thumbnail");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

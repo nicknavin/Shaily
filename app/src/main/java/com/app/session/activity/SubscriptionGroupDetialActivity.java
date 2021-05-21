@@ -44,6 +44,7 @@ import com.app.session.base.BaseActivity;
 import com.app.session.customview.CustomEditText;
 import com.app.session.customview.CustomTextView;
 import com.app.session.customview.MyDialog;
+import com.app.session.data.model.UserSubscriptionGroupsBody;
 import com.app.session.interfaces.ObjectCallback;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.interfaces.ServiceResultReceiver;
@@ -79,8 +80,6 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -92,9 +91,10 @@ import static com.app.session.service.FileUploadService.STATUS;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_THUMBNAIL_POSITION;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_URI;
 import static com.app.session.thumby.ThumbyActivity.VIDEO_PATH;
+import static com.app.session.utility.Utility.isConnectingToInternet;
 
-public class SubscriptionGroupDetialActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener , ServiceResultReceiver.Receiver {
-    private static final String TAG ="SubscriptionGroupDetialActivity" ;
+public class SubscriptionGroupDetialActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ServiceResultReceiver.Receiver {
+    private static final String TAG = "SubscriptionGroupDetialActivity";
     ScrollView layMid;
     CheckBox imgDrop;
     private Dialog dialogSelect;
@@ -104,122 +104,59 @@ public class SubscriptionGroupDetialActivity extends BaseActivity implements Vie
     private ServiceResultReceiver mServiceResultReceiver;
     public static final String RECEIVER = "receiver";
     private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
-    String mFileName = "", imgCoverName="",videoUrl = "", videoCoverImg = "", videoCoverImgName="",language_cd = "", currency_cd = "", category_cd = "",subscription_group_cd="",subscription_group_name="";
-    ImageView imgGroupCover,imgVideoCover,imgMenu,imgProfileCover;
+    String mFileName = "", imgCoverName = "", videoUrl = "", videoCoverImg = "", videoCoverImgName = "", language_cd = "", currency_cd = "", category_cd = "", subscription_group_cd = "", subscription_group_name = "";
+    ImageView imgGroupCover, imgVideoCover, imgMenu, imgProfileCover;
     LinearLayout layProgress;
-    Bitmap bmGroupCover = null,bmVideoCover=null;
+    Bitmap bmGroupCover = null, bmVideoCover = null;
     CustomTextView txtUploading;
     ProgressBar progressBar;
-    SubscriptionGroup subscriptionGroup =null;
-    CustomTextView txtGroupName,txtPrice,txtGroupName2,txtLanguageName,txtCategoryName,txtCategoryName1,txtCurrency,txtGroupName3;
+    SubscriptionGroup subscriptionGroup = null;
+    CustomTextView txtGroupName, txtPrice, txtGroupName2, txtLanguageName, txtCategoryName, txtCategoryName1, txtCurrency, txtGroupName3;
     ReadMoreTextView txtDiscription;
     Bundle bundle;
     Context context;
     boolean refreshpage;
-    String story_time = "", story_text = "", story_type = "",thumbnail_text="",story_caption = "", story_title = "", story_imgBase64="";
+    String story_time = "", story_text = "", story_type = "", thumbnail_text = "", story_caption = "", story_title = "", story_imgBase64 = "";
     CustomEditText edt_title, edt_story;
-    ImageView img_attachment,imgStory;
+    ImageView img_attachment, imgStory;
     CustomTextView txt_story_add;
     public String accessToken = "", userId = "", is_consultant = "", is_company = "", user_name = "";
     private boolean flagStory;
-    ArrayList<StoryData> storyDataArrayList=new ArrayList<>();
-SubscriptionStoryAdapter subscriptionStoryAdapter;
-String groupName="",groupiconUrl="";
-RecyclerView recyclerView;
-ImageView imgAdd;
+    ArrayList<StoryData> storyDataArrayList = new ArrayList<>();
+    SubscriptionStoryAdapter subscriptionStoryAdapter;
+    String groupName = "", groupiconUrl = "";
+    RecyclerView recyclerView;
+    ImageView imgAdd;
     FloatingActionButton fab;
-    ArrayList<Brief_CV>brief_cvList;
+    ArrayList<Brief_CV> brief_cvList;
+    UserSubscriptionGroupsBody groupsBody;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription_group_detial_new);
-        context=this;
+        context = this;
 //        initGetYouTube();
         initData();
         Intent intent = getIntent();
         bundle = intent.getBundleExtra("BUNDLE");
-        if(bundle!=null) {
+        if (bundle != null) {
             brief_cvList = (ArrayList<Brief_CV>) bundle.getSerializable("List");
         }
-        if (getIntent().getStringExtra("ID") != null)
-        {
-            subscription_group_cd=getIntent().getStringExtra("ID");
-            ((CustomTextView)findViewById(R.id.header)).setText(getIntent().getStringExtra("NAME"));
+        if (getIntent().getStringExtra("ID") != null) {
+            subscription_group_cd = getIntent().getStringExtra("ID");
+            ((CustomTextView) findViewById(R.id.header)).setText(getIntent().getStringExtra("NAME"));
 
         }
         initView();
-
-
+        getGroupData();
 
     }
 
 
-    private void initData()
-    {
+    private void initData() {
         accessToken = DataPrefrence.getPref(context, Constant.ACCESS_TOKEN, "");
         userId = DataPrefrence.getPref(context, Constant.USER_ID, "");
-
     }
-
-
-
-    private void initGetYouTube()
-    {
-        Intent intent = getIntent();
-
-        String action = intent.getAction();
-
-        if (intent.getType()!=null) {
-            String type = intent.getType();
-            String url="";
-            if ("android.intent.action.SEND".equals(action) && type != null && "text/plain".equals(type))
-            {
-                url=intent.getStringExtra("android.intent.extra.TEXT");
-                Log.println(Log.ASSERT,"shareablTextExtra",intent.getStringExtra("android.intent.extra.TEXT"));
-            }
-            if ("android.intent.action.SEND".equals(action) && type != null && "video".equals(type))
-            {
-                url=intent.getStringExtra("android.intent.extra.TEXT");
-                Log.println(Log.ASSERT,"shareablTextExtra",intent.getStringExtra("android.intent.extra.TEXT"));
-
-
-            }
-//https://youtu.be/pEnM4ArZf7U
-            String youtube="https://youtu.be/6ym8dyK94i0";
-            String df= "https://youtu.be/6ym8dyK94i0"+getYoutubeVideoIdFromUrl(youtube) + "/0.jpg";
-
-            if (type.startsWith("text/")) {
-
-                String receivedText = intent
-                        .getStringExtra(Intent.EXTRA_TEXT);
-                if (receivedText != null) {
-                    //do your stuff
-                }
-            }
-        }
-
-
-    }
-
-    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl)
-    {
-        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
-    }
-
-    public static String getYoutubeVideoIdFromUrl(String inUrl) {
-        inUrl = inUrl.replace("&feature=youtu.be", "");
-        if (inUrl.toLowerCase().contains("youtu.be")) {
-            return inUrl.substring(inUrl.lastIndexOf("/") + 1);
-        }
-        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
-        Pattern compiledPattern = Pattern.compile(pattern);
-        Matcher matcher = compiledPattern.matcher(inUrl);
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
-
 
 
     @Override
@@ -229,62 +166,72 @@ ImageView imgAdd;
         callGetStory();
     }
 
-    private void initView()
-    {
-        recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
+    private void initView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        ((ImageView)findViewById(R.id.imgBack)).setOnClickListener(new View.OnClickListener() {
+        ((ImageView) findViewById(R.id.imgBack)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-        txt_story_add=(CustomTextView)findViewById(R.id.txt_story_add);
+        txt_story_add = (CustomTextView) findViewById(R.id.txt_story_add);
         txt_story_add.setOnClickListener(this);
-        imgAdd=(ImageView) findViewById(R.id.imgAdd);
+        imgAdd = (ImageView) findViewById(R.id.imgAdd);
         imgAdd.setOnClickListener(this);
-        fab=(FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        txtGroupName3=(CustomTextView)findViewById(R.id.txtGroupName3);
-        txtCurrency=(CustomTextView)findViewById(R.id.txtCurrency);
-        txtCategoryName=(CustomTextView)findViewById(R.id.txtCategoryName);
-        txtCategoryName1=(CustomTextView)findViewById(R.id.txtCategoryName1);
-        txtLanguageName=(CustomTextView)findViewById(R.id.txtLanguageName);
-        txtGroupName2=(CustomTextView)findViewById(R.id.txtGroupName2);
-        txtPrice=(CustomTextView)findViewById(R.id.txtPrice);
-        txtGroupName=(CustomTextView)findViewById(R.id.txtGroupName);
-        txtDiscription=(ReadMoreTextView) findViewById(R.id.txtDiscription);
+        txtGroupName3 = (CustomTextView) findViewById(R.id.txtGroupName3);
+        txtCurrency = (CustomTextView) findViewById(R.id.txtCurrency);
+        txtCategoryName = (CustomTextView) findViewById(R.id.txtCategoryName);
+        txtCategoryName1 = (CustomTextView) findViewById(R.id.txtCategoryName1);
+        txtLanguageName = (CustomTextView) findViewById(R.id.txtLanguageName);
+        txtGroupName2 = (CustomTextView) findViewById(R.id.txtGroupName2);
+        txtPrice = (CustomTextView) findViewById(R.id.txtPrice);
+        txtGroupName = (CustomTextView) findViewById(R.id.txtGroupName);
+        txtDiscription = (ReadMoreTextView) findViewById(R.id.txtDiscription);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         txtUploading = (CustomTextView) findViewById(R.id.txtUploading);
         layProgress = (LinearLayout) findViewById(R.id.layProgress);
-        imgGroupCover=(ImageView)findViewById(R.id.imgGroupCover);
-        imgProfileCover=(ImageView)findViewById(R.id.imgProfileCover);
-        imgVideoCover=(ImageView)findViewById(R.id.imgVideoCover);
+        imgGroupCover = (ImageView) findViewById(R.id.imgGroupCover);
+        imgProfileCover = (ImageView) findViewById(R.id.imgProfileCover);
+        imgVideoCover = (ImageView) findViewById(R.id.imgVideoCover);
         imgVideoCover.setOnClickListener(this);
-        ((ImageView)findViewById(R.id.imgMenu)).setOnClickListener(this);
-        imgDrop=(CheckBox)findViewById(R.id.imgDrop);
+        ((ImageView) findViewById(R.id.imgMenu)).setOnClickListener(this);
+        imgDrop = (CheckBox) findViewById(R.id.imgDrop);
         imgDrop.setOnClickListener(this);
-        layMid=(ScrollView)findViewById(R.id.layMid);
-        ((ImageView)findViewById(R.id.imgEditdisc)).setOnClickListener(this);
-        ((ImageView)findViewById(R.id.imgEditDetail)).setOnClickListener(this);
+        layMid = (ScrollView) findViewById(R.id.layMid);
+        ((ImageView) findViewById(R.id.imgEditdisc)).setOnClickListener(this);
+        ((ImageView) findViewById(R.id.imgEditDetail)).setOnClickListener(this);
 
 
     }
+    private void getGroupData()
+    {
+        if(getIntent().getParcelableExtra(Constant.SUBS_GROUP)!=null)
+        {
+            groupsBody =getIntent().getParcelableExtra(Constant.SUBS_GROUP);
+            txtGroupName.setText(groupsBody.getGroup_name());
+            txtGroupName2.setText(groupsBody.getGroup_name());
+            txtCurrency.setText(groupsBody.getCurrency_id().getCurrency_name());
+            txtDiscription.setText(groupsBody.getGroup_description());
+            txtPrice.setText(groupsBody.getSubscription_price());
+            txtLanguageName.setText(groupsBody.getLanguage_id().getNativeName());
 
+        }
+    }
     @Override
     public void onClick(View view) {
-        Intent intent=null;
-        switch (view.getId())
-        {
+        Intent intent = null;
+        switch (view.getId()) {
             case R.id.fab:
-                intent=new Intent(context, AddSubscriptionStoryActivity.class);
+                intent = new Intent(context, AddSubscriptionStoryActivity.class);
                 Bundle arg = new Bundle();
                 arg.putSerializable("List", (Serializable) brief_cvList);
                 intent.putExtra("BUNDLE", arg);
-                intent.putExtra("ID",subscription_group_cd);
-
+                intent.putExtra("ID", subscription_group_cd);
                 startActivity(intent);
                 break;
             case R.id.txt_story_add:
@@ -292,23 +239,23 @@ ImageView imgAdd;
                 callStoryDialog();
                 break;
             case R.id.imgEditDetail:
-                refreshpage=false;
-                intent=new Intent(context,SubscriptionGroupUpdateActivity.class);
-                intent.putExtra("BUNDLE",bundle);
-                intent.putExtra("TYPE","1");
-                intent.putExtra("DATA",subscriptionGroup);
+                refreshpage = false;
+                intent = new Intent(context, SubscriptionGroupUpdateActivity.class);
+                intent.putExtra("BUNDLE", bundle);
+                intent.putExtra("TYPE", "1");
+                intent.putExtra("DATA", subscriptionGroup);
                 startActivity(intent);
                 break;
-                case R.id.imgEditdisc:
-                refreshpage=false;
-                intent=new Intent(context,UpdateSubscriptionGroupDiscription.class);
-                intent.putExtra("DATA",subscriptionGroup);
+            case R.id.imgEditdisc:
+                refreshpage = false;
+                intent = new Intent(context, UpdateSubscriptionGroupDiscription.class);
+                intent.putExtra("DATA", subscriptionGroup);
                 startActivity(intent);
                 break;
 
 
             case R.id.imgVideoCover:
-                if(!videoUrl.isEmpty()) {
+                if (!videoUrl.isEmpty()) {
                     intent = new Intent(context, VideoPlayerActivity.class);
                     String url = Urls.BASE_VIDEO_URL + videoUrl;
                     intent.putExtra("URL", url);
@@ -317,13 +264,10 @@ ImageView imgAdd;
                 break;
             case R.id.imgDrop:
 
-                if(imgDrop.isChecked())
-                {
+                if (imgDrop.isChecked()) {
                     layMid.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     layMid.setVisibility(View.GONE);
                 }
@@ -331,7 +275,7 @@ ImageView imgAdd;
                 break;
 
             case R.id.imgMenu:
-                flagStory=false;
+                flagStory = false;
                 showMenu(view);
                 break;
             case R.id.imgTake_photo:
@@ -377,8 +321,6 @@ ImageView imgAdd;
     }
 
 
-
-
     public void callVideoFrameThumb() {
         Intent intent = new Intent(context, MainActivitythumby.class);
         startActivityForResult(intent, Constant.PICK_VIDEO_THUMB);
@@ -392,6 +334,7 @@ ImageView imgAdd;
         newBitmap.recycle();
         return color;
     }
+
     public void dialog() {
         dialogSelect = new Dialog(context, R.style.MaterialDialogSheet);
         dialogSelect.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -522,7 +465,7 @@ ImageView imgAdd;
                     dismiss_loading();
                     try {
                         JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("image requ: "+js.toString());
+                        System.out.println("image requ: " + js.toString());
                         if (jsonObject.getString("rstatus").equals("1")) {
 
                             callUploadImageFinal(imgName);
@@ -566,7 +509,7 @@ ImageView imgAdd;
             jsonObject.put("fname", imgName);
             jsonObject.put("img", baseImg);
 
-            System.out.println("parameterImage"+jsonObject.toString());
+            System.out.println("parameterImage" + jsonObject.toString());
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -585,12 +528,11 @@ ImageView imgAdd;
                     try {
                         System.out.println("");
                         JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("image requ final: "+js.toString());
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
+                        System.out.println("image requ final: " + js.toString());
+                        if (jsonObject.getString("rstatus").equals("1")) {
                             imgGroupCover.setImageBitmap(bmGroupCover);
                             imgProfileCover.setImageBitmap(bmGroupCover);
-                            imgCoverName=jsonObject.getString("url");
+                            imgCoverName = jsonObject.getString("url");
                             //callGetProfile(getParamProfile(), Urls.GET_USER_DETAIL);
                         }
                     } catch (JSONException e) {
@@ -632,7 +574,7 @@ ImageView imgAdd;
             jsonObject.put("subscription_group_cd", subscription_group_cd);
             jsonObject.put("user_cd", userId);
             jsonObject.put("url", imgName + ".png");
-            System.out.println("parameterImageFinal"+jsonObject.toString());
+            System.out.println("parameterImageFinal" + jsonObject.toString());
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -641,21 +583,28 @@ ImageView imgAdd;
     }
 
     private void callService(String path) {
-        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
-        mServiceResultReceiver.setReceiver(this);
-        Intent mIntent = new Intent(this, FileUploadService.class);
-        mIntent.putExtra("mFilePath", path);
-        mIntent.putExtra("FileName", mFileName);
-        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(this, mIntent);
+
+        if (isConnectingToInternet(context)) {
+            mServiceResultReceiver = new ServiceResultReceiver(new Handler());
+            mServiceResultReceiver.setReceiver(this);
+            Intent mIntent = new Intent(this, FileUploadService.class);
+            mIntent.putExtra("mFilePath", path);
+            mIntent.putExtra("FileName", mFileName);
+            mIntent.putExtra(RECEIVER, mServiceResultReceiver);
+            mIntent.setAction(ACTION_DOWNLOAD);
+            FileUploadService.enqueueWork(this, mIntent);
+        }
+        else
+        {
+            showInternetConnectionToast();
+        }
 
     }
 
     private void callUploadVideoUpdate() {
         if (isInternetConnected()) {
             showLoading();
-            new BaseAsych(Urls.UPLOAD_GROUP_VIDEO , getParamUpdateVideo(), new RequestCallback() {
+            new BaseAsych(Urls.UPLOAD_GROUP_VIDEO, getParamUpdateVideo(), new RequestCallback() {
                 @Override
                 public void onSuccess(JSONObject js, String success) {
                     dismiss_loading();
@@ -665,11 +614,10 @@ ImageView imgAdd;
                         imgVideoCover.setBackgroundColor(Utility.getDominantColor(bmVideoCover));
                         JSONObject jsonObject = js.getJSONObject("result");
                         if (jsonObject.getString("rstatus").equals("1")) {
-                            callUploadVideoCoverImage(videoCoverImg,videoCoverImgName);
-                            if (jsonObject.getString("url") != null && !jsonObject.getString("url").isEmpty())
-                            {
+                            callUploadVideoCoverImage(videoCoverImg, videoCoverImgName);
+                            if (jsonObject.getString("url") != null && !jsonObject.getString("url").isEmpty()) {
                                 videoUrl = jsonObject.getString("url");
-                                System.out.println("videourl"+videoUrl);
+                                System.out.println("videourl" + videoUrl);
 
                             }
 
@@ -714,7 +662,7 @@ ImageView imgAdd;
             jsonObject.put("user_cd", userId);
             jsonObject.put("subscription_group_cd", subscription_group_cd);
             jsonObject.put("video_url", mFileName);
-            System.out.println("Video parameter "+jsonObject.toString());
+            System.out.println("Video parameter " + jsonObject.toString());
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -788,11 +736,10 @@ ImageView imgAdd;
 
         if (value == 100) {
             progressBar.setVisibility(View.GONE);
-layProgress.setVisibility(View.GONE);
+            layProgress.setVisibility(View.GONE);
         }
 
     }
-
 
 
     private void callGetSubscriptionGroup() {
@@ -805,65 +752,61 @@ layProgress.setVisibility(View.GONE);
                     try {
 
                         JSONObject jsonObject = js.getJSONObject("result");
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
+                        if (jsonObject.getString("rstatus").equals("1")) {
 
-                            if(js.getJSONArray("subscription_group_list")!=null)
-                            {
-                                    JSONArray jsonArray = js.getJSONArray("subscription_group_list");
-                                    JSONObject object = jsonArray.getJSONObject(0);
-                                    subscriptionGroup = new SubscriptionGroup();
-                                    subscriptionGroup.setCategory_cd(object.getString("category_cd"));
-                                    subscriptionGroup.setCategory_name(object.getString("category_name"));
-                                    subscriptionGroup.setCurrency_cd(object.getString("currency_cd"));
-                                    subscriptionGroup.setCurrency_name_en(object.getString("currency_name_en"));
-                                    subscriptionGroup.setGroup_desc(object.getString("group_desc"));
-                                    subscriptionGroup.setGroup_introduction_video_url(object.getString("group_introduction_video_url"));
-                                    subscriptionGroup.setGroup_name(object.getString("group_name"));
-                                    subscriptionGroup.setGroup_url_image_address(object.getString("group_url_image_address"));
-                                    subscriptionGroup.setLanguage_cd(object.getString("language_cd"));
-                                    subscriptionGroup.setLanguage(object.getString("language"));
-                                    subscriptionGroup.setSubscription_group_cd(object.getString("subscription_group_cd"));
-                                    subscriptionGroup.setSubscription_price(object.getDouble("subscription_price"));
-                                    subscriptionGroup.setUser_cd(object.getString("user_cd"));
-                                    subscriptionGroup.setGroup_thumbnail_url(object.getString("group_thumbnail_url"));
-                                subscription_group_name= subscriptionGroup.getGroup_name();
-                                subscription_group_cd= subscriptionGroup.getSubscription_group_cd();
+                            if (js.getJSONArray("subscription_group_list") != null) {
+                                JSONArray jsonArray = js.getJSONArray("subscription_group_list");
+                                JSONObject object = jsonArray.getJSONObject(0);
+                                subscriptionGroup = new SubscriptionGroup();
+                                subscriptionGroup.setCategory_cd(object.getString("category_cd"));
+                                subscriptionGroup.setCategory_name(object.getString("category_name"));
+                                subscriptionGroup.setCurrency_cd(object.getString("currency_cd"));
+                                subscriptionGroup.setCurrency_name_en(object.getString("currency_name_en"));
+                                subscriptionGroup.setGroup_desc(object.getString("group_desc"));
+                                subscriptionGroup.setGroup_introduction_video_url(object.getString("group_introduction_video_url"));
+                                subscriptionGroup.setGroup_name(object.getString("group_name"));
+                                subscriptionGroup.setGroup_url_image_address(object.getString("group_url_image_address"));
+                                subscriptionGroup.setLanguage_cd(object.getString("language_cd"));
+                                subscriptionGroup.setLanguage(object.getString("language"));
+                                subscriptionGroup.setSubscription_group_cd(object.getString("subscription_group_cd"));
+                                subscriptionGroup.setSubscription_price(object.getDouble("subscription_price"));
+                                subscriptionGroup.setUser_cd(object.getString("user_cd"));
+                                subscriptionGroup.setGroup_thumbnail_url(object.getString("group_thumbnail_url"));
+                                subscription_group_name = subscriptionGroup.getGroup_name();
+                                subscription_group_cd = subscriptionGroup.getSubscription_group_cd();
                                 Typeface face = Typeface.createFromAsset(context.getAssets(),
                                         "Roboto-Regular.ttf");
-                                txtDiscription .setTypeface(face);
-                                txtDiscription .setTrimCollapsedText(" more");
-                                txtDiscription .setTrimExpandedText(" less");
+                                txtDiscription.setTypeface(face);
+                                txtDiscription.setTrimCollapsedText(" more");
+                                txtDiscription.setTrimExpandedText(" less");
                                 txtDiscription.setText(subscriptionGroup.getGroup_desc());
 
                                 txtGroupName.setText(subscriptionGroup.getGroup_name());
                                 txtGroupName2.setText(subscriptionGroup.getGroup_name());
                                 txtGroupName3.setText(subscriptionGroup.getGroup_name());
-                                txtPrice.setText(""+subscriptionGroup.getSubscription_price());
+                                txtPrice.setText("" + subscriptionGroup.getSubscription_price());
                                 txtLanguageName.setText(subscriptionGroup.getLanguage());
                                 txtCategoryName.setText(subscriptionGroup.getCategory_name());
                                 txtCategoryName1.setText(subscriptionGroup.getCategory_name());
                                 txtCurrency.setText(subscriptionGroup.getCurrency_name_en());
-                                videoUrl=subscriptionGroup.getGroup_introduction_video_url();
+                                videoUrl = subscriptionGroup.getGroup_introduction_video_url();
 
-                                if (subscriptionGroup.getGroup_thumbnail_url() != null && !subscriptionGroup.getGroup_thumbnail_url().isEmpty())
-                                {
-                                    String url=Urls.BASE_IMAGES_URL + subscriptionGroup.getGroup_thumbnail_url();
+                                if (subscriptionGroup.getGroup_thumbnail_url() != null && !subscriptionGroup.getGroup_thumbnail_url().isEmpty()) {
+                                    String url = Urls.BASE_IMAGES_URL + subscriptionGroup.getGroup_thumbnail_url();
                                     Picasso.with(context).load(url).memoryPolicy(MemoryPolicy.NO_STORE).into(imgVideoCover);
 
                                 }
 
                                 if (subscriptionGroup.getGroup_url_image_address() != null && !subscriptionGroup.getGroup_url_image_address().isEmpty()) {
 
-                                    groupiconUrl=Urls.BASE_IMAGES_URL + subscriptionGroup.getGroup_url_image_address();
+                                    groupiconUrl = Urls.BASE_IMAGES_URL + subscriptionGroup.getGroup_url_image_address();
                                     //Picasso.with(context).load(Urls.BASE_IMAGES_URL +group.getGroup_url_image_address()).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.mipmap.profile_large).into(holder.imgGroup);
                                     //Picasso.with(context).load(Urls.BASE_IMAGES_URL +group.getGroup_url_image_address()).placeholder(R.mipmap.profile_large).into(imgGroupCover);
-                                    System.out.println("img url:"+Urls.BASE_IMAGES_URL + subscriptionGroup.getGroup_url_image_address());
+                                    System.out.println("img url:" + Urls.BASE_IMAGES_URL + subscriptionGroup.getGroup_url_image_address());
                                     Picasso.with(context).load(groupiconUrl).memoryPolicy(MemoryPolicy.NO_STORE).into(imgGroupCover);
 //                                    Picasso.with(context).load(url).placeholder(R.mipmap.profile_large).into(imgGroupCover);
                                     Picasso.with(context).load(groupiconUrl).placeholder(R.mipmap.profile_large).into(imgProfileCover);
                                 }
-
 
 
                             }
@@ -902,12 +845,12 @@ layProgress.setVisibility(View.GONE);
             showInternetConnectionToast();
         }
     }
-    private String getSubcriptionGroup()
-    {
-        JSONObject jsonObject= null;
+
+    private String getSubcriptionGroup() {
+        JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject();
-            jsonObject.put("subscription_group_cd",subscription_group_cd);
+            jsonObject.put("subscription_group_cd", subscription_group_cd);
 
 
         } catch (JSONException e) {
@@ -918,9 +861,6 @@ layProgress.setVisibility(View.GONE);
 
 
     }
-
-
-
 
 
     @Override
@@ -942,7 +882,6 @@ layProgress.setVisibility(View.GONE);
     /*upload video cover image */
 
 
-
     private void callUploadVideoCoverImage(String baseImg, String imgName) {
         if (isInternetConnected()) {
             showLoading();
@@ -952,7 +891,7 @@ layProgress.setVisibility(View.GONE);
                     dismiss_loading();
                     try {
                         JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("image requ: "+js.toString());
+                        System.out.println("image requ: " + js.toString());
                         if (jsonObject.getString("rstatus").equals("1")) {
 
                             callUploadVideoCoverImageFinal(imgName);
@@ -996,7 +935,7 @@ layProgress.setVisibility(View.GONE);
             jsonObject.put("fname", imgName);
             jsonObject.put("img", baseImg);
 
-            System.out.println("parameterImage"+jsonObject.toString());
+            System.out.println("parameterImage" + jsonObject.toString());
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1015,10 +954,8 @@ layProgress.setVisibility(View.GONE);
                     try {
                         System.out.println("");
                         JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("image requ final: "+js.toString());
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
-
+                        System.out.println("image requ final: " + js.toString());
+                        if (jsonObject.getString("rstatus").equals("1")) {
 
 
                         }
@@ -1061,13 +998,14 @@ layProgress.setVisibility(View.GONE);
             jsonObject.put("subscription_group_cd", subscription_group_cd);
             jsonObject.put("user_cd", userId);
             jsonObject.put("url", imgName + ".png");
-            System.out.println("getParamUplodVideoCoverImageFinal : "+jsonObject.toString());
+            System.out.println("getParamUplodVideoCoverImageFinal : " + jsonObject.toString());
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return "";
     }
+
     private boolean validation() {
         story_title = edt_title.getText().toString();
         story_text = edt_story.getText().toString();
@@ -1094,13 +1032,13 @@ layProgress.setVisibility(View.GONE);
             dd.getWindow().setLayout(-1, -2);
             dd.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-            imgStory=(ImageView)dd.findViewById(R.id.imgStory);
+            imgStory = (ImageView) dd.findViewById(R.id.imgStory);
 
-            img_attachment=(ImageView)dd.findViewById(R.id.img_attachment);
+            img_attachment = (ImageView) dd.findViewById(R.id.img_attachment);
             img_attachment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    flagStory=true;
+                    flagStory = true;
                     dialog();
                 }
             });
@@ -1115,7 +1053,7 @@ layProgress.setVisibility(View.GONE);
                             story_type = "1";
                             story_time = Utility.getTimeOnly();
 
-                            callUploadImageForStory(story_imgBase64,"story"+Utility.getTimeOnly());
+                            callUploadImageForStory(story_imgBase64, "story" + Utility.getTimeOnly());
 
                         } else {
                             showInternetPop(context);
@@ -1132,13 +1070,6 @@ layProgress.setVisibility(View.GONE);
             // Log.d(TAG, "Exception: " + e.getMessage());
         }
     }
-
-
-
-
-
-
-
 
 
     public static android.app.Dialog dd;
@@ -1187,9 +1118,11 @@ layProgress.setVisibility(View.GONE);
     public void showInternetPop(Context context) {
         MyDialog.iPhone(context.getResources().getString(R.string.connection), context);
     }
+
     public Boolean isInternetConnected() {
         return Methods.isInternetConnected(context);
     }
+
     public boolean isConnectingToInternet(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
@@ -1203,17 +1136,14 @@ layProgress.setVisibility(View.GONE);
         }
         return false;
     }
+
     public void showToast(String x) {
         Toast.makeText(getApplicationContext(), x, Toast.LENGTH_SHORT).show();
     }
+
     public void showInternetConnectionToast() {
         Toast.makeText(getApplicationContext(), "Check Internet Connection", Toast.LENGTH_SHORT).show();
     }
-
-
-
-
-
 
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -1246,9 +1176,7 @@ layProgress.setVisibility(View.GONE);
                         System.out.println("");
                         JSONObject jsonObject = js.getJSONObject("result");
 
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
-
+                        if (jsonObject.getString("rstatus").equals("1")) {
 
 
                         }
@@ -1284,38 +1212,39 @@ layProgress.setVisibility(View.GONE);
             showInternetConnectionToast();
         }
     }
+
     private String sendStoryParameter(String fname) {
 
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("subscription_group_cd",subscription_group_cd);
-            jsonObject.put("user_cd",userId);
-            jsonObject.put("story_title",story_title);
-            jsonObject.put("story_type",story_type);
-            jsonObject.put("story_text",story_text);
-            jsonObject.put("story_caption",story_caption);
-            jsonObject.put("thumbnail_text",fname+".png");
+            jsonObject.put("subscription_group_cd", subscription_group_cd);
+            jsonObject.put("user_cd", userId);
+            jsonObject.put("story_title", story_title);
+            jsonObject.put("story_type", story_type);
+            jsonObject.put("story_text", story_text);
+            jsonObject.put("story_caption", story_caption);
+            jsonObject.put("thumbnail_text", fname + ".png");
 
             return jsonObject.toString();
-
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         //  System.out.println("input : " + gsonObject.toString());
-        return null ;
+        return null;
     }
+
     private void callSendStoryImg(File file) {
         if (isInternetConnected()) {
             showLoading();
-            String url ="http://www.consultlot.com/imageuploadHandler.ashx";
+            String url = "http://www.consultlot.com/imageuploadHandler.ashx";
 
-            new BaseAsych(url,file ,"profile_image", new RequestCallback() {
+            new BaseAsych(url, file, "profile_image", new RequestCallback() {
                 @Override
                 public void onSuccess(JSONObject js, String success) {
                     dismiss_loading();
-                    thumbnail_text="profile_image";
+                    thumbnail_text = "profile_image";
 
                     showToast(success);
 
@@ -1346,10 +1275,6 @@ layProgress.setVisibility(View.GONE);
     }
 
 
-
-
-
-
     private void callGetStory() {
         if (isInternetConnected()) {
             showLoading();
@@ -1360,19 +1285,17 @@ layProgress.setVisibility(View.GONE);
                     try {
 
                         JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("result"+jsonObject.toString());
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
+                        System.out.println("result" + jsonObject.toString());
+                        if (jsonObject.getString("rstatus").equals("1")) {
                             try {
                                 JSONArray jsonArray = js.getJSONArray("story_data");
                                 Type type = new TypeToken<ArrayList<StoryData>>() {
                                 }.getType();
                                 storyDataArrayList = new Gson().fromJson(jsonArray.toString(), type);
-                                subscriptionStoryAdapter=new SubscriptionStoryAdapter(context, storyDataArrayList, subscription_group_name, groupiconUrl, new ObjectCallback() {
+                                subscriptionStoryAdapter = new SubscriptionStoryAdapter(context, storyDataArrayList, subscription_group_name, groupiconUrl, new ObjectCallback() {
                                     @Override
-                                    public void getObject(Object object, int position,View view)
-                                    {
-                                        if(position!=-1) {
+                                    public void getObject(Object object, int position, View view) {
+                                        if (position != -1) {
                                             StoryData storyData = (StoryData) object;
                                             showMenu(view, storyData, position);
                                         }
@@ -1420,22 +1343,22 @@ layProgress.setVisibility(View.GONE);
             showInternetConnectionToast();
         }
     }
+
     private String getStoryParameter() {
 
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("subscription_group_cd",subscription_group_cd);
+            jsonObject.put("subscription_group_cd", subscription_group_cd);
 
 
             return jsonObject.toString();
-
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         //  System.out.println("input : " + gsonObject.toString());
-        return null ;
+        return null;
     }
 
 
@@ -1450,9 +1373,8 @@ layProgress.setVisibility(View.GONE);
                         System.out.println("");
                         JSONObject jsonObject = js.getJSONObject("result");
 
-                        if (jsonObject.getString("rstatus").equals("1"))
-                        {
-                          subscriptionStoryAdapter.updateData(position);
+                        if (jsonObject.getString("rstatus").equals("1")) {
+                            subscriptionStoryAdapter.updateData(position);
 
 
                         }
@@ -1488,27 +1410,26 @@ layProgress.setVisibility(View.GONE);
             showInternetConnectionToast();
         }
     }
+
     private String getDeleteParameter(String story_id) {
 
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("story_id",story_id);
+            jsonObject.put("story_id", story_id);
 
 
             return jsonObject.toString();
-
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         //  System.out.println("input : " + gsonObject.toString());
-        return null ;
+        return null;
     }
 
 
-    public void showMenu(View v, final StoryData storyData, final int position)
-    {
+    public void showMenu(View v, final StoryData storyData, final int position) {
         PopupMenu popup = new PopupMenu(context, v);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -1516,9 +1437,8 @@ layProgress.setVisibility(View.GONE);
                 switch (item.getItemId()) {
 
                     case R.id.menu_delete:
-                        if (isConnectingToInternet(context))
-                        {
-                            callDeleteStory(storyData.getStory_id(),position);
+                        if (isConnectingToInternet(context)) {
+                            callDeleteStory(storyData.getStory_id(), position);
                         } else {
                             showInternetPop(context);
                         }
@@ -1537,8 +1457,6 @@ layProgress.setVisibility(View.GONE);
     }
 
 
-
-
     private void callUploadImageForStory(String baseImg, String imgName) {
         if (isInternetConnected()) {
             showLoading();
@@ -1548,7 +1466,7 @@ layProgress.setVisibility(View.GONE);
                     dismiss_loading();
                     try {
                         JSONObject jsonObject = js.getJSONObject("result");
-                        System.out.println("image requ: "+js.toString());
+                        System.out.println("image requ: " + js.toString());
                         if (jsonObject.getString("rstatus").equals("1")) {
 
                             callSendStory(imgName);
@@ -1592,7 +1510,7 @@ layProgress.setVisibility(View.GONE);
             jsonObject.put("fname", imgName);
             jsonObject.put("img", baseImg);
 
-            System.out.println("parameterImage"+jsonObject.toString());
+            System.out.println("parameterImage" + jsonObject.toString());
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1603,7 +1521,7 @@ layProgress.setVisibility(View.GONE);
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        refreshpage=true;
+        refreshpage = true;
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case Constant.REQUEST_CODE_CAMERA:
@@ -1639,10 +1557,9 @@ layProgress.setVisibility(View.GONE);
                             ByteArray = null;
 
                             Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
-                            if(!flagStory){
-                                bmGroupCover=bm;}
-                            else
-                            {
+                            if (!flagStory) {
+                                bmGroupCover = bm;
+                            } else {
                                 imgStory.setVisibility(View.VISIBLE);
                                 imgStory.setImageBitmap(bm);
                             }
@@ -1651,13 +1568,11 @@ layProgress.setVisibility(View.GONE);
                             ByteArray = datasecond.toByteArray();
 
 
-                            if(!flagStory) {
+                            if (!flagStory) {
                                 String coverImg = base64String(ByteArray);
 
                                 callUploadImage(coverImg, userId + "_" + subscription_group_name);
-                            }
-                            else
-                            {
+                            } else {
                                 story_imgBase64 = base64String(ByteArray);
 
 //                                callUploadImageForStory(coverImg, userId + "_" + subscription_group_name);
@@ -1668,7 +1583,6 @@ layProgress.setVisibility(View.GONE);
 
 //                                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), Utility.getRealPathFromURI(context,resultUri));
 //                                callSendMyStoryImg(requestFile,file);
-
 
 
                             }
@@ -1708,15 +1622,15 @@ layProgress.setVisibility(View.GONE);
                 Uri uri = data.getParcelableExtra(EXTRA_URI);
                 Bitmap bitmap = ThumbyUtils.getBitmapAtFrame(context, uri, location, 200, 200);
                 // imgBriefCV.setImageBitmap(bitmap);
-                bmVideoCover=bitmap;
+                bmVideoCover = bitmap;
                 ByteArrayOutputStream datasecond = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, datasecond);
                 byte[] ByteArray = datasecond.toByteArray();
                 videoCoverImg = base64String(ByteArray);
                 String selectedVideoPath = data.getStringExtra(VIDEO_PATH);
 //                imgBriefCV.setImageBitmap(bm);
-                mFileName = subscription_group_cd + "_group_video_url"+".mp4";
-                videoCoverImgName= subscription_group_cd +"_groupname_thumbnail.png";
+                mFileName = subscription_group_cd + "_group_video_url" + ".mp4";
+                videoCoverImgName = subscription_group_cd + "_groupname_thumbnail.png";
                 callService(selectedVideoPath);
             }
 

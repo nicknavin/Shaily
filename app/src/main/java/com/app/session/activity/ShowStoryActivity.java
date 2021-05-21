@@ -47,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 public class ShowStoryActivity extends BaseActivity {
@@ -74,6 +75,9 @@ public class ShowStoryActivity extends BaseActivity {
     LinearLayout layDocument;
     ImageView imgDoc;
     CustomTextView txtDoc;
+ImageView imgSetting;
+
+int position=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +87,14 @@ public class ShowStoryActivity extends BaseActivity {
         {
             userStory=getIntent().getParcelableExtra("DATA");
         }
-        if(!userStory.getUserDetails().getId().equals(userId))
-        {
-            sendStoryView();
+        if(userStory.getUserDetails()!=null) {
+            if (!userStory.getUserDetails().getId().equals(userId)) {
+                sendStoryView();
+            }
         }
+        position=getIntent().getIntExtra(Constant.POSITION,-1);
+
+
         initView();
     }
 
@@ -99,10 +107,15 @@ public class ShowStoryActivity extends BaseActivity {
                 finish();
             }
         });
+        imgSetting=(ImageView)findViewById(R.id.imgSetting);
+        imgSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMenu(view);
+            }
+        });
 
         laySubscription=(RelativeLayout)findViewById(R.id.laySubscription);
-
-
         audio_seekBar = (SeekBar)findViewById(R.id.audio_seekBar);
         audio_seekBar.setClickable(false);
         lay_audio = (CardView) findViewById(R.id.lay_audio);
@@ -139,7 +152,7 @@ public class ShowStoryActivity extends BaseActivity {
 
     public void bindHolderToVoice( long duration)
     {
-        txtViewCount.setText(userStory.getViews());
+      //  txtViewCount.setText(""+userStory.getStoryRead().getCount());
 //        String days = Utility.getCalculatedDate(userStory.getCreatedAt());
         txtweek.setText(userStory.getDaysAgo()+"days");
         if(userStory.getStoryTitle()!=null&&!userStory.getStoryTitle().isEmpty())
@@ -170,15 +183,37 @@ public class ShowStoryActivity extends BaseActivity {
         {
             txtStoryDiscription.setVisibility(View.GONE);
         }
-if(userStory.getSubscriptionId().getGroupName()==null)
-{
-    laySubscription.setVisibility(View.GONE);
-}
-else
-{
-    laySubscription.setVisibility(View.VISIBLE);
-}
-        txt_userName.setText(userStory.getSubscriptionId().getGroupName());
+//if(userStory.getSubscriptionId().getGroupName()==null)
+//{
+//    laySubscription.setVisibility(View.GONE);
+//}
+//else
+//{
+//
+//}
+        if (userStory.getStory_provider()!=null) {
+            if(userStory.getStory_provider().equals("2"))
+            {
+                laySubscription.setVisibility(View.VISIBLE);
+                txt_userName.setText(userStory.getSubscriptionId().getGroupName());
+                if(userStory.getSubscriptionId().getGroupImageUrl()!=null&&!userStory.getSubscriptionId().getGroupImageUrl().isEmpty())
+                {
+                    Picasso.with(context).load(Urls.BASE_IMAGES_URL+userStory.getSubscriptionId().getGroupImageUrl()).placeholder(R.mipmap.profile_image).into(imgGroupIcon);
+                }
+
+            }
+            else
+            {
+                laySubscription.setVisibility(View.GONE);
+                imgSetting.setVisibility(View.VISIBLE);
+            }
+        }else
+        {
+
+                laySubscription.setVisibility(View.GONE);
+                imgSetting.setVisibility(View.VISIBLE);
+
+        }
         header.setText(userStory.getUserDetails().getUserName());
         String userUrl=userStory.getUserDetails().getImageUrl();
         if(userUrl!=null&&!userUrl.isEmpty()&&!userUrl.equals("null"))
@@ -188,9 +223,6 @@ else
 
         }
 
-        if(userStory.getSubscriptionId().getGroupImageUrl()!=null&&!userStory.getSubscriptionId().getGroupImageUrl().isEmpty()) {
-            Picasso.with(context).load(Urls.BASE_IMAGES_URL+userStory.getSubscriptionId().getGroupImageUrl()).placeholder(R.mipmap.profile_image).into(imgGroupIcon);
-        }
 
         if(userStory.getStoryType().equals("image"))
         {
@@ -526,13 +558,13 @@ else
                         return true;
 
                     case R.id.menu_edit:
-//                        Intent intent = new Intent(context, UpdateSubscriptionStoryActivity.class);
-//                        intent.putExtra("DATA", storyData);
+                        Intent intent = new Intent(context, UpdateSubscriptionStoryActivity.class);
+                        intent.putExtra("DATA", userStory);
 //                        Bundle arg = new Bundle();
 //                        arg.putSerializable("List", (Serializable) brief_cvList);
 //                        intent.putExtra("BUNDLE", arg);
-//                        intent.putExtra("ID", storyData.getId());
-//                        startActivity(intent);
+                        intent.putExtra("ID", userStory.getId());
+                        startActivity(intent);
                         return true;
 
 
@@ -545,7 +577,7 @@ else
 
         if(userId.equals(userStory.getUserDetails().getId()))
         {
-            inflater.inflate(R.menu.menu_subscription_story, popup.getMenu());
+            inflater.inflate(R.menu.menu_login_user_story, popup.getMenu());
         }
         else
         {
@@ -577,6 +609,8 @@ else
                         {
                             Intent returnIntent = new Intent();
                             returnIntent.putExtra("REFRESH", false);
+                            returnIntent.putExtra(Constant.POSITION,position);
+                            returnIntent.putExtra(Constant.TYPE,Constant.DELETE);
                             setResult(Constant.PAGE_REFRESH, returnIntent);
                             finish();
 

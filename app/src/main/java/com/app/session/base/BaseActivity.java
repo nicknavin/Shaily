@@ -71,6 +71,7 @@ public class BaseActivity extends AppCompatActivity  {
     public String profileImg = "";
     public String profileName = "", profileEmail = "", profileContact = "";
     public String accessToken = "", userId = "",login_user_id="", is_consultant = "", is_company = "", user_name = "";
+    public String token="";
 
 
     public boolean checkLocationFlag;
@@ -92,6 +93,7 @@ public class BaseActivity extends AppCompatActivity  {
         activity = this;
         loginType = DataPrefrence.getPref(context, Constant.LOGIN_TYPE, "");
         accessToken = "Bearer "+DataPrefrence.getPref(context, Constant.ACCESS_TOKEN, "");
+
         System.out.println("accessToken "+accessToken);
         userId = DataPrefrence.getPref(context, Constant.USER_ID, "");
         login_user_id= DataPrefrence.getPref(context, Constant.LOGIN_USER_ID, "");
@@ -347,21 +349,25 @@ public void mlog(String logs)
 
     public void clearDataBase() {
 
-        DataPrefrence.setPref(context, Constant.USER_ID, "");
-        DataPrefrence.setPref(context, Constant.PROFILE_IMAGE, "");
-        DataPrefrence.setPref(context, Constant.ENCODED_IMAGE, "");
-        DataPrefrence.setPref(context, Constant.EMAILID, "");
-        DataPrefrence.setPref(context, Constant.USER_NAME, "");
-        DataPrefrence.setPref(context, Constant.MOBILE_NO, "");
-        DataPrefrence.setPref(context, Constant.FULLNAME, "");
-        DataPrefrence.setPref(context, Constant.COUNTRY_ID, "");
-        DataPrefrence.setPref(context, Constant.ACCESS_TOKEN, "");
-        DataPrefrence.setPref(context, Constant.LOGIN_FLAG, false);
-        DataPrefrence.setPref(context, Constant.LOGIN_TYPE, "");
-        DataPrefrence.setPref(context, Constant.IS_CONSULTANT, "");
-        DataPrefrence.setPref(context, Constant.IS_COMPANY, "");
-        DataPrefrence.setPref(context, Constant.LANGUAGE_SELECTED, false);
-        DataPrefrence.setPref(context, Constant.CATEGORY_SELECTED, false);
+//        DataPrefrence.setPref(context, Constant.USER_ID, "");
+//        DataPrefrence.setPref(context, Constant.PROFILE_IMAGE, "");
+//        DataPrefrence.setPref(context, Constant.ENCODED_IMAGE, "");
+//        DataPrefrence.setPref(context, Constant.EMAILID, "");
+//        DataPrefrence.setPref(context, Constant.USER_NAME, "");
+//        DataPrefrence.setPref(context, Constant.MOBILE_NO, "");
+//        DataPrefrence.setPref(context, Constant.FULLNAME, "");
+//        DataPrefrence.setPref(context, Constant.COUNTRY_ID, "");
+//        DataPrefrence.setPref(context, Constant.ACCESS_TOKEN, "");
+//        DataPrefrence.setPref(context, Constant.LOGIN_FLAG, false);
+//        DataPrefrence.setPref(context, Constant.LOGIN_TYPE, "");
+//        DataPrefrence.setPref(context, Constant.IS_CONSULTANT, "");
+//        DataPrefrence.setPref(context, Constant.IS_COMPANY, "");
+//        DataPrefrence.setPref(context, Constant.BRIEF_CV_DB, "");
+//        DataPrefrence.setPref(context, Constant.LANGUAGE_SELECTED, false);
+//        DataPrefrence.setPref(context, Constant.CATEGORY_SELECTED, false);
+//        DataPrefrence.setPref(context,Constant.LOGIN_USER_ID,"");
+        DataPrefrence.deletePrefs(context);
+
 
     }
 

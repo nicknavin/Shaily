@@ -178,7 +178,7 @@ String userName,userUrl;
 
             txtweek.setText(userStory.getDaysAgo()+"days");
 
-            txtViewCount.setText(userStory.getViews());
+            txtViewCount.setText(""+userStory.getStoryRead().getCount());
             if(userStory.getStoryTitle()!=null&&!userStory.getStoryTitle().isEmpty())
             {
                 txtStoryTitle.setText(userStory.getStoryTitle());

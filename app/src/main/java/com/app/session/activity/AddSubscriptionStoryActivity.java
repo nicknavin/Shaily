@@ -936,33 +936,39 @@ public class AddSubscriptionStoryActivity extends BaseActivity implements View.O
     private void callService() {
 //        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
 //        mServiceResultReceiver.setReceiver(this);
-        Intent mIntent = new Intent(this, FileUploadService.class);
-        mIntent.putExtra("mFilePath", selectedVideoPath);
-        mIntent.putExtra("FileName", "");
-        mIntent.putExtra("VIDEO_THUMB", videoThumbBitmap);//this for image
-        mIntent.putExtra("TYPE", "story");
-        mIntent.putExtra("USER_ID", userId);
-        mIntent.putExtra("TOKEN", accessToken);
-        mIntent.putExtra("LANGUAGE_ID", "cd");
+        if (isConnectingToInternet(context)) {
+            Intent mIntent = new Intent(this, FileUploadService.class);
+            mIntent.putExtra("mFilePath", selectedVideoPath);
+            mIntent.putExtra("FileName", "");
+            mIntent.putExtra("VIDEO_THUMB", videoThumbBitmap);//this for image
+            mIntent.putExtra("TYPE", "story");
+            mIntent.putExtra("USER_ID", userId);
+            mIntent.putExtra("TOKEN", accessToken);
+            mIntent.putExtra("LANGUAGE_ID", "cd");
 
-        ReqSendStory reqSendStory = new ReqSendStory();
-        reqSendStory.setStoryText(story_text);
-        reqSendStory.setStoryTitle(story_title);
-        reqSendStory.setStory_language_id(language_cd);
-        reqSendStory.setStoryProvider(storyProvider);
-        reqSendStory.setStoryType(story_type);
-        reqSendStory.setVideoUrl(video_url);
-        reqSendStory.setSubscription_id(subscription_id);
-        reqSendStory.setDocFileName(docName);
-        reqSendStory.setDocFilePath(selectedDocumentPath);
+            ReqSendStory reqSendStory = new ReqSendStory();
+            reqSendStory.setStoryText(story_text);
+            reqSendStory.setStoryTitle(story_title);
+            reqSendStory.setStory_language_id(language_cd);
+            reqSendStory.setStoryProvider(storyProvider);
+            reqSendStory.setStoryType(story_type);
+            reqSendStory.setVideoUrl(video_url);
+            reqSendStory.setSubscription_id(subscription_id);
+            reqSendStory.setDocFileName(docName);
+            reqSendStory.setDocFilePath(selectedDocumentPath);
 
 
-        mIntent.putExtra("DATA", reqSendStory);
+            mIntent.putExtra("DATA", reqSendStory);
 //        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.putExtra(RECEIVER,mResultReceiver);
-        mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(context, mIntent);
-        finish();
+            mIntent.putExtra(RECEIVER,mResultReceiver);
+            mIntent.setAction(ACTION_DOWNLOAD);
+            FileUploadService.enqueueWork(context, mIntent);
+            finish();
+        }
+        else
+        {
+            showInternetConnectionToast();
+        }
     }
 
 

@@ -14,22 +14,25 @@ public class AudioVideoData implements Parcelable
     private String callType;
     private String agorachannelName;
     private String agoraTockenID;
+    private boolean isCalling;
 
     public AudioVideoData()
     {
 
     }
 
+
     protected AudioVideoData(Parcel in) {
-        userId = in.readString();
-        agorachannelName = in.readString();
-        agoraTockenID = in.readString();
         reciverId = in.readString();
+        userId = in.readString();
         callerName = in.readString();
         reciverName = in.readString();
         ProfileUrl = in.readString();
         reciever_profile_url = in.readString();
         callType = in.readString();
+        agorachannelName = in.readString();
+        agoraTockenID = in.readString();
+        isCalling = in.readByte() != 0;
     }
 
     public static final Creator<AudioVideoData> CREATOR = new Creator<AudioVideoData>() {
@@ -100,9 +103,6 @@ public class AudioVideoData implements Parcelable
         this.reciever_profile_url = reciever_profile_url;
     }
 
-    public static Creator<AudioVideoData> getCREATOR() {
-        return CREATOR;
-    }
 
     public String getCallType() {
         return callType;
@@ -128,14 +128,18 @@ public class AudioVideoData implements Parcelable
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(userId);
-        parcel.writeString(agorachannelName);
-        parcel.writeString(agoraTockenID);
+
         parcel.writeString(reciverId);
+        parcel.writeString(userId);
         parcel.writeString(callerName);
         parcel.writeString(reciverName);
         parcel.writeString(ProfileUrl);
         parcel.writeString(reciever_profile_url);
         parcel.writeString(callType);
+        parcel.writeString(agorachannelName);
+        parcel.writeString(agoraTockenID);
+        parcel.writeByte((byte) (isCalling ? 1 : 0));
     }
+
+
 }

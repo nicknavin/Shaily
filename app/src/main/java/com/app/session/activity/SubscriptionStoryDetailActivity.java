@@ -76,6 +76,7 @@ import static com.app.session.service.FileUploadService.FAIL;
 import static com.app.session.service.FileUploadService.SHOW_RESULT;
 import static com.app.session.service.FileUploadService.STATUS;
 import static com.app.session.utility.Utility.getTime;
+import static com.app.session.utility.Utility.isConnectingToInternet;
 
 public class SubscriptionStoryDetailActivity extends BaseActivity implements View.OnClickListener , ServiceResultReceiver.Receiver{
 
@@ -803,14 +804,17 @@ public class SubscriptionStoryDetailActivity extends BaseActivity implements Vie
 
 
     private void callService(String path) {
-        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
-        mServiceResultReceiver.setReceiver(this);
-        Intent mIntent = new Intent(this, FileUploadService.class);
-        mIntent.putExtra("mFilePath", path);
+
+        if (isConnectingToInternet(context)) {
+            mServiceResultReceiver = new ServiceResultReceiver(new Handler());
+            mServiceResultReceiver.setReceiver(this);
+            Intent mIntent = new Intent(this, FileUploadService.class);
+            mIntent.putExtra("mFilePath", path);
             mIntent.putExtra("FileName", "");
-        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(this, mIntent);
+            mIntent.putExtra(RECEIVER, mServiceResultReceiver);
+            mIntent.setAction(ACTION_DOWNLOAD);
+            FileUploadService.enqueueWork(this, mIntent);
+        }
     }
 
 

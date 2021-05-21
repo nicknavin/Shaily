@@ -14,6 +14,7 @@ public class ReqDeleteStory implements Serializable {
 	@SerializedName("story_provider")
 	private String story_provider;
 
+
 	public void setStoryId(String storyId){
 		this.storyId = storyId;
 	}
@@ -29,4 +30,5 @@ public class ReqDeleteStory implements Serializable {
 	public void setStory_provider(String story_provider) {
 		this.story_provider = story_provider;
 	}
+
 }

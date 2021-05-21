@@ -9,9 +9,12 @@ import com.app.session.data.model.StoryRoot;
 import com.app.session.data.model.SubscriptionGroup;
 import com.app.session.data.model.SubscriptionGroupRoot;
 import com.app.session.data.model.UserId;
+import com.app.session.data.model.UserSubscriptionGroupsRoot;
 import com.app.session.data.repository.MainRepository;
 import com.app.session.network.ApiClientProfile;
 import com.app.session.network.ApiInterface;
+import com.app.session.utility.Constant;
+import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.Utility;
 
 import org.json.JSONException;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -32,25 +36,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileViewModel extends AndroidViewModel {
+public class ProfileViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
     public MutableLiveData<ArrayList<SubscriptionGroup>> listMutableLiveData;
-    private MutableLiveData<SubscriptionGroupRoot> subscriptionGroupMutableLiveData=new MutableLiveData<>();
+    private MutableLiveData<UserSubscriptionGroupsRoot> subscriptionGroupMutableLiveData=new MutableLiveData<>();
     private MutableLiveData<StoryRoot> storyRootMutableLiveData=new MutableLiveData<>();
+    private MutableLiveData<UserSubscriptionGroupsRoot>groupsRootMutableLiveData=new MutableLiveData<>();
 
-    Context context;
     boolean flagApi;
-    String userID, accessToken;
+    String userID;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     MainRepository mainRepository;
     public int page=1,totalPage=0;
-    public ProfileViewModel(@NonNull Application application, String id, String token) {
-        super(application);
-        context = application.getApplicationContext();
+
+    public ProfileViewModel(String id,String token)
+    {
         userID = id;
-        this.accessToken = token;
-        mainRepository=MainRepository.getInstance(context);
+
+        mainRepository=new MainRepository(token);
         System.out.println("userID : " + userID);
 
 
@@ -90,33 +94,32 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
 
-    public void loadUserSubcriptionGroupApi()
+    public void loadUserGroup()
     {
-        UserId userId=new UserId();
+        UserId userId = new UserId();
         userId.setUser_id(userID);
         compositeDisposable.add(
-                mainRepository.getUserSubscriptionGroups(userId)
-                        .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<SubscriptionGroupRoot>() {
-                    @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull SubscriptionGroupRoot root) {
-                        subscriptionGroupMutableLiveData.setValue(root);
-                    }
+                mainRepository.getOtherSubscriptionGroups(userId).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<UserSubscriptionGroupsRoot>() {
+                            @Override
+                            public void onSuccess(@io.reactivex.annotations.NonNull UserSubscriptionGroupsRoot userSubscriptionGroupsRoot)
+                            {
+                                groupsRootMutableLiveData.setValue(userSubscriptionGroupsRoot);
+                            }
 
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                            @Override
+                            public void onError(@io.reactivex.annotations.NonNull Throwable e) {
 
-                    }
-                })
+                            }
+                        })
         );
     }
-
-
-    public MutableLiveData<SubscriptionGroupRoot> getSubscriptionGroupMutableLiveData()
+    public MutableLiveData<UserSubscriptionGroupsRoot> getGroupsRootMutableLiveData()
     {
-        return subscriptionGroupMutableLiveData;
+        return groupsRootMutableLiveData;
     }
+
 
 
     @Override

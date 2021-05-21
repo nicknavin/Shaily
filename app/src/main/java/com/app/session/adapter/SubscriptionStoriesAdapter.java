@@ -56,6 +56,14 @@ String userName,userUrl;
     }
 
 
+    public void updateGroupIcon(String groupName,String url)
+    {
+        userUrl=url;
+        userName=groupName;
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public SubscriptionStoriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_subscriptiongroup_story_layout, parent, false);

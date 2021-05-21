@@ -158,6 +158,7 @@ public class SearchCurrencyActivity extends BaseActivity implements View.OnClick
                                 Intent returnIntent = new Intent();
                                 returnIntent.putExtra("result",body.getCurrency_name());
                                 returnIntent.putExtra("id",body.get_id());
+                                returnIntent.putExtra("cd",body.getCurrency_cd());
                                 setResult(Constant.REQUEST_RESULT, returnIntent);
                                 finish();
                             }

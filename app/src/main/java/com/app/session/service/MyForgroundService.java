@@ -59,7 +59,7 @@ public class MyForgroundService extends Service implements SocketEventListener.L
     public static final int NOTIFICATION_ID_AUDIO_VIDEO_CALL_END = 3;
     public static final int NOTIFICATION_ID_MESSAGE = 4;
     public static final int NOTIFICATION_ID_MESSAGE_FILE = 5;
-    public static final String KEY_BROADCAST_MESSAGE = "session_message";
+    public static final String KEY_BROADCAST_MESSAGE_AUDIO_VIDEO_CALLING = "session_message_audio_video_calling";
     private static final String TAG = "myTag";
     public static final String EXTRA_USER_NAME = "extra_user_name";
     public static final String EXTRA_EVENT_TYPE = "extra_event_type";
@@ -342,7 +342,7 @@ public class MyForgroundService extends Service implements SocketEventListener.L
             Gson gson = new Gson();
             String request = gson.toJson(audioVideoData);
             Log.d(TAG, request);
-            Intent intent = new Intent(KEY_BROADCAST_MESSAGE);
+            Intent intent = new Intent(KEY_BROADCAST_MESSAGE_AUDIO_VIDEO_CALLING);
             intent.putExtra("REQUEST", "caller");
             intent.putExtra("TYPE", "calling");
             intent.putExtra("DATA", request);
@@ -878,6 +878,7 @@ public class MyForgroundService extends Service implements SocketEventListener.L
                 Log.d(TAG, "Constant.NEW_MESSAGE " + objects[0].toString());
 
                 //{"message":"regards David David I am not sure if you have any questions or","senderId":"5f3cfba45a1d392b092e3fb8","senderName":"demo1","reciverName":"demo5","messageType":"text","createdAt":"2021-01-08T07:53:59.925Z","isRead":true}
+
                 String msg=objects[0].toString();
                 try {
                     JSONObject jsonObject=new JSONObject(msg);
@@ -902,7 +903,8 @@ public class MyForgroundService extends Service implements SocketEventListener.L
                     if(!jsonObject.getString("senderId").equals(userId))
                     {
 
-                        if(jsonObject.getString("messageType").equals("image")) {
+                        if(jsonObject.getString("messageType").equals("image"))
+                        {
                             url=Urls.BASE_IMAGES_URL +jsonObject.getString("file");
                             new getBitmapFromUrl(this, result, url).execute();
                         }

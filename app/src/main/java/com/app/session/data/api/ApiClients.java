@@ -31,35 +31,40 @@ public class ApiClients
 
     private static Retrofit retrofit = null;
     private static int REQUEST_TIMEOUT = 60;
-    private static OkHttpClient okHttpClient;
-    private static String  url="";
-    public static Retrofit getClient(Context context)
+    private static OkHttpClient okHttpClient=null;
+private static String token=null;
+
+    public static Retrofit getClient(String accessToken)
     {
+
+        token=accessToken;
+        if (okHttpClient == null) {
+            initOkHttp();
+        }
+
+
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+//                .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+//                .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+//                .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
 //
-//        if (okHttpClient == null)
-//            initOkHttp(context);
+//
+//            httpClient.addInterceptor(new Interceptor()
+//            {
+//                @Override
+//                public Response intercept(Chain chain) throws IOException {
+//                    Request request = chain.request().newBuilder()
+//                            .addHeader("Content-Type", "application/json")
+//                            .addHeader("Authorization", token).build();
+//                    return chain.proceed(request);
+//                }
+//            });
 
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
-
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder()
-                        .addHeader("Content-Type", "application/json")
-                        .addHeader("Authorization","Bearer "+DataPrefrence.getPref(context,Constant.ACCESS_TOKEN,"")).build();
-
-                return chain.proceed(request);
-            }
-        });
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(httpClient.build())
+                    .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -68,8 +73,10 @@ public class ApiClients
         return retrofit;
     }
 
-    private static void initOkHttp(final Context context) {
-        OkHttpClient.Builder httpClient = new OkHttpClient().newBuilder()
+    private static OkHttpClient  initOkHttp() {
+
+        OkHttpClient.Builder httpClient=null;
+         httpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
@@ -84,21 +91,28 @@ public class ApiClients
             public Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
                 Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .addHeader("Content-Type", "application/json");
+                        .addHeader("Content-Type", "application/json")
+                        .addHeader("Authorization", token);
 
-                // Adding Authorization token (API Key)
-                // Requests will be denied without API key
-                if (!TextUtils.isEmpty(DataPrefrence.getPref(context, Constant.ACCESS_TOKEN,"")))
-                {
-                    requestBuilder.addHeader("Authorization", DataPrefrence.getPref(context, Constant.ACCESS_TOKEN,""));
-                }
 
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
         });
 
-        okHttpClient = httpClient.build();
+       return okHttpClient = httpClient.build();
+
+    }
+    public static Retrofit getClient()
+    {
+        if (retrofit==null)
+        {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
     }
 }

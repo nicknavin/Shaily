@@ -180,4 +180,27 @@ public class LoginUser {
     public int get__v() {
         return this.__v;
     }
+
+
+    @Override
+    public String toString() {
+        return "LoginUser{" +
+                "userBank=" + userBank +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", userLangauges=" + userLangauges +
+                ", subscription_group_id=" + subscription_group_id +
+                ", _id='" + _id + '\'' +
+                ", email='" + email + '\'' +
+                ", login_user_id='" + login_user_id + '\'' +
+                ", mobile_no='" + mobile_no + '\'' +
+                ", user_password='" + user_password + '\'' +
+                ", user_name='" + user_name + '\'' +
+                ", country_id='" + country_id + '\'' +
+                ", gender='" + gender + '\'' +
+                ", is_consultant='" + is_consultant + '\'' +
+                ", status_id='" + status_id + '\'' +
+                ", mail_verfy='" + mail_verfy + '\'' +
+                ", __v=" + __v +
+                '}';
+    }
 }

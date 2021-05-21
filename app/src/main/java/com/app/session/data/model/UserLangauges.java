@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class UserLangauges implements Parcelable
 {
     @SerializedName("_id")
@@ -92,5 +94,20 @@ public class UserLangauges implements Parcelable
         return name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserLangauges)) return false;
+        UserLangauges that = (UserLangauges) o;
+        return isChecked() == that.isChecked() &&
+                Objects.equals(get_id(), that.get_id()) &&
+                Objects.equals(getCode(), that.getCode()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getNativeName(), that.getNativeName());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(get_id(), getCode(), getName(), getNativeName(), isChecked());
+    }
 }

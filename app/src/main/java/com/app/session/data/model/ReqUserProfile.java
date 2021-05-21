@@ -28,4 +28,11 @@ public class ReqUserProfile {
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return "ReqUserProfile{" +
+                "personUserId='" + personUserId + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

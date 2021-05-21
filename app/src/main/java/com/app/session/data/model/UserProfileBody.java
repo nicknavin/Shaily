@@ -22,6 +22,9 @@ public class UserProfileBody
     @SerializedName("isFollow")
     private boolean isFollow;
 
+    @SerializedName("isEligiblefor24")
+    private boolean isEligiblefor24;
+
     public OtherUserProfile getUser() {
         return user;
     }
@@ -57,5 +60,13 @@ public class UserProfileBody
 
     public void setPersonalProfileStoryArrayList(ArrayList<PersonalProfileStory> personalProfileStoryArrayList) {
         this.personalProfileStoryArrayList = personalProfileStoryArrayList;
+    }
+
+    public boolean isEligiblefor24() {
+        return isEligiblefor24;
+    }
+
+    public void setEligiblefor24(boolean eligiblefor24) {
+        isEligiblefor24 = eligiblefor24;
     }
 }

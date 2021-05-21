@@ -5,10 +5,18 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.Nullable;
+
 public class StoryRead implements Parcelable
 {
     @SerializedName("count")
+    @Nullable
    private int count;
+
+   public StoryRead()
+    {
+
+    }
 
     protected StoryRead(Parcel in) {
         count = in.readInt();

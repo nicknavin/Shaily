@@ -19,10 +19,14 @@ import android.widget.SeekBar;
 
 import com.app.session.BuildConfig;
 import com.app.session.R;
+import com.app.session.activity.ui.baseviewmodels.ViewModelFactory;
+import com.app.session.activity.viewmodel.StoryPageDetailViewModel;
 import com.app.session.api.Urls;
 import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
+import com.app.session.data.model.RequestReadCount;
+import com.app.session.data.model.RequestReadCountNormalStory;
 import com.app.session.data.model.Root;
 import com.app.session.data.model.StoryData;
 import com.app.session.data.model.StoryId;
@@ -50,13 +54,15 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class StoryPageDetailActivity extends BaseActivity {
     UserStory storyData;
-
+StoryPageDetailViewModel viewModel;
     CustomTextView txtCategory,  txtStoryTitle,txtStoryDiscription,header;
     CircleImageView imgProfile;
     ImageView  imgStory,imgVideoThumb,imgPlay;
@@ -81,12 +87,17 @@ public class StoryPageDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_page_detail);
+        viewModel=new ViewModelProvider(this,new ViewModelFactory(userId,accessToken)).get(StoryPageDetailViewModel.class);
         if (getIntent().getParcelableExtra("DATA") != null)
         {
             storyData = getIntent().getParcelableExtra("DATA");
         }
         initView();
-        sendStoryView();
+       // sendStoryView();
+        if(!storyData.getUserDetails().getId().equals(userId)) {
+            apiViewCount();
+        }
+        setupObserver();
     }
 
     private void initView() {
@@ -137,7 +148,7 @@ public class StoryPageDetailActivity extends BaseActivity {
 
         header.setText(userName);
         txtweek.setText(storyData.getDaysAgo() + "days");
-        txtViewCount.setText("" + storyData.getViews());
+        txtViewCount.setText("" + storyData.getStoryRead().getCount());
         if(storyData.getStoryTitle()!=null&&!storyData.getStoryTitle().isEmpty())
         {
             txtStoryTitle.setText(storyData.getStoryTitle());
@@ -474,6 +485,54 @@ public class StoryPageDetailActivity extends BaseActivity {
     }
 
 
+    private void apiViewCount()
+    {
+
+        if(storyData.getStory_provider().equals("2"))
+        {
+            RequestReadCount requestReadCount=new RequestReadCount() ;
+            requestReadCount.setStory_id(storyData.getId());
+            requestReadCount.setSubscription_id(storyData.getSubscriptionId().get_id());
+            requestReadCount.setUser_id(userId);
+            requestReadCount.setStory_provider(storyData.getStory_provider());
+            viewModel.setRequestReadCount(requestReadCount);
+            viewModel.sendReadViewCount();
+        }
+        else
+        {
+
+//            RequestReadCount requestReadCount=new RequestReadCount() ;
+//            requestReadCount.setStory_id(storyData.getId());
+//            requestReadCount.setSubscription_id("");
+//            requestReadCount.setUser_id(userId);
+//            requestReadCount.setStory_provider(storyData.getStory_provider());
+//            viewModel.setRequestReadCount(requestReadCount);
+//            viewModel.sendReadViewCount();
+
+            RequestReadCountNormalStory requestReadCountNormalStory=new RequestReadCountNormalStory();
+            requestReadCountNormalStory.setStory_id(storyData.getId());
+            requestReadCountNormalStory.setStory_provider(storyData.getStory_provider());
+            requestReadCountNormalStory.setUser_id(userId);
+            viewModel.setRequestReadCountNormalStory(requestReadCountNormalStory);
+            viewModel.sendReadViewCountNormalStory();
+        }
+
+    }
+    private void setupObserver()
+    {
+        viewModel.getResponseBodyMutableLiveData().observe(this, new Observer<ResponseBody>() {
+            @Override
+            public void onChanged(ResponseBody responseBody)
+            {
+               log(responseBody.toString());
+                try {
+                    log(responseBody.string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     @Override
     protected void onPause() {

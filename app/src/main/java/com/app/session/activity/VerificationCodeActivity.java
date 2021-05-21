@@ -563,69 +563,6 @@ dismiss_loading();
         return params;
     }
 
-    private void callSignUp()
-    {
-        if (isConnectingToInternet(context)) {
-            showLoading();
-            ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call = apiInterface.callUserRegister(
-                    DataPrefrence.getPref(context, Constant.EMAILID, ""),
-                    DataPrefrence.getPref(context, Constant.USER_NAME, ""),
-                    DataPrefrence.getPref(context, Constant.MOBILE_NO, ""),
-                    DataPrefrence.getPref(context, Constant.PASSWORD, ""),
-                    DataPrefrence.getPref(context, Constant.FULLNAME, ""),
-                    DataPrefrence.getPref(context, Constant.COUNTRY_ID, ""),
-                    DataPrefrence.getPref(context, Constant.IS_COMPANY, ""),
-                    DataPrefrence.getPref(context, Constant.IS_CONSULTANT, ""),
-                    DataPrefrence.getPref(context, Constant.LANGUAGE_CD, ""),
-                    DataPrefrence.getPref(context, Constant.CATEGORY_CD,""),
-                    DataPrefrence.getPref(context, Constant.GENDER,""),
-                    DataPrefrence.getPref(context, Constant.BRIEF_CV,getBriefCV()),
-                    DataPrefrence.getPref(context, Constant.PROFILE_IMAGE, "")
-            );
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    dismiss_loading();
-                    ResponseBody responseBody = response.body();
-                    try {
-                        String data = responseBody.string();
-                        try {
-                            JSONObject jsonObject=new JSONObject(data);
-                            if(jsonObject.getBoolean("Status"))
-                            {
-                             Intent intent = new Intent(context, LoginActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
-                            }
-                            else
-                            {
-
-                            }
-                            showToast(jsonObject.getString("Message"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    dismiss_loading();
-                }
-            });
-        } else {
-            showInternetConnectionToast();
-        }
-    }
 
 
     public ArrayList<Language> selectlanguageList = new ArrayList<>();

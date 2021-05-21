@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.app.session.data.model.ReqDeleteGroupStory;
 import com.app.session.data.model.ReqDeleteStory;
 import com.app.session.data.model.ReqSubscriptionStories;
 import com.app.session.data.model.ReqUserStory;
@@ -11,32 +12,35 @@ import com.app.session.data.model.Root;
 import com.app.session.data.model.StoryRoot;
 import com.app.session.data.model.SubscriptionStories;
 import com.app.session.data.model.SubscriptionStoriesRoot;
+import com.app.session.data.model.UserSubscriptionGroupsBody;
 import com.app.session.data.repository.MainRepository;
+import com.app.session.utility.Utility;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class StoryDetailViewModel  extends AndroidViewModel {
+public class StoryDetailViewModel  extends ViewModel {
     Context context;
-    String userID, accessToken;
+    String userID;
     MainRepository mainRepository;
     private CompositeDisposable compositeDisposable=new CompositeDisposable();
     private MutableLiveData<SubscriptionStoriesRoot> subscriptionStoriesMutableLiveData=new MutableLiveData<>();
     private MutableLiveData<Root> rootMutableLiveData=new MutableLiveData<>();
     public int page=1,totalPage=0;
+   //public UserSubscriptionGroupsBody userSubscriptionGroupsBody;
+   public MutableLiveData<UserSubscriptionGroupsBody> userSubscriptionGroupsBody=new MutableLiveData<>();
 
-    public StoryDetailViewModel(@NonNull Application application,String id, String token)
+    public StoryDetailViewModel(String id,String token)
     {
-        super(application);
-        context = application.getApplicationContext();
         userID = id;
-        this.accessToken = token;
-        mainRepository= MainRepository.getInstance(context);
+
+        mainRepository= new MainRepository(token);
     }
 
 
@@ -76,9 +80,11 @@ public class StoryDetailViewModel  extends AndroidViewModel {
 
     public void deleteStory(SubscriptionStories subscriptionStories)
     {
-        ReqDeleteStory reqDeleteStory= new ReqDeleteStory();
+        ReqDeleteGroupStory reqDeleteStory= new ReqDeleteGroupStory();
         reqDeleteStory.setStoryId(subscriptionStories.get_id());
+        reqDeleteStory.setSubscription_id(subscriptionStories.getSubscriptionId().get_id());
         reqDeleteStory.setStory_provider(subscriptionStories.getStory_provider());
+        Utility.log(reqDeleteStory.toString());
         compositeDisposable.add(
           mainRepository.deleteStory(reqDeleteStory)
           .subscribeOn(Schedulers.io())
@@ -102,6 +108,12 @@ public class StoryDetailViewModel  extends AndroidViewModel {
     public MutableLiveData<Root> getRootMutableLiveData() {
         return rootMutableLiveData;
     }
+
+    public MutableLiveData<UserSubscriptionGroupsBody> getUserSubscriptionGroupsBody() {
+        return userSubscriptionGroupsBody;
+    }
+
+
 
     @Override
     protected void onCleared() {

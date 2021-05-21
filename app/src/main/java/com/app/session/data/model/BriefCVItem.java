@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class BriefCVItem implements Serializable {
 
 	@SerializedName("language_cd")
-	public String languageCd;
+	private String languageCd;
 
 	@SerializedName("brief_cv")
-	public String briefCv;
+	private String briefCv;
 
 	public String getLanguageCd() {
 		return languageCd;

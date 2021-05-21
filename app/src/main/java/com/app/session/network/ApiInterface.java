@@ -326,7 +326,7 @@ public interface ApiInterface {
     @POST("getAllUsers")
     public Call<ConsultUserRoot> reqGetAllUsers(@Header("Authorization") String token, @Body ReqAllUser reqAllUser);
 
-    @Headers("Content-1Type: application/json")
+    @Headers("Content-Type: application/json")
     @POST("deleteStory")
     public Call<Root> reqDeleteStory(@Header("Authorization") String token, @Body ReqDeleteStory reqDeleteStory);
 
@@ -429,7 +429,7 @@ public interface ApiInterface {
     public Call<Root> reqsendUserUnFollow(@Header("Authorization") String token, @Body ReqFollowUser reqFollowUser);
 
     @Headers("Content-Type: application/json")
-    @POST("followers")
+    @POST("following")
     public Call<RootFollowers> reqFollowers(@Header("Authorization") String token, @Body UserId userId);
 
     @Headers("Content-Type: application/json")

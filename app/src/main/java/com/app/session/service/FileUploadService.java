@@ -16,6 +16,7 @@ import com.app.session.notification.NotificationHelper;
 import com.app.session.receiver.FileProgressReceiver;
 import com.app.session.receiver.RetryJobReceiver;
 import com.app.session.room.ChatMessage;
+import com.app.session.utility.Constant;
 import com.app.session.utils.MIMEType;
 
 import java.io.File;
@@ -56,7 +57,7 @@ public class FileUploadService extends JobIntentService {
      */
     private static final int JOB_ID = 102;
     String mFilePath, mFileName, languageId = "", userId = "", token, mFilePathThumb = "";
-    Bitmap videoThumbBitmap;
+    Bitmap videoThumbBitmap,groupImageBitmap;
     //story data
     String storyType = "", storyTitle = "", storyText = "", videoUrl = "", subscription_id = "";
     String requestType = "";
@@ -74,13 +75,18 @@ public class FileUploadService extends JobIntentService {
     AddSubscription addSubscription;
     ChatMessage chatMessageFile;
     /*...................Story parameter.........................*/
-    RequestBody usercd,language_Id,groupDescription,uploading,groupName,subscriptionPrice,currencyId,categoryId,reqStoryText, reqStoryTitle, reqStoryType,reqStoryProvider, reqSubscriptionId, reqVideoUrl, reqDocFileName;
+    RequestBody usercd,language_Id,groupDescription,uploading,groupName,
+            subscriptionPrice,currencyId,categoryId,reqStoryText,
+            reqStoryTitle, reqStoryType,reqStoryProvider,
+            reqSubscriptionId, reqVideoUrl, reqDocFileName;
 
     RequestBody reqSenderId,reqsenderName,reqsenderProfileUrl,reqReciverId,reqReciverName,reqReciverProfileUrl,reqFileTye,reqFileName,reqFileDuartion;
 
     RequestBody requestfile = null;
+    RequestBody requestGroupFile = null;
     MultipartBody.Part productimg = null;
-
+    MultipartBody.Part groupImg = null;
+    File imageFile,groupImageFile;
     public static void enqueueWork(Context context, Intent intent) {
         enqueueWork(context, FileUploadService.class, JOB_ID, intent);
     }
@@ -161,10 +167,21 @@ public class FileUploadService extends JobIntentService {
                     addSubscription = intent.getParcelableExtra("DATA");
                 }
             }
+            if(requestType.equals(Constant.UPDATE_GROUP_IMAGE))
+            {
+                subscription_id=intent.getStringExtra(Constant.SUBSCN_GROUP_CD);
+            }
+
             if ((Bitmap) intent.getParcelableExtra("VIDEO_THUMB") != null)
             {
 
                 videoThumbBitmap = (Bitmap) intent.getParcelableExtra("VIDEO_THUMB");
+
+            }
+            if ((Bitmap) intent.getParcelableExtra("GROUP_IMAGE") != null)
+            {
+
+                groupImageBitmap = (Bitmap) intent.getParcelableExtra("GROUP_IMAGE");
 
             }
         }
@@ -220,6 +237,9 @@ public class FileUploadService extends JobIntentService {
         }
         else if (requestType.equals("AddSubscription"))
         {
+
+
+
             usercd=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getUserId());
             language_Id=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getLanguageId());
             categoryId=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getCategoryId());
@@ -228,9 +248,24 @@ public class FileUploadService extends JobIntentService {
              groupName=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getGroupName());
             groupDescription=RequestBody.create( MediaType.parse("text/plain"),addSubscription.getDescription());
             uploading=RequestBody.create( MediaType.parse("text/plain"),"image/video");
+
             imageFile = persistImage(videoThumbBitmap, "story_image");
             requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-            productimg = MultipartBody.Part.createFormData("files", "image.jpg", requestfile);
+           productimg = MultipartBody.Part.createFormData("video_cover", "image.jpg", requestfile);
+
+            groupImageFile = persistImage(groupImageBitmap, "group_image");
+            requestGroupFile = RequestBody.create(MediaType.parse("image/jpeg"), groupImageFile);
+           groupImg = MultipartBody.Part.createFormData("group_intro_image", "image.jpg", requestGroupFile);
+
+
+        }
+        else if (requestType.equals(Constant.UPDATE_GROUP_IMAGE))
+        {
+            imageFile = persistImage(videoThumbBitmap, "story_image");
+            requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+
+            productimg = MultipartBody.Part.createFormData("image", "image.jpg", requestfile);
+            reqSubscriptionId = RequestBody.create(MediaType.parse("text/plain"), subscription_id);
 
         }
 
@@ -248,6 +283,10 @@ public class FileUploadService extends JobIntentService {
             apiService= RetrofitInstance.getApiChat();
         }
         else if(requestType.equals("AddSubscription"))
+        {
+            apiService = RetrofitInstance.getApiStoryService();
+        }
+        else if(requestType.equals(Constant.UPDATE_GROUP_IMAGE))
         {
             apiService = RetrofitInstance.getApiStoryService();
         }
@@ -270,17 +309,40 @@ public class FileUploadService extends JobIntentService {
 //                    productimg = MultipartBody.Part.createFormData("files", "image.jpg", requestfile);
                     if(mFilePath.equals(""))
                     {
-                        responseBody = apiService.reqAddSubscription(token, usercd, language_Id, categoryId, currencyId, subscriptionPrice, groupDescription, groupName, uploading,
-                                createMultipartBodyImage("files", "image.jpg", "image/jpeg", imageFile, emitter),
-                               null).blockingGet();
+                        responseBody = apiService.reqAddSubscription(token, usercd, language_Id, categoryId, currencyId, subscriptionPrice, groupDescription, groupName,
+                                createMultipartBodyImage("group_intro_image", "image.jpg", "image/jpeg", groupImageFile, emitter),
+                               null,null).blockingGet();
 
                     }
-                    else {
-                        responseBody = apiService.reqAddSubscription(token, usercd, language_Id, categoryId, currencyId, subscriptionPrice, groupDescription, groupName, uploading,
-                                productimg,
-                                createStoryMultipartBody("files", mFilePath, emitter)).blockingGet();
+                    else
+                    {
+
+                        responseBody = apiService.reqAddSubscription(token, usercd, language_Id, categoryId, currencyId, subscriptionPrice, groupDescription, groupName,groupImg,productimg,
+                                createStoryMultipartBody("group_intro_video", mFilePath, emitter)).blockingGet();
                     }
 
+                }
+                else if (requestType.equals(Constant.UPDATE_GROUP_IMAGE))
+                {
+                    imageFile = persistImage(videoThumbBitmap, "story_image");
+//                    requestfile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+//                    productimg = MultipartBody.Part.createFormData("files", "image.jpg", requestfile);
+                    if(mFilePath.equals(""))
+                    {
+                        responseBody = apiService.updateSubsGruopImage(token, reqSubscriptionId,
+                                createMultipartBodyImage("image", "image.jpg", "image/jpeg", imageFile, emitter)
+                                ).blockingGet();
+
+
+                    }
+                    else
+                    {
+                        responseBody = apiService.updateSubscriptinGroupVideo(token,reqSubscriptionId,
+                                createStoryMultipartBody("video", mFilePath, emitter)).blockingGet();
+                        responseBody = apiService.updateSubscriptionThumbnail(token, reqSubscriptionId,
+                                createMultipartBodyImage("image", "image.jpg", "image/jpeg", imageFile, emitter)
+                        ).blockingGet();
+                    }
                 }
                else if (requestType.equals("story")) {
 
@@ -379,7 +441,7 @@ public class FileUploadService extends JobIntentService {
 
 
 
-    File imageFile;
+
 
     private File persistImage(Bitmap bitmap, String name) {
 
@@ -430,37 +492,37 @@ public class FileUploadService extends JobIntentService {
         sendBroadcast(successIntent);
 
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this,
-                0 /* Request code */, new Intent(this, HomeUserChatProfileActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent resultPendingIntent = PendingIntent.getActivity(this,
+//                0 /* Request code */, new Intent(this, HomeUserChatProfileActivity.class),
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        /**
+//         * Add retry action button in notification
+//         */
+//        Intent retryIntent = new Intent(this, RetryJobReceiver.class);
+//        retryIntent.putExtra("notificationId", NOTIFICATION_RETRY_ID);
+//        retryIntent.putExtra("mFilePath", mFilePath);
+//        retryIntent.setAction(ACTION_RETRY);
+//
+//        /**
+//         * Add clear action button in notification
+//         */
+//        Intent clearIntent = new Intent(this, RetryJobReceiver.class);
+//        clearIntent.putExtra("notificationId", NOTIFICATION_RETRY_ID);
+//        clearIntent.putExtra("mFilePath", mFilePath);
+//        clearIntent.setAction(ACTION_CLEAR);
+//
+//        PendingIntent retryPendingIntent = PendingIntent.getBroadcast(this, 0, retryIntent, 0);
+//        PendingIntent clearPendingIntent = PendingIntent.getBroadcast(this, 0, clearIntent, 0);
+//        NotificationCompat.Builder mBuilder = mNotificationHelper.getNotification(getString(R.string.error_upload_failed), getString(R.string.message_upload_failed), resultPendingIntent);
+//        // attached Retry action in notification
+//        mBuilder.addAction(android.R.drawable.ic_menu_revert, getString(R.string.btn_retry_not), retryPendingIntent);
+//        // attached Cancel action in notification
+//        mBuilder.addAction(android.R.drawable.ic_menu_revert, getString(R.string.btn_cancel_not), clearPendingIntent);
+//        // Notify notification
+//        mNotificationHelper.notify(NOTIFICATION_RETRY_ID, mBuilder);
 
-        /**
-         * Add retry action button in notification
-         */
-        Intent retryIntent = new Intent(this, RetryJobReceiver.class);
-        retryIntent.putExtra("notificationId", NOTIFICATION_RETRY_ID);
-        retryIntent.putExtra("mFilePath", mFilePath);
-        retryIntent.setAction(ACTION_RETRY);
-
-        /**
-         * Add clear action button in notification
-         */
-        Intent clearIntent = new Intent(this, RetryJobReceiver.class);
-        clearIntent.putExtra("notificationId", NOTIFICATION_RETRY_ID);
-        clearIntent.putExtra("mFilePath", mFilePath);
-        clearIntent.setAction(ACTION_CLEAR);
-
-        PendingIntent retryPendingIntent = PendingIntent.getBroadcast(this, 0, retryIntent, 0);
-        PendingIntent clearPendingIntent = PendingIntent.getBroadcast(this, 0, clearIntent, 0);
-        NotificationCompat.Builder mBuilder = mNotificationHelper.getNotification(getString(R.string.error_upload_failed), getString(R.string.message_upload_failed), resultPendingIntent);
-        // attached Retry action in notification
-        mBuilder.addAction(android.R.drawable.ic_menu_revert, getString(R.string.btn_retry_not), retryPendingIntent);
-        // attached Cancel action in notification
-        mBuilder.addAction(android.R.drawable.ic_menu_revert, getString(R.string.btn_cancel_not), clearPendingIntent);
-        // Notify notification
-        mNotificationHelper.notify(NOTIFICATION_RETRY_ID, mBuilder);
-
-
+           mNotificationHelper.cancelNotification(NOTIFICATION_ID);
 
 
 
@@ -482,7 +544,17 @@ public class FileUploadService extends JobIntentService {
                 bundle.putParcelable("IMAGE", videoThumbBitmap);
                 bundle.putString("TYPE", sendStory.getStoryType());
                 bundle.putString("FILENAME", sendStory.getDocFileName());
+                bundle.putString("REQTYPE",Constant.ADD_NEW_STORY);
                 System.out.println("filename" + sendStory.getDocFileName());
+                flag = true;
+            }
+        }
+        else if (requestType.equals(Constant.UPDATE_GROUP_IMAGE))
+        {
+            if (!flag) {
+                bundle.putParcelable("IMAGE", videoThumbBitmap);
+                bundle.putString("REQTYPE",Constant.UPDATE_GROUP_IMAGE);
+
                 flag = true;
             }
         }
@@ -513,6 +585,19 @@ public class FileUploadService extends JobIntentService {
         successIntent.putExtra("notificationId", NOTIFICATION_ID);
         successIntent.putExtra("progress", 100);
         successIntent.putExtra("DATA",data);
+        if (requestType.equals("story"))
+        {
+            successIntent.putExtra("REQTYPE", Constant.ADD_NEW_STORY);
+        }
+        if (requestType.equals(Constant.BRIEF_CV_VIDEO))
+        {
+            successIntent.putExtra("REQTYPE", Constant.BRIEF_CV_VIDEO);
+        }
+        if (requestType.equals(Constant.UPDATE_GROUP_IMAGE))
+        {
+            successIntent.putExtra("REQTYPE", Constant.UPDATE_GROUP_IMAGE);
+        }
+
         successIntent.putExtra("RECEVIER",mResultReceiver);
         sendBroadcast(successIntent);
 

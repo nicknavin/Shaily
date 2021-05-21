@@ -26,17 +26,14 @@ import java.security.NoSuchAlgorithmException;
 
 public class SplashActivity extends BaseActivity {
 
-//please see this , getuserSubscribedAllStroies,subscriptionStories in this api, give me subsciptin group name and group image
-    // getSubscribedSubscriptionGroups give me user details
-    //
-
-    //572482702
-    //pwd e8ax16
+    String s1="navin";
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash);
+
 //        startActivity(new Intent(getApplicationContext(), AddSubscriptionStoryActivity.class));
 startApp();
     }

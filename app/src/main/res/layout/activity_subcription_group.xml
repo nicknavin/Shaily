@@ -34,23 +34,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/laySelectImgCover"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:orientation="vertical">
-            <com.app.session.customview.CircleImageView
+                <com.app.session.customview.CircleImageView
                 android:id="@+id/imgGroupCover"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-android:layout_gravity="center"
+                android:layout_gravity="center"
                 app:border_color="@color/grayline"
                 app:border_width="1dp"
                 android:src="@mipmap/profile_large"
-
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                 />
                 <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtImageUploding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -58,9 +61,27 @@ android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:layout_marginTop="@dimen/value5"
                     android:textSize="14sp"
-                    app:edittextfont="OpenSans-Regular.ttf" />
-            </LinearLayout>
-            <LinearLayout
+                    app:edittextfont="OpenSans-Regular.ttf"
+                    app:layout_constraintTop_toBottomOf="@+id/imgGroupCover"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/rey_loading_image"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:max="50"
+                    app:layout_constraintTop_toTopOf="@+id/imgGroupCover"
+                    app:layout_constraintBottom_toBottomOf="@+id/imgGroupCover"
+                    app:layout_constraintLeft_toLeftOf="@+id/imgGroupCover"
+                    app:layout_constraintRight_toRightOf="@+id/imgGroupCover"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    android:visibility="gone"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/chatloadingstyle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/laySelectVideo"
                 android:layout_width="wrap_content"
                 android:layout_margin="20dp"
@@ -72,9 +93,12 @@ android:layout_gravity="center"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
                 android:src="@mipmap/video_upload"
-                  />
+                  app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
 
                 <com.app.session.customview.CustomTextView
+                    android:id="@+id/txtVideoUploding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -82,9 +106,25 @@ android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:layout_marginTop="@dimen/value5"
                     android:textSize="14sp"
-                    app:edittextfont="OpenSans-Regular.ttf" />
-
-            </LinearLayout>
+                    app:edittextfont="OpenSans-Regular.ttf"
+                    app:layout_constraintTop_toBottomOf="@+id/imgVideoCover"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/rey_loading_video"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:max="50"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="@+id/imgVideoCover"
+                    app:layout_constraintBottom_toBottomOf="@+id/imgVideoCover"
+                    app:layout_constraintLeft_toLeftOf="@+id/imgVideoCover"
+                    app:layout_constraintRight_toRightOf="@+id/imgVideoCover"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/chatloadingstyle" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/layProgress"

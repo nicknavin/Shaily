@@ -92,4 +92,16 @@ public class UserBank implements Parcelable {
     public String getCurrency_symbol(){
         return this.currency_symbol;
     }
+
+    @Override
+    public String toString() {
+        return "UserBank{" +
+                "bank_name='" + bank_name + '\'' +
+                ", account_number='" + account_number + '\'' +
+                ", iban_code='" + iban_code + '\'' +
+                ", swift_code='" + swift_code + '\'' +
+                ", bank_address='" + bank_address + '\'' +
+                ", currency_symbol='" + currency_symbol + '\'' +
+                '}';
+    }
 }

@@ -159,9 +159,10 @@ View view;
 
                                 subscriptionGroupAdapters = new SubscriptionGroupAdapters(context, subscriptionGroupsList, new ApiItemCallback() {
                                     @Override
-                                    public void result(int position) {
+                                    public void result(int position)
+                                    {
                                         SubscriptionGroup group = subscriptionGroupsList.get(position);
-                                        Intent intent = new Intent(context, SubscriptionGroupDetialActivity.class);
+                                        Intent intent = new Intent(context,SubscriptionGroupDetialActivity.class);
                                         intent.putExtra("ID", group.getSubscription_group_cd());
                                         intent.putExtra("NAME", group.getGroup_name());
                                         Bundle bundle = new Bundle();

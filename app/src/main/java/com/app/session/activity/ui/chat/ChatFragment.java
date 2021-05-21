@@ -13,6 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +27,9 @@ import com.app.session.activity.ChattingActivity;
 import com.app.session.adapter.AllChatUserAdapter;
 import com.app.session.api.Urls;
 import com.app.session.baseFragment.BaseFragment;
+import com.app.session.data.model.DemoReciver;
+import com.app.session.data.model.NotificationModel;
+import com.app.session.data.model.UserId;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.data.model.ChatUserId;
 import com.app.session.data.model.ChatedBody;
@@ -30,15 +38,21 @@ import com.app.session.data.model.MessageChat;
 import com.app.session.network.ApiClient;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
+import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.Utility;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.engineio.client.transports.Polling;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +75,7 @@ Context context;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=getContext();
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -395,6 +410,7 @@ Context context;
         super.onResume();
         connectWithSocket();
         getChatedPersons();
+
     }
 
     @Override
@@ -409,4 +425,9 @@ Context context;
         mSocket.off(Constant.NEW_MESSAGE, onNewMessage);
         mSocket.off(Constant.FILES_EVENT, onFiles);
     }
+
+
+
+
+
 }

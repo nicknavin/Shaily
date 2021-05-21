@@ -275,75 +275,8 @@ LinearLayout layBios;
         popup.show();
     }
 
-    public void setupStoryRecylerview()
-    {
-        recyclerView=(RecyclerView)view.findViewById(R.id.recyclerView);
-        linearLayoutManager=new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        userSubscriptionStoryAdapter=new UserSubscriptionStoryAdapter(context, storyDataArrayList,userName,groupiconUrl, new ObjectCallback()
-        {
-            @Override
-            public void getObject(Object object, int position,View view)
-            {
-                if (!userId.isEmpty()) {
-                    if(position==-1) {
-                        startActivity(new Intent(context, SubscriptionGroupProfileActivity.class));
-                    }
-                    else {
-
-                        if(view.getId()==R.id.imgRemove) {
-                            showMenu(view);
-                        }
-                        else
-                        {
-                            UserStory userStory=(UserStory)object;
-                            Intent intent=new Intent(context, ShowStoryActivity.class);
-                            intent.putExtra("DATA",userStory);
-                            startActivity(intent);
-                        }
-
-                    }
-                }
-
-            }
-        });
-        recyclerView.setAdapter(userSubscriptionStoryAdapter);
 
 
-    }
-
-    public void setUpRecyclerListener()
-    {
-        loading = true;
-        loaddingDone = true;
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-
-                visibleItemCount = linearLayoutManager.getChildCount();
-                totalItemCount = linearLayoutManager.getItemCount();
-                pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
-
-
-                if (loading && loaddingDone)
-                {
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                    {
-
-                        loading = false;
-                        Utility.Log("inside the recly litner");
-
-
-
-
-
-
-                    }
-                }
-            }
-        });
-    }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {

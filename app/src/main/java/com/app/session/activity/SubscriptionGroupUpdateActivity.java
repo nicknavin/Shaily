@@ -75,6 +75,7 @@ import retrofit2.Response;
 import static com.app.session.service.FileUploadService.FAIL;
 import static com.app.session.service.FileUploadService.SHOW_RESULT;
 import static com.app.session.service.FileUploadService.STATUS;
+import static com.app.session.utility.Utility.isConnectingToInternet;
 
 public class SubscriptionGroupUpdateActivity extends BaseActivity implements View.OnClickListener, ServiceResultReceiver.Receiver {
     SubscriptionGroup group=null;
@@ -96,7 +97,7 @@ public class SubscriptionGroupUpdateActivity extends BaseActivity implements Vie
     private ArrayList<Category> categoryArrayList = new ArrayList<>();
     CustomEditText edtGroupName, edtSubscriptionprice, edt_cv;
     Bitmap bmGroupCover = null,bmVideoCover=null;
-ImageView imgVideoCover;
+    ImageView imgVideoCover;
     SubscriptionGroup subscriptionGroup =null;
     LinearLayout layGroupDecription,layGroupDetail;
     @Override
@@ -504,14 +505,20 @@ ImageView imgVideoCover;
     }
 
     private void callService(String path) {
-        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
-        mServiceResultReceiver.setReceiver(this);
-        Intent mIntent = new Intent(this, FileUploadService.class);
-        mIntent.putExtra("mFilePath", path);
-        mIntent.putExtra("FileName", mFileName);
-        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(this, mIntent);
+        if (isConnectingToInternet(context)) {
+            mServiceResultReceiver = new ServiceResultReceiver(new Handler());
+            mServiceResultReceiver.setReceiver(this);
+            Intent mIntent = new Intent(this, FileUploadService.class);
+            mIntent.putExtra("mFilePath", path);
+            mIntent.putExtra("FileName", mFileName);
+            mIntent.putExtra(RECEIVER, mServiceResultReceiver);
+            mIntent.setAction(ACTION_DOWNLOAD);
+            FileUploadService.enqueueWork(this, mIntent);
+        }
+        else
+        {
+            showInternetConnectionToast();
+        }
 
     }
 

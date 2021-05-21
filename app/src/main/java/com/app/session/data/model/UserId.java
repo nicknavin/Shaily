@@ -19,4 +19,11 @@ public class UserId
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
-}
+
+     @Override
+     public String toString() {
+         return "UserId{" +
+                 "user_id='" + user_id + '\'' +
+                 '}';
+     }
+ }

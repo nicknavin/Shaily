@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.app.session.R;
 import com.app.session.base.BaseActivity;
@@ -12,6 +13,7 @@ import com.app.session.customview.CustomTextView;
 import com.app.session.data.model.LoginBody;
 import com.app.session.data.model.LoginRoot;
 import com.app.session.data.model.LoginUser;
+import com.app.session.data.model.UserFcm;
 import com.app.session.network.ApiClientNew;
 import com.app.session.network.ApiInterface;
 import com.app.session.utility.Constant;
@@ -20,7 +22,14 @@ import com.app.session.utility.DataPrefrence;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -32,7 +41,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 
-
+import androidx.annotation.NonNull;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,13 +58,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
    RelativeLayout lay_bottem;
     private Socket mSocket;
+    FirebaseFirestore firebaseFirestore;
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
         context = this;
-
+        firebaseFirestore=FirebaseFirestore.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
         initView();
     }
 
@@ -71,7 +83,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         btn_skip.setOnClickListener(this);
         edt_email = (TextInputEditText) findViewById(R.id.edit_email);
         edt_pwd = (TextInputEditText) findViewById(R.id.edit_password);
-
     }
 
     private boolean isValid() {
@@ -136,6 +147,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void callUserLogin()
     {
+
         if (isConnectingToInternet(context)) {
             showLoading();
             ApiInterface apiInterface = ApiClientNew.getClient().create(ApiInterface.class);
@@ -151,7 +163,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if(responseBody.getStatus()==200)
                         {
                             LoginBody loginBody = responseBody.getLoginBody();
+                            DataPrefrence.setPref(context, Constant.ACCESS_TOKEN,loginBody.getToken() );
+                            log("token "+loginBody.getToken());
                             LoginUser loginUser= loginBody.getLoginUser();
+                            log("login data "+loginUser.toString());
                             DataPrefrence.setPref(context, Constant.LOGIN_FLAG, true);
                             DataPrefrence.setPref(context, Constant.USER_ID, loginUser.get_id());
                             DataPrefrence.setPref(context,Constant.LOGIN_USER_ID,loginUser.getLogin_user_id());
@@ -159,8 +174,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             DataPrefrence.setPref(context, Constant.USER_NAME, loginUser.getUser_name());
                             DataPrefrence.setPref(context, Constant.MOBILE_NO, loginUser.getMobile_no());
                             DataPrefrence.setPref(context, Constant.COUNTRY_ID, loginUser.getCountry_id());
-                            DataPrefrence.setPref(context, Constant.ACCESS_TOKEN,loginBody.getToken() );
+
                             DataPrefrence.setPref(context, Constant.PROFILE_IMAGE, loginUser.getImageUrl());
+
+
+
                             if(loginUser.getUserLangauges().size()>0)
                             {
                                 DataPrefrence.setPref(context, Constant.LANGUAGE_SELECTED, true);
@@ -189,14 +207,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 DataPrefrence.setPref(context, Constant.LOGIN_TYPE, Constant.CLIENT);
                             }
                             connectWithSocket();
-                            Intent intent;
-                            intent = new Intent(context, HomeUserChatProfileActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
+
+                            loginFCM(loginUser.getEmail(),pwd);
+
+
                         }
 
 
@@ -227,6 +241,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             showInternetConnectionToast();
         }
     }
+
+
+
 
 
     private JsonObject getParameter()
@@ -315,6 +332,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     };
 
+
+
+
+    private void loginFCM(String email, String password) {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+
+                    DataPrefrence.setPref(context,Constant.U_ID,firebaseAuth.getCurrentUser().getUid());
+                    log("uId"+firebaseAuth.getCurrentUser().getUid());
+                    Intent intent;
+                    intent = new Intent(context, HomeUserChatProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
+
+                } else {
+
+
+                    log("Error ! " + task.getException().getMessage());
+                }
+            }
+        });
+    }
 
 
 

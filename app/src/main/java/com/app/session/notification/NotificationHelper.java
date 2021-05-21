@@ -43,11 +43,8 @@ public class NotificationHelper extends ContextWrapper {
         mBuilder.setSmallIcon(getSmallIcon());
         mBuilder.setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
         mBuilder.setContentTitle(title)
-                .setContentText(body)
-                //.setContentIntent(resultPendingIntent)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-        mBuilder.setVibrate(new long[]{0L});
+                .setContentText(body);
+
         mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         mBuilder.setProgress(100, progress, false);
         if (progress == 100) {
@@ -99,31 +96,22 @@ public class NotificationHelper extends ContextWrapper {
         mBuilder.setSmallIcon(R.mipmap.ic_launcher);
         mBuilder.setContentTitle(title)
                 .setContentText(message)
-                .setAutoCancel(true).setOngoing(true)
-                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setPriority(Notification.DEFAULT_ALL)
-        .setContentIntent(resultPendingIntent);
+                .setAutoCancel(true)
+               .setContentIntent(resultPendingIntent);
 
 
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_NONE;
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, importance);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
-            notificationChannel.enableVibration(true);
-            notificationChannel.setImportance(importance);
-            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             assert mNotificationManager != null;
             mBuilder.setChannelId(CHANNEL_ID);
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
         Notification notification = mBuilder.build();
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.defaults = Notification.DEFAULT_ALL;
         mNotificationManager.notify(NOTIFICATION_ID, notification);
 
 

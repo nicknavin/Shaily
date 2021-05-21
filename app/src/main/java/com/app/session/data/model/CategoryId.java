@@ -1,16 +1,52 @@
 package com.app.session.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class CategoryId
+public class CategoryId implements Parcelable
 {
     @SerializedName("_id")
     private String _id;
-
     @SerializedName("language_cd")
     private String language_cd;
     @SerializedName("category_name")
     private String category_name;
+
+    public CategoryId() {
+
+    }
+
+    protected CategoryId(Parcel in) {
+        _id = in.readString();
+        language_cd = in.readString();
+        category_name = in.readString();
+    }
+
+    public static final Creator<CategoryId> CREATOR = new Creator<CategoryId>() {
+        @Override
+        public CategoryId createFromParcel(Parcel in) {
+            return new CategoryId(in);
+        }
+
+        @Override
+        public CategoryId[] newArray(int size) {
+            return new CategoryId[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(_id);
+        parcel.writeString(language_cd);
+        parcel.writeString(category_name);
+    }
 
     public String get_id() {
         return _id;

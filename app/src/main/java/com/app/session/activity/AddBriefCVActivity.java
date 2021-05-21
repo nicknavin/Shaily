@@ -88,6 +88,7 @@ import static com.app.session.service.FileUploadService.STATUS;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_THUMBNAIL_POSITION;
 import static com.app.session.thumby.ThumbyActivity.EXTRA_URI;
 import static com.app.session.thumby.ThumbyActivity.VIDEO_PATH;
+import static com.app.session.utility.Utility.isConnectingToInternet;
 
 public class AddBriefCVActivity extends BaseActivity implements View.OnClickListener, ServiceResultReceiver.Receiver {
     CustomEditText edt_brief;
@@ -404,21 +405,22 @@ showLoading();
 
                             responseBody = response.errorBody();
 
-                            String data =responseBody.string();
+                            if(responseBody!=null) {
+                                String data = responseBody.string();
 
-                            System.out.println("error1"+data);
-                            JSONObject jsonObject=new JSONObject(data);
+                                System.out.println("error1" + data);
+                                JSONObject jsonObject = new JSONObject(data);
 
-                            if(jsonObject.getInt("status")==200)
-                            {
-                                showToast(jsonObject.getString("message"));
+                                if (jsonObject.getInt("status") == 200) {
+                                    showToast(jsonObject.getString("message"));
+                                }
                             }
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
 
                     }
                     else
@@ -585,17 +587,24 @@ showLoading();
     private static final String ACTION_DOWNLOAD = "action.DOWNLOAD_DATA";
 
     private void callService(String path) {
-        mServiceResultReceiver = new ServiceResultReceiver(new Handler());
-        mServiceResultReceiver.setReceiver(this);
-        Intent mIntent = new Intent(this, FileUploadService.class);
-        mIntent.putExtra("mFilePath", path);
-        mIntent.putExtra("FileName", mFileName);
-        mIntent.putExtra("LANGUAGE_ID", language_id);
-        mIntent.putExtra("USER_ID", userId);
-        mIntent.putExtra("TOKEN", accessToken);
-        mIntent.putExtra(RECEIVER, mServiceResultReceiver);
-        mIntent.setAction(ACTION_DOWNLOAD);
-        FileUploadService.enqueueWork(context, mIntent);
+
+        if (isConnectingToInternet(context)) {
+            mServiceResultReceiver = new ServiceResultReceiver(new Handler());
+            mServiceResultReceiver.setReceiver(this);
+            Intent mIntent = new Intent(this, FileUploadService.class);
+            mIntent.putExtra("mFilePath", path);
+            mIntent.putExtra("FileName", mFileName);
+            mIntent.putExtra("LANGUAGE_ID", language_id);
+            mIntent.putExtra("USER_ID", userId);
+            mIntent.putExtra("TOKEN", accessToken);
+            mIntent.putExtra(RECEIVER, mServiceResultReceiver);
+            mIntent.setAction(ACTION_DOWNLOAD);
+            FileUploadService.enqueueWork(context, mIntent);
+        }
+        else
+        {
+            showInternetConnectionToast();
+        }
 
     }
 

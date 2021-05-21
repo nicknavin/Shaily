@@ -20,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.app.session.R;
 import com.app.session.api.AqueryCall;
@@ -27,6 +28,7 @@ import com.app.session.base.BaseActivity;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.customview.MyDialog;
+import com.app.session.data.model.UserFcm;
 import com.app.session.interfaces.RequestCallback;
 import com.app.session.data.model.Brief_CV;
 import com.app.session.data.model.Language;
@@ -38,7 +40,14 @@ import com.app.session.utility.ConvetBitmap;
 import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;
 import com.app.session.utility.Utility;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -56,6 +65,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import okhttp3.ResponseBody;
@@ -76,15 +86,18 @@ public class RegistrationFirstActivity extends BaseActivity implements View.OnCl
     private Uri mCameraImageUri, mImageCaptureUri;
     byte[] ByteArray;
     public String PicturePath = "";
-    private AlertDialog alertDialog;
-    String patientProfile = "", gender = "M";
-    RadioGroup rg_group_gender;
 
+    String patientProfile = "", gender = "M";
+
+    FirebaseFirestore firebaseFirestore;
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_first);
         context = this;
+        firebaseFirestore=FirebaseFirestore.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
         initView();
     }
 
@@ -814,6 +827,7 @@ public class RegistrationFirstActivity extends BaseActivity implements View.OnCl
                     Root responseBody= response.body();
                     if(responseBody.getStatus()==200) {
 
+                        register(DataPrefrence.getPref(context, Constant.EMAILID, ""),DataPrefrence.getPref(context, Constant.PASSWORD, ""),DataPrefrence.getPref(context, Constant.FULLNAME, ""));
                         showToast(responseBody.getMessage());
                         Intent intent;
                         intent = new Intent(context, LoginActivity.class);
@@ -899,6 +913,48 @@ public class RegistrationFirstActivity extends BaseActivity implements View.OnCl
         }
         return gsonObject;
     }
+
+
+
+    private void register(String email,String password,String name)
+    {
+
+
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful())
+                {
+
+                    String uid = firebaseAuth.getCurrentUser().getUid();
+                    DataPrefrence.setPref(context, Constant.U_ID, uid);
+
+                    DocumentReference documentReference = firebaseFirestore.collection("users").document(uid);
+                    UserFcm users = new UserFcm();
+                    users.setUid(uid);
+                    users.setName(name);
+
+                    documentReference.set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //showToast("onSuccess: user profile is created for " + uid);
+                            log("onSuccess: user profile is created for " + uid);
+                        }
+                    });
+
+
+
+                    //Toast.makeText(context, "User created ", Toast.LENGTH_SHORT).show();
+                    log("User created ");
+
+
+                } else {
+                   // Toast.makeText(context, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     public ArrayList<Language> selectlanguageList = new ArrayList<>();
     private ArrayList<Brief_CV> brief_cvList = new ArrayList<>();

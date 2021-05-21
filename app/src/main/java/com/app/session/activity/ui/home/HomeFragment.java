@@ -20,26 +20,30 @@ import android.widget.PopupMenu;
 import com.app.session.R;
 import com.app.session.activity.ConsultantUserActivity;
 import com.app.session.activity.HomeConsultantActivity;
-import com.app.session.activity.StoryDetailActivity;
+import com.app.session.activity.OtheUserSubscriptionGroupDetailActivity;
+import com.app.session.activity.PurchaseGroupStoryActivity;
 import com.app.session.activity.StoryPageDetailActivity;
 import com.app.session.activity.ui.baseviewmodels.ViewModelFactory;
 import com.app.session.adapter.AllSubscriptionStoryAdapter;
-import com.app.session.adapter.SampleDemoAdapter;
+import com.app.session.adapter.PurchaseSubscribeGroupAdapter;
 import com.app.session.api.Urls;
 import com.app.session.baseFragment.BaseFragment;
 import com.app.session.customview.CircleImageView;
 import com.app.session.customview.CustomTextView;
 import com.app.session.data.model.Brief_CV;
+import com.app.session.data.model.PurchaseSubscribeGroup;
+import com.app.session.data.model.PurchaseSubscribeGroupRoot;
 import com.app.session.data.model.SubscribedAllStroiesBody;
 import com.app.session.data.model.SubscribedAllStroiesRoot;
-import com.app.session.data.model.SubscriptionGroup;
-import com.app.session.data.model.SubscriptionGroupRoot;
+import com.app.session.data.model.SubscriptionIdData;
 import com.app.session.data.model.User;
 import com.app.session.data.model.UserRoot;
 import com.app.session.data.model.UserStory;
+import com.app.session.data.model.UserSubscriptionGroupsBody;
 import com.app.session.database.DatabaseHelper;
 import com.app.session.interfaces.ApiItemCallback;
 import com.app.session.interfaces.ObjectCallback;
+import com.app.session.service.MyWorker;
 import com.app.session.utility.Constant;
 import com.app.session.utility.DataPrefrence;
 import com.app.session.utility.PermissionsUtils;
@@ -47,29 +51,35 @@ import com.app.session.utility.Utility;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemClickListener {
 
-    private HomeViewModel homeViewModel;
+    private static final int JOB_ID = 101010;
+    public HomeViewModel homeViewModel;
     View root;
     RecyclerView recyclerViewtop, recyclerViewbottom;
     CustomTextView txtProfileName;
     ImageView imgSearch;
     ArrayList<Brief_CV> brief_cvList;
-    ArrayList<SubscriptionGroup> subscriptionGroupsList = new ArrayList<>();
-
-
+    ArrayList<PurchaseSubscribeGroup> subscriptionGroupsList = new ArrayList<>();
     AllSubscriptionStoryAdapter subscriptionStoryAdapter;
     private ShimmerFrameLayout mShimmerViewContainer, shimmer_view_container2;
     CircleImageView img_profilepic;
@@ -79,7 +89,7 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
     String load = "1";
     private boolean loaddingDone = true;
     private boolean loading = true;
-    private boolean unfollowing=false;
+    private boolean unfollowing = false;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     int pageno = 1;
     int total_pages = 0;
@@ -87,13 +97,16 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
     LinkedList<UserStory> allStories = new LinkedList<>();
     Context context;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
+
         setupViewModel();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -102,20 +115,18 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
         userName = user_name;
         userUrl = profileUrl;
         initView();
-
         img_profilepic.setClickable(true);
         setupStoryRecylerview();
-
         setupObserver();
         setUpRecyclerListener();
         setSwipeLayout();
-
+        createWorker();
         return root;
     }
 
 
     private void setupViewModel() {
-        homeViewModel = new ViewModelProvider(this, new ViewModelFactory(getActivity().getApplication(), userId, accessToken)).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(this, new ViewModelFactory( userId,accessToken)).get(HomeViewModel.class);
     }
 
 
@@ -129,6 +140,16 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
             apiCall();
         }
 
+        if(homeViewModel!=null)
+        {
+            homeViewModel.getSubscriptinGroupApi();
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
 
     }
 
@@ -180,7 +201,12 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
                 if (view.getId() == R.id.imgRemove) {
                     showMenu(view);
                 } else {
+
                     UserStory storyData = allStories.get(position);
+                    if(storyData.isUserFollwoingPeopleStory)
+                    {
+                        subscriptionStoryAdapter.updateData(position);
+                    }
                     Intent intent = new Intent(context, StoryPageDetailActivity.class);
                     intent.putExtra("DATA", storyData);
                     startActivity(intent);
@@ -291,7 +317,7 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
                 swipeRefreshLayout.setRefreshing(true);
                 pageno = 1;
                 homeViewModel.page = 1;
-                homeViewModel.stories=0;
+                homeViewModel.stories = 0;
                 allStories = new LinkedList<>();
                 homeViewModel.getFollowingUserStoryApi();
                 swipeRefreshLayout.setRefreshing(false);
@@ -299,12 +325,10 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
         });
     }
 
-    private void apiCall()
-    {
+    private void apiCall() {
         homeViewModel.getUserDetailApi();
-        homeViewModel.getSubscriptinGroupApi();
         homeViewModel.getFollowingUserStoryApi();
-      //  homeViewModel.getStoryoFUnFollowingUserApi();
+        //  homeViewModel.getStoryoFUnFollowingUserApi();
 
     }
 
@@ -321,16 +345,14 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
 
 
                 if (loading && loaddingDone) {
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                    {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         loading = false;
                         Utility.Log("inside the recly litner");
-                      if(!unfollowing) {
-                          homeViewModel.getFollowingUserStoryApi();
-                      }else
-                      {
-                          homeViewModel.getUnFollowingUserStoryApi();
-                      }
+                        if (!unfollowing) {
+                            homeViewModel.getFollowingUserStoryApi();
+                        } else {
+                            homeViewModel.getUnFollowingUserStoryApi();
+                        }
                     }
                 }
             }
@@ -339,31 +361,33 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
 
 
     private void setupObserver() {
-        homeViewModel.getSubscriptionGroupRootMutableLiveData().observe(getViewLifecycleOwner(), new Observer<SubscriptionGroupRoot>() {
+        homeViewModel.getSubscriptionGroupRootMutableLiveData().observe(getViewLifecycleOwner(), new Observer<PurchaseSubscribeGroupRoot>() {
             @Override
-            public void onChanged(SubscriptionGroupRoot root) {
-                setupGroupData(root);
-
+            public void onChanged(PurchaseSubscribeGroupRoot purchaseSubscribeGroupRoot) {
+                Utility.log("Group " + root);
+                setupGroupData(purchaseSubscribeGroupRoot);
             }
         });
 
 
+
         homeViewModel.getSubscriptionGroupStoryData().observe(getViewLifecycleOwner(), new Observer<SubscribedAllStroiesRoot>() {
             @Override
-            public void onChanged(SubscribedAllStroiesRoot subscribedAllStroiesRoot) {
+            public void onChanged(SubscribedAllStroiesRoot subscribedAllStroiesRoot)
+            {
                 shimmer_view_container2.stopShimmerAnimation();
                 shimmer_view_container2.setVisibility(View.GONE);
                 SubscribedAllStroiesBody body = subscribedAllStroiesRoot.getmBody();
                 homeViewModel.totalPage = body.getTotal_Page();
-                setupGroupStoryUI(subscribedAllStroiesRoot);
+//                setupGroupStoryUI(subscribedAllStroiesRoot);
 
-//                if(homeViewModel.totalPage==0)
-//                {
-//                    homeViewModel.getStoryoFUnFollowingUserApi();
-//                }
-//                else {
-//                    setupGroupStoryUI(subscribedAllStroiesRoot);
-//                }
+                if(homeViewModel.totalPage==0)
+                {
+                    homeViewModel.getUnFollowingUserStoryApi();
+                }
+                else {
+                    setupGroupStoryUI(subscribedAllStroiesRoot);
+                }
             }
         });
 
@@ -374,7 +398,7 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
                 Log.d("TAG", subscribedAllStroiesRoot.getMessage());
                 SubscribedAllStroiesBody body = subscribedAllStroiesRoot.getmBody();
                 homeViewModel.unsubscribeTotalPage = body.getTotal_Page();
-                if(homeViewModel.unsubscribeTotalPage>0) {
+                if (homeViewModel.unsubscribeTotalPage > 0) {
                     setupUnGroupStoryUI(subscribedAllStroiesRoot);
                 }
             }
@@ -393,25 +417,21 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
     }
 
 
-    private void setupGroupData(SubscriptionGroupRoot root) {
+    private void setupGroupData(PurchaseSubscribeGroupRoot root)
+    {
         if (root.getStatus() == 200) {
-            subscriptionGroupsList = root.getSubscriptionGroupBodies();
-            SampleDemoAdapter sampleDemoAdapter = new SampleDemoAdapter(context, subscriptionGroupsList, new ApiItemCallback() {
+            subscriptionGroupsList = root.getPurchaseSubscribeGroupBody();
+            PurchaseSubscribeGroupAdapter sampleDemoAdapter = new PurchaseSubscribeGroupAdapter(context, subscriptionGroupsList, new ApiItemCallback() {
                 @Override
-                public void result(int position) {
-                    SubscriptionGroup group = subscriptionGroupsList.get(position);
-                    Intent intent = new Intent(context, StoryDetailActivity.class);
-                    intent.putExtra("ID", group.get_id());
-                    intent.putExtra("GROUP_NAME", group.getGroup_name());
-                    intent.putExtra("GROUP_IMAGE", group.getGroup_image_url());
-                    intent.putExtra("USER_NAME", group.getUserDetails().getUserName());
-                    intent.putExtra("USER_URL", group.getUserDetails().getImageUrl());
-                    intent.putExtra("USER_ID", group.getUserDetails().getId());
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("List", (Serializable) brief_cvList);
-                    intent.putExtra("BUNDLE", bundle);
-                    intent.putExtra("OTHER", "0");
+                public void result(int position)
+                {
+                    PurchaseSubscribeGroup purchase = subscriptionGroupsList.get(position);
+                    Utility.log("subscription id: "+purchase.getId());
+                    Intent intent = new Intent(context, PurchaseGroupStoryActivity.class);
+                    intent.putExtra(Constant.PURCHASE_GROUP,purchase);
                     startActivity(intent);
+
+
                 }
             });
             recyclerViewtop.setAdapter(sampleDemoAdapter);
@@ -462,22 +482,20 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
     private void setupGroupStoryUI(SubscribedAllStroiesRoot response) {
         SubscribedAllStroiesBody subscribedAllStroiesBody = response.getmBody();
         homeViewModel.totalPage = subscribedAllStroiesBody.getTotal_Page();
-        homeViewModel.stories=subscribedAllStroiesBody.getmTotalOverAllStories();
+        homeViewModel.stories = subscribedAllStroiesBody.getmTotalOverAllStories();
         ArrayList<UserStory> storyDataArrayList = subscribedAllStroiesBody.getSubscriptionStories();
-        if (storyDataArrayList.size() > 0)
-        {
+        if (storyDataArrayList.size() > 0) {
             if (homeViewModel.page <= homeViewModel.totalPage) {
                 loading = true;
                 homeViewModel.page++;
             }
 
-            for (UserStory userStory : storyDataArrayList)
-            {
+            for (UserStory userStory : storyDataArrayList) {
                 allStories.addLast(userStory);
 
             }
 
-           // Utility.getStringFromList(allStories);
+            // Utility.getStringFromList(allStories);
 //                if(db.getNotesCount()>0)
 //                {
 //                    db.deleteNote();
@@ -485,16 +503,15 @@ public class HomeFragment extends BaseFragment implements PopupMenu.OnMenuItemCl
 //                db.insertNote(Utility.getStringFromList(allStories));
 
             subscriptionStoryAdapter.notifyDataSetChanged();
-            if(allStories.size()==homeViewModel.stories)
-            {
-                unfollowing=true;
+            if (allStories.size() == homeViewModel.stories) {
+                unfollowing = true;
 
             }
 
         }
     }
 
-private void setupUnGroupStoryUI(SubscribedAllStroiesRoot response) {
+    private void setupUnGroupStoryUI(SubscribedAllStroiesRoot response) {
         SubscribedAllStroiesBody subscribedAllStroiesBody = response.getmBody();
 
         ArrayList<UserStory> storyDataArrayList = subscribedAllStroiesBody.getSubscriptionStories();
@@ -509,7 +526,7 @@ private void setupUnGroupStoryUI(SubscribedAllStroiesRoot response) {
 
             }
 
-           // Utility.getStringFromList(allStories);
+            // Utility.getStringFromList(allStories);
 //                if(db.getNotesCount()>0)
 //                {
 //                    db.deleteNote();
@@ -540,6 +557,61 @@ private void setupUnGroupStoryUI(SubscribedAllStroiesRoot response) {
             DataPrefrence.setLanguageDb(context, Constant.LANG_DB, user.getUserLangauges());
         }
 
+    }
+
+//this method schedules the job
+
+    private void createWorker() {
+        Constraints constraints = new Constraints.Builder()
+                    .setRequiresCharging(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        //we can put as many variables needed
+        Data data = new Data.Builder()
+                    .putString(MyWorker.TASK_DESC, "The task data passed from MainActivity")
+                .build();
+
+//        final OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWorker.class).build();
+//        final OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWorker.class).setInputData(data).build();
+        final PeriodicWorkRequest periodicWorkRequest
+                = new PeriodicWorkRequest.Builder(MyWorker.class, 15, TimeUnit.MINUTES).setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance().getWorkInfoByIdLiveData(periodicWorkRequest.getId()).observe(getViewLifecycleOwner(), new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo)
+            {
+
+//                showToast("hello shello hello");
+
+                if(workInfo != null && workInfo.getState().isFinished())
+                {
+                    if (homeViewModel != null)
+                    {
+//                    showToast("view model not null call work manager ");
+//                    System.out.println("view model not null call work manager ");
+                        homeViewModel.getSubscriptinGroupApi();
+                    }
+                    Utility.log("work info is called");
+                    System.out.println("work info is called");
+                    System.out.println("hello shello hello");
+                }
+            }
+        });
+        WorkManager.getInstance().enqueue(periodicWorkRequest);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
 

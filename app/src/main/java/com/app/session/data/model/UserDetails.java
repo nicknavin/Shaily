@@ -94,4 +94,14 @@ public class UserDetails implements Parcelable {
 	public static Creator<UserDetails> getCREATOR() {
 		return CREATOR;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDetails{" +
+				"userName='" + userName + '\'' +
+				", imageUrl='" + imageUrl + '\'' +
+				", loginUserId='" + loginUserId + '\'' +
+				", id='" + id + '\'' +
+				'}';
+	}
 }
